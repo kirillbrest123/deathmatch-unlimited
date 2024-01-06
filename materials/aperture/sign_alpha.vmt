@@ -1,0 +1,6 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "aperture/sign_alpha"
+	"$surfaceprop" "glass"
+	"$selfillum" 1
+}
