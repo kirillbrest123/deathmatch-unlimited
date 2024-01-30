@@ -397,17 +397,16 @@ local SCORE_BOARD = {
 	end,
 
 	Think = function( self, w, h )
-
 		if DMU.Mode.FFA then
 			for id, pl in ipairs( player.GetAll() ) do
 
 				if ( IsValid( pl.ScoreEntry ) ) then continue end
-	
+
 				pl.ScoreEntry = vgui.CreateFromTable( PLAYER_LINE, pl.ScoreEntry )
 				pl.ScoreEntry:Setup( pl )
-	
+
 				self.Teams:AddItem( pl.ScoreEntry )
-	
+
 			end
 		end
 	end

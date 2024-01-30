@@ -15,6 +15,7 @@ function DMU.LoadPlayLists()
     else
         print("[DMU] Playlist file not found! Loading default playlists...")
         DMU.LoadDefaultPlayLists()
+        DMU.SavePlayLists()
     end
 end
 

@@ -26,6 +26,10 @@ end)
 local function start_map_votes()
 
     vote_options = {}
+    votes = {}
+    for k, ply in ipairs(player.GetHumans()) do
+        ply.Vote = nil
+    end
 
     local maps = DMU.PlayLists[chosen_playlist]["maps"]
 
@@ -100,7 +104,6 @@ function DMU.StartVotes()
             return
         end
 
-        votes = {}
         timer.Simple(5, function()
             start_map_votes()
         end)

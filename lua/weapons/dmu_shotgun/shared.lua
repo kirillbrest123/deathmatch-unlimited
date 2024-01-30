@@ -117,7 +117,7 @@ function SWEP:Think()
 end
 
 function SWEP:Reload()
-	if self.NextReload > CurTime() then return end
+	if (self.NextReload or 0) > CurTime() then return end
 	if self:Clip1() >= self:GetMaxClip1() then return end
 	if self:Ammo1() <= 0 then return end
 	if self:GetReloading() then return end

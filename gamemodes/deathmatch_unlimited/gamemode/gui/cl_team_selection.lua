@@ -100,7 +100,11 @@ function PANEL:Init()
         s = s * 0.8
         btn.SelectColor = HSVToColor(h,s,v1)
 
-        btn.Material = Material("team_banners/" .. k .. ".png")
+        if v.banner then
+            btn.Material = Material(v.banner)
+        else
+            btn.Material = Material("team_banners/" .. k .. ".png")
+        end
         x = x + item_wide + gap
     end
 

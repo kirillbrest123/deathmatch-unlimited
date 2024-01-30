@@ -68,6 +68,14 @@ local function Draw3DText( pos, scale, text)
 	cam.End3D2D()
 end
 
+local text_offset = Vector(0,0,54.7066)
+local model_offset = Vector(0,0,23)
+local z_offset = Vector(0,0,0)
+local offset1 = Vector(0,0,30)
+local offset2 = Vector(0,0,46)
+local offset3 = Vector(0,0,4)
+local ang = Angle(0,0,0) -- they all rotate in sync anyway
+
 function ENT:Draw()
 	-- Draw the model
 	self:DrawModel()
@@ -75,40 +83,43 @@ function ENT:Draw()
 	-- The text to display
 	self.WeaponName = self.WeaponName or ""
 
-	-- The position. We use model bounds to make the text appear just above the model. Customize this to your liking.
-	local mins, maxs = self:GetModelBounds()
-	local pos = self:GetPos() + Vector( 0, 0, maxs.z + 56 )
-
-	local ang = Angle( 0, SysTime() * 25 % 360, 0 )
-
 	if not IsValid(self.WeaponModel) or not IsValid(self.WeaponModel.Overlay) then -- FUCKYOUFUCKYOUFUCKYOUFUCKYOU
-		self:Initialize()
-		return 
+		self:CreateModels()
 	end
 
+	z_offset.z = TimedCos(0.25, -1, 1, 0)
+	local pos = self:GetPos() + model_offset + z_offset -- uhhh idk why but during heavy lag (or so i think) models' position gets messed up so we do this. It shouldn't be that expensive, right?
+	ang.y = SysTime() * 25 % 360
+
+	self.WeaponModel:SetPos(pos)
+	self.WeaponModel.Overlay:SetPos(pos)
 	self.WeaponModel:SetAngles(ang)
 	self.WeaponModel.Overlay:SetAngles(ang)
 
 	if self:GetEmpty() then return end -- Don't draw most of stuff when it's empty
 
-	Draw3DText( pos, 0.2, self.WeaponName)
+	Draw3DText( self:GetPos() + text_offset + z_offset, 0.2, self.WeaponName)
 
 	cam.Start3D()
-		render.DrawLine(self:GetPos() + Vector(0,0,30), self:GetPos() + Vector(0,0,48), color_white, true)
+		render.DrawLine(self:GetPos() + offset1 + z_offset, self:GetPos() + offset2 + z_offset, color_white, true)
 		render.SetMaterial(material_dot)
-		render.DrawSprite( self:GetPos() + Vector(0,0,48), 4, 4, color_white)
+		render.DrawSprite( self:GetPos() + offset2 + z_offset, 4, 4, color_white)
 		render.SetMaterial(material_glow)
-		render.DrawSprite( self:GetPos() + Vector(0,0,4), 128, 64, self.Color)
+		render.DrawSprite( self:GetPos() + offset3, 128, 64, self.Color)
 	cam.End3D()
 end
 
 -- TODO: uhhh idk maybe sck support? that'd be neat. though that'd probably mean no overlays cuz that's 2x client models
 function ENT:Initialize()
+	self:CreateModels()
+end
+
+function ENT:CreateModels()
 	if IsValid(self.WeaponModel) then self.WeaponModel:Remove() end
 	self.WeaponModel = ClientsideModel("models/weapons/w_pistol.mdl")
     self.WeaponModel:SetParent(self)
 	self:SetRenderMode( RENDERMODE_TRANSCOLOR )
-    self.WeaponModel:SetPos(self:GetPos() + Vector(0,0,24))
+    self.WeaponModel:SetPos(self:GetPos() + model_offset)
 
 	if IsValid(self.WeaponModel.Overlay) then self.WeaponModel.Overlay:Remove() end -- should i be ashamed of this?
 	self.WeaponModel.Overlay = ClientsideModel("models/weapons/w_pistol.mdl")
@@ -120,6 +131,7 @@ function ENT:Initialize()
 	if self:GetWeapon() then
 		self:WeaponChanged(nil, nil, self:GetWeapon())
 	end
+
 	if self:GetEmpty() then
 		self:EmptyChanged(nil, nil, self:GetEmpty())
 	end
@@ -127,7 +139,6 @@ end
 
 function ENT:OnRemove()
 	if not IsValid(self.WeaponModel) or not IsValid(self.WeaponModel.Overlay) then -- FUCKYOUFUCKYOUFUCKYOUFUCKYOU
-		self:Initialize()
 		return 
 	end
 	self.WeaponModel:Remove()
@@ -143,10 +154,12 @@ function ENT:WeaponChanged(name, old, new_weapon)
 	if !weapon then
 		weapon = {WorldModel = "models/weapons/w_irifle.mdl", PrintName = "UNKNOWN WEAPON"}
 	end
+
 	if not IsValid(self.WeaponModel) or not IsValid(self.WeaponModel.Overlay) then -- FUCKYOUFUCKYOUFUCKYOUFUCKYOU
-		self:Initialize()
-		return 
+		self:CreateModels()
+		return
 	end
+
 	self.WeaponModel:SetModel(weapon.WorldModel)
 	self.WeaponModel.Overlay:SetModel(weapon.WorldModel)
 
@@ -160,6 +173,11 @@ function ENT:WeaponChanged(name, old, new_weapon)
 end
 
 function ENT:EmptyChanged(name, old, new)
+	if not IsValid(self.WeaponModel) or not IsValid(self.WeaponModel.Overlay) then -- FUCKYOUFUCKYOUFUCKYOUFUCKYOU
+		self:CreateModels()
+		return
+	end
+
 	if new then
 		self.WeaponModel:SetNoDraw(true)
 	else

@@ -46,7 +46,7 @@ end
 
 MODE.Hooks.InitPostEntity = function()
     if CLIENT then return end
-    for k,v in ipairs(ents.FindByClass("*dmu_objective_zone")) do
+    for k,v in ipairs(ents.FindByClass("*dmu_hold_zone")) do
         v:Disable()
     end
 
@@ -60,7 +60,7 @@ MODE.Hooks.Think = function()
 
     DMU.SendNotification("Hill moved!")
 
-    local hills = ents.FindByClass("*dmu_objective_zone")
+    local hills = ents.FindByClass("*dmu_hold_zone")
 
     for k,v in ipairs(hills) do
         v:Disable()

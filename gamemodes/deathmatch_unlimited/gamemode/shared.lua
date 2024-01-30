@@ -5,9 +5,6 @@ GM.Author = ".kkrill"
 GM.Email = "N/A"
 GM.Website = "N/A"
 
-//GM.TeamBased = true
-GM.AllowAutoTeam = true
-
 DMU = {}
 
 function GM:Initialize()
@@ -28,6 +25,10 @@ local function check_allow_feature()
 end
 
 hook.Add("SpawnMenuOpen", "dmu_SpawnMenu", check_allow_feature)
+
+local context_menu_disabled = CreateConVar( "dmu_disable_context_menu", "0", FCVAR_ARCHIVE + FCVAR_REPLICATED, "Prevents players from opening the context menu. Note that even with context menu enabled players won't be able to use properties without sandbox mode enabled.")
+
+function GM:ContextMenuOpen() return !context_menu_disabled:GetBool() end 
 
 function GM:CanProperty() return check_allow_feature() end
 

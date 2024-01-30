@@ -192,6 +192,17 @@ function SWEP:Think()
 	end
 end
 
+function SWEP:ShootEffects()
+
+	local owner = self:GetOwner()
+	if !IsValid(owner) then return end -- because that can happen
+
+	self:SendWeaponAnim( ACT_VM_PRIMARYATTACK )
+	owner:MuzzleFlash()
+	owner:SetAnimation( PLAYER_ATTACK1 )
+
+end
+
 if CLIENT then
 
 	function SWEP:AdjustMouseSensitivity()
@@ -207,7 +218,7 @@ if CLIENT then
 	SWEP.vRenderOrder = nil
 	function SWEP:ViewModelDrawn()
 		
-		local vm = self.Owner:GetViewModel()
+		local vm = self:GetOwner():GetViewModel()
 		if !IsValid(vm) then return end
 		
 		if (!self.VElements) then return end

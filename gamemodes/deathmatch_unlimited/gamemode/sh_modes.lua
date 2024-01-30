@@ -39,14 +39,16 @@ local function load_mode(name)
 
     DMU.Weapons = {}
 
+    DMU.Weapons.starter = string.Split(GetConVar("dmu_weapons_starter"):GetString(), ",")
+    DMU.Weapons.common = string.Split(GetConVar("dmu_weapons_common"):GetString(), ",")
+    DMU.Weapons.uncommon = string.Split(GetConVar("dmu_weapons_uncommon"):GetString(), ",")
+    DMU.Weapons.rare = string.Split(GetConVar("dmu_weapons_rare"):GetString(), ",")
+    DMU.Weapons.very_rare = string.Split(GetConVar("dmu_weapons_very_rare"):GetString(), ",")
+
     if DMU.Mode.Weapons then
-        DMU.Weapons = DMU.Mode.Weapons
-    else
-        DMU.Weapons.starter = string.Split(GetConVar("dmu_weapons_starter"):GetString(), ",")
-        DMU.Weapons.common = string.Split(GetConVar("dmu_weapons_common"):GetString(), ",")
-        DMU.Weapons.uncommon = string.Split(GetConVar("dmu_weapons_uncommon"):GetString(), ",")
-        DMU.Weapons.rare = string.Split(GetConVar("dmu_weapons_rare"):GetString(), ",")
-        DMU.Weapons.very_rare = string.Split(GetConVar("dmu_weapons_very_rare"):GetString(), ",")
+        for rarity, sweps in pairs(DMU.Mode.Weapons) do
+            DMU.Weapons[rarity] = sweps
+        end
     end
 
     DMU.weapon_to_rarity = {}

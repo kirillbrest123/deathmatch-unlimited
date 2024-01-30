@@ -200,7 +200,8 @@ function GM:PlayerCanJoinTeam(ply, t)
     end
 
     if CurTime() < (ply.TeamChangeCooldown or 0) then
-        ply:ChatPrint("You can't switch teams this often!")
+        ply:ChatPrint("Please wait " .. math.Round(ply.TeamChangeCooldown - CurTime()) .. " more seconds before trying to change team again")
+        ply.TeamChangeCooldown = ply.TeamChangeCooldown + 1
         return false
     end
 

@@ -1,39 +1,48 @@
 include("shared.lua")
 
+local ang = Angle(0,0,0) -- they all rotate in sync anyway
+local model_offset = Vector(0,0,8)
+
 function ENT:Draw()
 
-	local ang = Angle( 0, SysTime() * 25 % 360, 0 )
+	ang.y = SysTime() * 25 % 360
 
 	if not IsValid(self.PickUpModel) then -- AAAAAAAAAAAA
-		self:Initialize()
-		return 
+		self:CreateModels()
 	end
 
+	model_offset.z = TimedCos(0.25, 8, 10, 0)
 	self.PickUpModel:SetAngles(ang)
-
+	self.PickUpModel:SetPos(self:GetPos() + model_offset)
 end
 
 function ENT:Initialize()
-	--self.PickUpModel = ents.CreateClientside("base_anim")
-	if IsValid(self.PickUpModel) then self.PickUpModel:Remove() end
-	self.PickUpModel = ClientsideModel(self.Model)
-    self.PickUpModel:SetParent(self)
-	self.PickUpModel:SetRenderMode( RENDERMODE_TRANSCOLOR )
-    self.PickUpModel:SetPos(self:GetPos() + Vector(0,0,8))
-	self.PickUpModel:Spawn()
-
-	--self.PickUpModel:SetModel("models/Items/HealthKit.mdl")
+	self:CreateModels()
 
 	if self:GetEmpty() then
 		self:EmptyChanged(nil, nil, self:GetEmpty())
 	end
 end
 
+function ENT:CreateModels()
+	if IsValid(self.PickUpModel) then self.PickUpModel:Remove() end
+	self.PickUpModel = ClientsideModel(self.Model)
+    self.PickUpModel:SetParent(self)
+	self.PickUpModel:SetRenderMode( RENDERMODE_TRANSCOLOR )
+    self.PickUpModel:SetPos(self:GetPos() + model_offset)
+	self.PickUpModel:Spawn()
+end
+
 function ENT:OnRemove()
+	if not IsValid(self.PickUpModel) then return end
 	self.PickUpModel:Remove()
 end
 
 function ENT:EmptyChanged(name, old, new)
+	if not IsValid(self.PickUpModel) then -- AAAAAAAAAAAA
+		self:CreateModels()
+	end
+
 	if new then
 		self.PickUpModel:SetMaterial("lights/white")
 		self.PickUpModel:SetColor4Part(32,32,32,127)

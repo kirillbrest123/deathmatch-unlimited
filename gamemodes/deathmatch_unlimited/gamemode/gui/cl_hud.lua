@@ -3,11 +3,11 @@ local holdzone_team
 local hold_progress
 local hold_mats = 
 {
-    a = Material("hold_zone_a_hud.png"),
-    b = Material("hold_zone_b_hud.png"),
-    c = Material("hold_zone_c_hud.png"),
-    d = Material("hold_zone_d_hud.png"),
-    e = Material("hold_zone_e_hud.png"),
+    Material("hold_zone_icons/hold_zone_0_hud.png"),
+    Material("hold_zone_icons/hold_zone_1_hud.png"),
+    Material("hold_zone_icons/hold_zone_2_hud.png"),
+    Material("hold_zone_icons/hold_zone_3_hud.png"),
+    Material("hold_zone_icons/hold_zone_4_hud.png"),
 }
 local hold_identifier
 
@@ -82,11 +82,10 @@ local function draw_score_team()
 
     local my_team = LocalPlayer():Team()
     if my_team == TEAM_UNASSIGNED or my_team == TEAM_SPECTATOR then return end
-    local teams = table.Copy(DMU.Mode.Teams)
-    teams[my_team] = nil
 
     local best_team = nil
-    for k, v in pairs(teams) do
+    for k, v in pairs(DMU.Mode.Teams) do
+        if k == my_team then continue end
         best_team = best_team or k
         if team.GetScore(k) > team.GetScore(best_team) then
             best_team = k
@@ -160,7 +159,7 @@ net.Receive("DMU_HoldZoneHUD", function()
     in_holdzone = net.ReadBool()
     holdzone_team = net.ReadInt(12)
     hold_progress = net.ReadInt(8)
-    hold_identifier = net.ReadString()
+    hold_identifier = net.ReadUInt(4)
 end)
 
 hook.Add("HUDPaint", "DMU_DrawHoldZoneProgress", function ()
@@ -223,7 +222,7 @@ hook.Add("HUDPaint", "DMU_DrawHoldZoneProgress", function ()
         end
     end
 
-    surface.SetMaterial(hold_mats[hold_identifier])
+    surface.SetMaterial(hold_mats[hold_identifier + 1]) -- i forgot that tables in lua are 1 indexed...
     surface.DrawTexturedRect(x, y, 64, 64)
 end)
 

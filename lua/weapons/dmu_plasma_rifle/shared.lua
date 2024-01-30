@@ -158,7 +158,7 @@ function SWEP:SelfDestruct() -- stolen from rb655
 	local owner = self:GetOwner()
 
 	timer.Simple(2.2, function()
-		if IsValid(owner) and owner:GetActiveWeapon() == NULL then
+		if IsValid(owner) and #owner:GetWeapons() > 0 and owner:GetActiveWeapon() == NULL then
 			owner:SelectWeapon( owner:GetWeapons()[math.random(#owner:GetWeapons())]:GetClass() )
 		end
 		dissolver:Remove()

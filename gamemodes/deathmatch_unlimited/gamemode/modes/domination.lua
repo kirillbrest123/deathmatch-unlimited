@@ -23,7 +23,7 @@ MODE.Hooks = {}
 
 MODE.Hooks.InitPostEntity = function()
     if CLIENT then return end
-    DMU.Mode.ScoreLimit = #ents.FindByClass("*dmu_objective_zone") * 200
+    DMU.Mode.ScoreLimit = #ents.FindByClass("*dmu_hold_zone") * 200
 end
 
 MODE.Hooks.PlayerLoadout = function(ply)
