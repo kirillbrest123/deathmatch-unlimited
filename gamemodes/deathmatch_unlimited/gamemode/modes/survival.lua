@@ -54,7 +54,9 @@ MODE.Hooks.PlayerDeath = function(victim, inflictor, attacker)
     end
 
     if players_alive <= 1 then
-        survivor:AddScore(1)
+        if survivor then
+            survivor:AddScore(1)
+        end
         DMU.EndRound(survivor)
     end
 end

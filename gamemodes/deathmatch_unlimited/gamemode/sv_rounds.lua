@@ -1,5 +1,6 @@
 util.AddNetworkString("DMU_SyncRound")
 util.AddNetworkString("DMU_SyncTimeLeft")
+util.AddNetworkString("DMU_RoundVictoryAnnouncement")
 
 function DMU.StartNextRound()
     DMU.Round = DMU.Round + 1
@@ -53,47 +54,21 @@ function DMU.StartNextRound()
     end)
 end
 
-function DMU.EndRound(victor)
+function DMU.EndRound(winner)
 
     DMU.RoundEnded = true
 
-    if IsEntity(victor) then -- we always assume that victor is a player
-        for _, ply in ipairs(player.GetAll()) do
-            if ply == victor then
-                net.Start("DMU_Announcement")
-                    net.WriteString("Round Won")
-                    net.WriteUInt(10, 8)
-                    net.WriteString("music/hl2_song15.mp3")
-                net.Send(ply)
-            else
-                net.Start("DMU_Announcement")
-                    net.WriteString("Round Lost")
-                    net.WriteUInt(10, 8)
-                    net.WriteString("music/hl2_song23_suitsong3.mp3")
-                net.Send(ply)
-            end
-        end
-    elseif victor then     
-        for _, ply in ipairs(player.GetAll()) do
-            if ply:Team() == victor then
-                net.Start("DMU_Announcement")
-                    net.WriteString("Round Won")
-                    net.WriteUInt(10, 8)
-                    net.WriteString("music/hl2_song15.mp3")
-                net.Send(ply)
-            else
-                net.Start("DMU_Announcement")
-                    net.WriteString("Round Lost")
-                    net.WriteUInt(10, 8)
-                    net.WriteString("music/hl2_song23_suitsong3.mp3")
-                net.Send(ply)
-            end
-        end
+    if !winner then
+        net.Start("DMU_RoundVictoryAnnouncement")
+            net.WriteUInt(0, 13)
+        net.Broadcast()
     else
-        net.Start("DMU_Announcement")
-            net.WriteString("Round End")
-            net.WriteUInt(10, 8)
-            net.WriteString("music/hl2_song8.mp3")
+        if isentity(winner) then
+            winner = winner:EntIndex()
+        end
+
+        net.Start("DMU_RoundVictoryAnnouncement")
+            net.WriteUInt(winner + 1, 13)
         net.Broadcast()
     end
 

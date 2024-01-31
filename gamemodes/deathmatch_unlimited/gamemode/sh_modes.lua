@@ -39,11 +39,11 @@ local function load_mode(name)
 
     DMU.Weapons = {}
 
-    DMU.Weapons.starter = string.Split(GetConVar("dmu_weapons_starter"):GetString(), ",")
-    DMU.Weapons.common = string.Split(GetConVar("dmu_weapons_common"):GetString(), ",")
-    DMU.Weapons.uncommon = string.Split(GetConVar("dmu_weapons_uncommon"):GetString(), ",")
-    DMU.Weapons.rare = string.Split(GetConVar("dmu_weapons_rare"):GetString(), ",")
-    DMU.Weapons.very_rare = string.Split(GetConVar("dmu_weapons_very_rare"):GetString(), ",")
+    DMU.Weapons.starter = string.Split(GetConVar("dmu_server_weapons_starter"):GetString(), ",")
+    DMU.Weapons.common = string.Split(GetConVar("dmu_server_weapons_common"):GetString(), ",")
+    DMU.Weapons.uncommon = string.Split(GetConVar("dmu_server_weapons_uncommon"):GetString(), ",")
+    DMU.Weapons.rare = string.Split(GetConVar("dmu_server_weapons_rare"):GetString(), ",")
+    DMU.Weapons.very_rare = string.Split(GetConVar("dmu_server_weapons_very_rare"):GetString(), ",")
 
     if DMU.Mode.Weapons then
         for rarity, sweps in pairs(DMU.Mode.Weapons) do
@@ -85,4 +85,4 @@ local function load_mode(name)
 end
 
 load_modes()
-load_mode( string.lower( GetConVar("dmu_mode"):GetString() ) ) -- thank GOD these are networked automatically
+load_mode( string.lower( GetConVar("dmu_server_mode"):GetString() ) ) -- thank GOD these are networked automatically

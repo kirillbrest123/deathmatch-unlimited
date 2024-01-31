@@ -450,7 +450,3 @@ end
 -----------------------------------------------------------]]
 function GM:HUDDrawScoreBoard()
 end
-
-concommand.Add("dmu_remove_scoreboard", function()
-	g_Scoreboard:Remove()
-end)

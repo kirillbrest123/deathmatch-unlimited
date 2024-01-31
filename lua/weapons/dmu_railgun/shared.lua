@@ -16,7 +16,6 @@ SWEP.ViewModel = "models/weapons/c_shotgun.mdl"
 SWEP.WorldModel = "models/weapons/w_shotgun.mdl"
 SWEP.ShowViewModel = true
 SWEP.ShowWorldModel = true
-SWEP.ViewModelBoneMods = {}
 
 SWEP.VElements = {
 	["rail1+"] = { type = "Model", model = "models/props_junk/iBeam01a_cluster01.mdl", bone = "ValveBiped.Gun", rel = "", pos = Vector(0, 1.574, 21.263), angle = Angle(90, 0, 0), size = Vector(0.217, 0.351, 0.352), color = Color(255, 255, 255, 255), surpresslightning = false, material = "phoenix_storms/metalfloor_2-3", skin = 0, bodygroup = {} },

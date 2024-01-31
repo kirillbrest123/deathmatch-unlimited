@@ -55,7 +55,7 @@ function SWEP:PrimaryAttack()
 	bullet.Spread	= 0
 	bullet.Tracer	= 1
 	bullet.Force	= 1	
-	bullet.Damage	= 65
+	bullet.Damage	= 75
 	bullet.AmmoType = self.Primary.Ammo
 	bullet.TracerName = "snipertracer"
 

@@ -23,7 +23,7 @@ function ENT:KeyValue(key, value)
     end
 end
 
-local respawn_time_convar = GetConVar("dmu_weapon_respawn_time")
+local respawn_time_convar = GetConVar("dmu_server_weapon_respawn_time")
 
 function ENT:Initialize()
 
@@ -56,7 +56,7 @@ function ENT:Initialize()
     end
 end
 
-local sandbox = GetConVar("dmu_sandbox")
+local sandbox = GetConVar("dmu_server_sandbox")
 
 function ENT:UpdateTransmitState()
     if sandbox:GetBool() then return TRANSMIT_ALWAYS end -- uhhh so when an entity leaves PVS (i.e stop getting networked) all clientside models get unparented

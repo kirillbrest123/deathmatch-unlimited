@@ -44,7 +44,7 @@ local function start_map_votes()
         end
     end
 
-    for i = 1, GetConVar("dmu_num_of_map_choices"):GetInt() do
+    for i = 1, GetConVar("dmu_server_num_of_map_choices"):GetInt() do
         vote_options[i] = {
             mode = DMU.PlayLists[chosen_playlist]["modes"][math.random(1, #DMU.PlayLists[chosen_playlist]["modes"])],
             map = maps[math.random(#maps)]
@@ -58,22 +58,22 @@ local function start_map_votes()
     net.Broadcast()
 
     timer.Simple(15, function()
-        local winner = table.GetWinningKey(votes) or GetConVar("dmu_num_of_map_choices"):GetInt() + 1
+        local winner = table.GetWinningKey(votes) or GetConVar("dmu_server_num_of_map_choices"):GetInt() + 1
 
         net.Start("DMU_EndVote")
             net.WriteUInt(winner, 4)
         net.Broadcast()
 
-        if winner == GetConVar("dmu_num_of_map_choices"):GetInt() + 1 then
+        if winner == GetConVar("dmu_server_num_of_map_choices"):GetInt() + 1 then
             timer.Simple(5, function()
-                GetConVar("dmu_mode"):SetString(DMU.PlayLists[chosen_playlist]["modes"][math.random(1, #DMU.PlayLists[chosen_playlist]["modes"])])
+                GetConVar("dmu_server_mode"):SetString(DMU.PlayLists[chosen_playlist]["modes"][math.random(1, #DMU.PlayLists[chosen_playlist]["modes"])])
                 RunConsoleCommand("changelevel", maps[math.random(#maps)])
             end)
             return
         end
 
         timer.Simple(5, function()
-            GetConVar("dmu_mode"):SetString(vote_options[winner]["mode"])
+            GetConVar("dmu_server_mode"):SetString(vote_options[winner]["mode"])
             RunConsoleCommand("changelevel", vote_options[winner]["map"])
         end)
     end)

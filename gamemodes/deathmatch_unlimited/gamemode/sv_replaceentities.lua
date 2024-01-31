@@ -35,8 +35,8 @@ local ents_to_replace_very_rare = {
 }
 
 function DMU.ReplaceMapEntities()
-    local replace_weapons = GetConVar("dmu_replace_weapons"):GetBool()
-    local replace_items = GetConVar("dmu_replace_items"):GetBool()
+    local replace_weapons = GetConVar("dmu_server_replace_weapons"):GetBool()
+    local replace_items = GetConVar("dmu_server_replace_items"):GetBool()
 
     for _, ent in ipairs(ents.GetAll()) do
 

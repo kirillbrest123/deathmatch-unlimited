@@ -17,7 +17,7 @@ function GM:ShouldCollide(ent1, ent2)
 end
 
 local function check_allow_feature()
-    if GetConVar("dmu_sandbox"):GetBool() then
+    if GetConVar("dmu_server_sandbox"):GetBool() then
         return true
     else
         return false
@@ -26,7 +26,7 @@ end
 
 hook.Add("SpawnMenuOpen", "dmu_SpawnMenu", check_allow_feature)
 
-local context_menu_disabled = CreateConVar( "dmu_disable_context_menu", "0", FCVAR_ARCHIVE + FCVAR_REPLICATED, "Prevents players from opening the context menu. Note that even with context menu enabled players won't be able to use properties without sandbox mode enabled.")
+local context_menu_disabled = CreateConVar( "dmu_server_disable_context_menu", "0", FCVAR_ARCHIVE + FCVAR_REPLICATED, "Prevents players from opening the context menu. Note that even with context menu enabled players won't be able to use properties without sandbox mode enabled.")
 
 function GM:ContextMenuOpen() return !context_menu_disabled:GetBool() end 
 
@@ -54,13 +54,13 @@ function GM:PlayerSpawnEffect(ply,model) return check_allow_feature() end
 
 function GM:PlayerGiveSWEP(ply,weapon,swep) return check_allow_feature() end
 
-CreateConVar( "dmu_weapons_starter", "dmu_pistol,dmu_carbine", FCVAR_ARCHIVE + FCVAR_REPLICATED, "Default starter weapons, separated by commas. Can be overriden by game mode.")
-CreateConVar( "dmu_weapons_common", "dmu_pistol,dmu_carbine", FCVAR_ARCHIVE + FCVAR_REPLICATED, "Default common weapons, separated by commas. Can be overriden by game mode.")
-CreateConVar( "dmu_weapons_uncommon", "dmu_assault_rifle,dmu_battle_rifle", FCVAR_ARCHIVE + FCVAR_REPLICATED, "Default uncommon weapons, separated by commas. Can be overriden by game mode.")
-CreateConVar( "dmu_weapons_rare", "dmu_smg,dmu_sniper_rifle,dmu_plasma_rifle", FCVAR_ARCHIVE + FCVAR_REPLICATED, "Rare weapons, separated by commas. Can be overriden by game mode.")
-CreateConVar( "dmu_weapons_very_rare", "dmu_railgun,dmu_rocket_launcher,dmu_shotgun,dmu_bfb", FCVAR_ARCHIVE + FCVAR_REPLICATED, "Very rare weapons, separated by commas. Can be overriden by game mode.")
+CreateConVar( "dmu_server_weapons_starter", "dmu_pistol,dmu_carbine", FCVAR_ARCHIVE + FCVAR_REPLICATED, "Default starter weapons, separated by commas. Can be overriden by game mode.")
+CreateConVar( "dmu_server_weapons_common", "dmu_pistol,dmu_carbine", FCVAR_ARCHIVE + FCVAR_REPLICATED, "Default common weapons, separated by commas. Can be overriden by game mode.")
+CreateConVar( "dmu_server_weapons_uncommon", "dmu_assault_rifle,dmu_battle_rifle", FCVAR_ARCHIVE + FCVAR_REPLICATED, "Default uncommon weapons, separated by commas. Can be overriden by game mode.")
+CreateConVar( "dmu_server_weapons_rare", "dmu_smg,dmu_sniper_rifle,dmu_plasma_rifle", FCVAR_ARCHIVE + FCVAR_REPLICATED, "Rare weapons, separated by commas. Can be overriden by game mode.")
+CreateConVar( "dmu_server_weapons_very_rare", "dmu_railgun,dmu_rocket_launcher,dmu_shotgun,dmu_bfb", FCVAR_ARCHIVE + FCVAR_REPLICATED, "Very rare weapons, separated by commas. Can be overriden by game mode.")
 
-CreateConVar( "dmu_weapon_respawn_time", "30", FCVAR_ARCHIVE + FCVAR_REPLICATED, "Default weapons respawn time.")
-CreateConVar( "dmu_pickup_respawn_time", "15", FCVAR_ARCHIVE + FCVAR_REPLICATED, "Default health/armor pick-ups respawn time.")
+CreateConVar( "dmu_server_weapon_respawn_time", "30", FCVAR_ARCHIVE + FCVAR_REPLICATED, "Default weapons respawn time.")
+CreateConVar( "dmu_server_pickup_respawn_time", "15", FCVAR_ARCHIVE + FCVAR_REPLICATED, "Default health/armor pick-ups respawn time.")
 
-DMU.DefaultScoreLimit = CreateConVar( "dmu_score_limit", "60", FCVAR_ARCHIVE + FCVAR_REPLICATED, "Default score limit. Can be overriden by game mode."):GetInt()
+DMU.DefaultScoreLimit = CreateConVar( "dmu_server_score_limit", "60", FCVAR_ARCHIVE + FCVAR_REPLICATED, "Default score limit. Can be overriden by game mode."):GetInt()

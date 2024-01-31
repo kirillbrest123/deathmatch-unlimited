@@ -62,7 +62,7 @@ local glow2 = Color(255,0,0)
 
 function SWEP:Think()
 	if !self:GetOverheated() then
-		self:SetOverheat(math.max(0, self:GetOverheat() - 40 * FrameTime()))
+		self:SetOverheat(math.max(0, self:GetOverheat() - 60 * FrameTime()))
 		self.VElements.glow.color = glow1
 	else
 		self.VElements.glow.color = glow2
@@ -86,11 +86,11 @@ function SWEP:PrimaryAttack()
 
 	if ( !owner:IsNPC() ) then owner:ViewPunch( Angle( -0.2, util.SharedRandom(self:GetClass(),-0.2,0.2), 0 ) ) end
 
-	self:SetOverheat(math.min(100, self:GetOverheat() + 7))
+	self:SetOverheat(math.min(100, self:GetOverheat() + 12))
 	if self:GetOverheat() >= 100 then
 		self:SetOverheated(true)
 		self:EmitSound("buttons/blip2.wav")
-		timer.Simple(4, function()
+		timer.Simple(3, function()
 			if !IsValid(self) then return end
 			self:SetOverheated(false)
 			self:SetOverheat(0)

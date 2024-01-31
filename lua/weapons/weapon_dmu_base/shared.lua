@@ -88,6 +88,18 @@ function SWEP:Holster()
 	return true
 end
 
+function SWEP:CDeploy()
+
+end
+
+function SWEP:Deploy()
+	self:CDeploy()
+
+	if self.Scoped then -- why is holster() not enough
+		self:SetADS( false )
+	end
+end
+
 function SWEP:COnRemove()
 
 end

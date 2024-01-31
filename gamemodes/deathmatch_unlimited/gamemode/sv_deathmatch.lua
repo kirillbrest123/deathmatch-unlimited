@@ -3,7 +3,7 @@ gameevent.Listen( "player_activate" )
 DMU.BotObjectives = {}
 DMU.BotTeamObjectives = {}
 
-CreateConVar( "dmu_num_of_map_choices", "3", FCVAR_ARCHIVE + FCVAR_NEVER_AS_STRING, "Number of choices during the map phase of voting.")
+CreateConVar( "dmu_server_num_of_map_choices", "3", FCVAR_ARCHIVE + FCVAR_NEVER_AS_STRING, "Number of choices during the map phase of voting.")
 
 function DMU.AutoAssign(ply)
     local best_team = team.BestAutoJoinTeam()
@@ -13,63 +13,44 @@ function DMU.AutoAssign(ply)
     end
 end
 
-function DMU.EndGame(victor)
+util.AddNetworkString("DMU_MatchVictoryAnnouncement")
+
+function DMU.EndGame(winner)
 
     DMU.GameEnded = true
 
-    -- TODO: clean-up this later
-    if !victor then -- try to find a victor
+    if !winner then -- try to find a winner
         if DMU.Mode.FFA then
             local players = player.GetAll()
-            local victor = players[1]
+            winner = players[1]
             for k,v in ipairs(players) do
-                if v:GetScore() > victor:GetScore() then
-                    victor = v
-                end
-            end
-        
-            for _, ply in ipairs(players) do
-                if ply == victor then
-                    DMU.SendAnnouncement("Victory", 10, DMU.Mode.RoundBased and "" or "music/hl2_song15.mp3", ply)
-                else
-                    DMU.SendAnnouncement("Defeat", 10, DMU.Mode.RoundBased and "" or "music/hl2_song23_suitsong3.mp3", ply)
+                if v:GetScore() > winner:GetScore() then
+                    winner = v
                 end
             end
         else
             local teams = DMU.Mode.Teams
-            local victor = 1
+            winner = 1
             
             for k,v in ipairs(teams) do
-                if team.GetScore(k) > team.GetScore(victor) then
-                    victor = k
+                if team.GetScore(k) > team.GetScore(winner) then
+                    winner = k
                 end
-            end
-
-            for _, ply in ipairs(player.GetAll()) do
-                if ply:Team() == victor then
-                    DMU.SendAnnouncement("Victory", 10, DMU.Mode.RoundBased and "" or "music/hl2_song15.mp3", ply)
-                else
-                    DMU.SendAnnouncement("Defeat", 10, DMU.Mode.RoundBased and "" or "music/hl2_song23_suitsong3.mp3", ply)
-                end
-            end
-        end
-    elseif IsEntity(victor) and victor:IsPlayer() then -- victor is a player
-        for _, ply in ipairs(player.GetAll()) do
-            if ply == victor then
-                DMU.SendAnnouncement("Victory", 10, DMU.Mode.RoundBased and "" or "music/hl2_song15.mp3", ply)
-            else
-                DMU.SendAnnouncement("Defeat", 10, DMU.Mode.RoundBased and "" or "music/hl2_song23_suitsong3.mp3", ply)
-            end
-        end
-    else -- victor is a team
-        for _, ply in ipairs(player.GetAll()) do
-            if ply:Team() == victor then
-                DMU.SendAnnouncement("Victory", 10, DMU.Mode.RoundBased and "" or "music/hl2_song15.mp3", ply)
-            else
-                DMU.SendAnnouncement("Defeat", 10, DMU.Mode.RoundBased and "" or "music/hl2_song23_suitsong3.mp3", ply)
             end
         end
     end
+
+    print(winner)
+
+    if isentity(winner) then
+        winner = winner:EntIndex()
+    end
+
+    print(winner)
+
+    net.Start("DMU_MatchVictoryAnnouncement")
+        net.WriteUInt(winner, 13)
+    net.Broadcast()
 
     timer.Simple(10, function()
         DMU.StartVotes()
@@ -175,11 +156,11 @@ net.Receive("DMU_SaveConfig", function(len, ply)
 
     DMU.SendNotification("Config saved!", ply)
 
-    GetConVar("dmu_weapons_starter"):SetString( net.ReadString() )
-    GetConVar("dmu_weapons_common"):SetString( net.ReadString() )
-    GetConVar("dmu_weapons_uncommon"):SetString( net.ReadString() )
-    GetConVar("dmu_weapons_rare"):SetString( net.ReadString() )
-    GetConVar("dmu_weapons_very_rare"):SetString( net.ReadString() )
+    GetConVar("dmu_server_weapons_starter"):SetString( net.ReadString() )
+    GetConVar("dmu_server_weapons_common"):SetString( net.ReadString() )
+    GetConVar("dmu_server_weapons_uncommon"):SetString( net.ReadString() )
+    GetConVar("dmu_server_weapons_rare"):SetString( net.ReadString() )
+    GetConVar("dmu_server_weapons_very_rare"):SetString( net.ReadString() )
 end)
 
 -- Team stuff

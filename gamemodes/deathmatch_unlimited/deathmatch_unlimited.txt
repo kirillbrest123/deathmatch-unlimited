@@ -10,7 +10,7 @@
 	{
 		1
 		{
-			"name"		"dmu_mode"
+			"name"		"dmu_server_mode"
 			"text"		"Game Mode. If you're unsure, enter TDM or FFA."
 			"help"		"No effect after server start-up."
 			"type"		"Text"
@@ -20,17 +20,17 @@
 
 		4
 		{
-			"name"		"dmu_sandbox"
+			"name"		"dmu_server_sandbox"
 			"text"		"Sandbox Mode"
 			"help"		""
 			"type"		"CheckBox"
-			"default"	"1"
+			"default"	"0"
 			"singleplayer" "1"
 		}
 
 		2
 		{
-			"name"		"dmu_replace_weapons"
+			"name"		"dmu_server_replace_weapons"
 			"text"		"Replace weapons"
 			"help"		""
 			"type"		"CheckBox"
@@ -40,7 +40,7 @@
 
 		3
    		{
-			"name"		"dmu_replace_items"
+			"name"		"dmu_server_replace_items"
 			"text"		"Replace items"
 			"help"		""
 			"type"		"CheckBox"

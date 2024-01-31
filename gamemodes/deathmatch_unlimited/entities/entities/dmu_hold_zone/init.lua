@@ -42,7 +42,7 @@ function ENT:Initialize()
     self:SetCollisionGroup(COLLISION_GROUP_DEBRIS)
     self:GetPhysicsObject():EnableMotion(false)
 
-    if !GetConVar("dmu_sandbox"):GetBool() then -- that's the best solution i could think off. Another option would be using like a proxy entity or smth but i'd rather not
+    if !GetConVar("dmu_server_sandbox"):GetBool() then -- that's the best solution i could think off. Another option would be using like a proxy entity or smth but i'd rather not
         self:SetSolid(SOLID_NONE)
         self:SetMoveType(MOVETYPE_NONE)
     end

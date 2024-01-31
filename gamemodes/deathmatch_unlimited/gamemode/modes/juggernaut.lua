@@ -16,15 +16,15 @@ MODE.Teams = {
     }
 }
 
-MODE.Instructions = "You get points for being the Juggernaut.\nFrag the current Juggernaut to become the new Juggernaut.\nJuggernaut moves faster and has more health."
+MODE.Instructions = "You get points for being the Juggernaut.\nFrag the current Juggernaut to become the new Juggernaut.\nJuggernaut has more health, moves faster and heals on kills."
 
 local function set_juggernaut(ply)
     local juggernaut = GetGlobalEntity("DMU_CurrentJuggernaut")
 
     if IsValid(juggernaut) then
         juggernaut:SetMaxHealth(100)
-        juggernaut:SetWalkSpeed(200)
-        juggernaut:SetRunSpeed(500)
+        juggernaut:SetWalkSpeed( ply:GetWalkSpeed() / 1.25 )
+        juggernaut:SetRunSpeed( ply:GetRunSpeed() / 1.25 )
         juggernaut:SetTeam(1)
     end 
 
@@ -32,9 +32,11 @@ local function set_juggernaut(ply)
 
     DMU.BotTeamObjectives[1] = {GetGlobalEntity("DMU_CurrentJuggernaut")}
 
-    ply:SetHealth(250)
-    ply:SetWalkSpeed(300)
-    ply:SetRunSpeed(500)
+    local new_health = ply:GetMaxHealth() + 20 * player.GetCount()
+    ply:SetMaxHealth(new_health)
+    ply:SetHealth(new_health)
+    ply:SetWalkSpeed( ply:GetWalkSpeed() * 1.25 )
+    ply:SetRunSpeed( ply:GetRunSpeed() * 1.25 )
     ply:SetTeam(2)
 
     ply:SetPlayerColor( DMU.Mode.Teams[2].color:ToVector() )
@@ -68,7 +70,12 @@ end
 MODE.Hooks.PlayerDeath = function(victim, inflictor, attacker)
     if CLIENT then return end
     if DMU.GameEnded then return end
-    if victim != GetGlobalEntity("DMU_CurrentJuggernaut") then return end
+    if victim != GetGlobalEntity("DMU_CurrentJuggernaut") then
+        if attacker == GetGlobalEntity("DMU_CurrentJuggernaut") then
+            attacker:SetHealth( math.min( attacker:GetMaxHealth(), attacker:Health() + 15 ) )
+        end
+        return
+    end
 
     if !attacker:IsPlayer() or attacker == victim then
         local players = player.GetAll()

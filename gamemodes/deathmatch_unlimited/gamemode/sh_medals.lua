@@ -124,13 +124,13 @@ if SERVER then
 end
 
 if CLIENT then
-    local show_medals = CreateClientConVar("dmu_medals_enabled", "1", true, false, "", 0, 1)
-    local medal_alpha = CreateClientConVar("dmu_medals_alpha", "225", true, false, "", 0, 255)
-    local medal_scale = CreateClientConVar("dmu_medals_scale", "1", true, false, "")
+    local show_medals = CreateClientConVar("dmu_client_medals_enabled", "1", true, false, "", 0, 1)
+    local medal_alpha = CreateClientConVar("dmu_client_medals_alpha", "225", true, false, "", 0, 255)
+    local medal_scale = CreateClientConVar("dmu_client_medals_scale", "1", true, false, "")
 
     surface.CreateFont( "MedalFont", {font = "Roboto", size = 24 * medal_scale:GetFloat()})
 
-    cvars.AddChangeCallback("dmu_medals_scale", function(convar, old_value, new_value)
+    cvars.AddChangeCallback("dmu_client_medals_scale", function(convar, old_value, new_value)
         surface.CreateFont( "MedalFont", {font = "Roboto", size = 24 * tonumber(new_value)})
     end)
 

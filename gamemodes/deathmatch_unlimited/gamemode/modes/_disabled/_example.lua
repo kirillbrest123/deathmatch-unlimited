@@ -70,7 +70,7 @@ Don't use the same hook twice or it will be overwrited, try to merge instead.
 */
 
 
--- Give weapons defined in dmu_weapons_starter
+-- Give weapons defined in dmu_server_weapons_starter
 MODE.Hooks.PlayerLoadout = function(ply)
     if CLIENT then return end
 

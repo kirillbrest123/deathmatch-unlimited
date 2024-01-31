@@ -1,16 +1,3 @@
-local in_holdzone
-local holdzone_team
-local hold_progress
-local hold_mats = 
-{
-    Material("hold_zone_icons/hold_zone_0_hud.png"),
-    Material("hold_zone_icons/hold_zone_1_hud.png"),
-    Material("hold_zone_icons/hold_zone_2_hud.png"),
-    Material("hold_zone_icons/hold_zone_3_hud.png"),
-    Material("hold_zone_icons/hold_zone_4_hud.png"),
-}
-local hold_identifier
-
 local w = ScrW()
 local h = ScrH()
 local x = w/2 - 170
@@ -155,6 +142,19 @@ end)
 
 -- hill hud
 
+local in_holdzone
+local holdzone_team
+local hold_progress
+local hold_mats = 
+{
+    Material("hold_zone_icons/hold_zone_0_hud.png"),
+    Material("hold_zone_icons/hold_zone_1_hud.png"),
+    Material("hold_zone_icons/hold_zone_2_hud.png"),
+    Material("hold_zone_icons/hold_zone_3_hud.png"),
+    Material("hold_zone_icons/hold_zone_4_hud.png"),
+}
+local hold_identifier
+
 net.Receive("DMU_HoldZoneHUD", function()
     in_holdzone = net.ReadBool()
     holdzone_team = net.ReadInt(12)
@@ -250,4 +250,52 @@ hook.Add("HUDPaint", "DMU_DrawAnnouncements", function ()
     local alpha = 255 * math.min(1, 1 - (announcement_fadein_timer - CurTime()) / 0.2 )
 
     draw.TextShadow({text = announcement_text, font = "AnnouncementFont", pos = {w/2, h/2 - 36}, xalign = TEXT_ALIGN_CENTER, yalign = TEXT_ALIGN_CENTER, color = Color(255,255,255,alpha)}, 2)
+end)
+
+local music_disabled = CreateClientConVar( "dmu_client_disable_victory_music", "0", true, false, "", 0, 1)
+
+net.Receive("DMU_MatchVictoryAnnouncement", function()
+    announcement_time = CurTime() + 10
+    announcement_fadein_timer = CurTime() + 0.2
+    local winner = net.ReadUInt(13)
+
+    if DMU.Mode.FFA and winner == LocalPlayer():EntIndex() or !DMU.Mode.FFA and winner == LocalPlayer():Team() then
+        announcement_text = "Victory"
+        if !(DMU.Mode.RoundBased) and !music_disabled:GetBool() then -- music will be already playing from round victory announcement. Too bad there's no way to stop sounds played with surface.PlaySound()
+            surface.PlaySound("music/hl2_song15.mp3")
+        end
+    else
+        announcement_text = "Defeat"
+        if !(DMU.Mode.RoundBased) and !music_disabled:GetBool() then
+            surface.PlaySound("music/hl2_song23_suitsong3.mp3")
+        end
+    end
+end)
+
+net.Receive("DMU_RoundVictoryAnnouncement", function()
+    announcement_time = CurTime() + 10
+    announcement_fadein_timer = CurTime() + 0.2
+    local winner = net.ReadUInt(13)
+    
+    if winner == 0 then
+        announcement_text = "Round End"
+        if !music_disabled:GetBool() then
+            surface.PlaySound("music/hl2_song8.mp3")
+        end
+        return
+    end
+
+    winner = winner - 1
+
+    if DMU.Mode.FFA and winner == LocalPlayer():EntIndex() or !DMU.Mode.FFA and winner == LocalPlayer():Team() then
+        announcement_text = "Round Won"
+        if !music_disabled:GetBool() then
+            surface.PlaySound("music/hl2_song15.mp3")
+        end
+    else
+        announcement_text = "Round Lost"
+        if !music_disabled:GetBool() then
+            surface.PlaySound("music/hl2_song23_suitsong3.mp3")
+        end
+    end
 end)

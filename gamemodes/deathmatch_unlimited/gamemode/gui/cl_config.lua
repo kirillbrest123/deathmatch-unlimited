@@ -219,11 +219,11 @@ local PANEL = {}
 
 function PANEL:Init()
 
-    local starter = GetConVar("dmu_weapons_starter"):GetString()
-    local common = GetConVar("dmu_weapons_common"):GetString()
-    local uncommon = GetConVar("dmu_weapons_uncommon"):GetString()
-    local rare = GetConVar("dmu_weapons_rare"):GetString()
-    local very_rare = GetConVar("dmu_weapons_very_rare"):GetString()
+    local starter = GetConVar("dmu_server_weapons_starter"):GetString()
+    local common = GetConVar("dmu_server_weapons_common"):GetString()
+    local uncommon = GetConVar("dmu_server_weapons_uncommon"):GetString()
+    local rare = GetConVar("dmu_server_weapons_rare"):GetString()
+    local very_rare = GetConVar("dmu_server_weapons_very_rare"):GetString()
 
     self:DockPadding(16,16,16,16)
 
