@@ -1,5 +1,5 @@
-MODE.Name = "Domination" -- internal name. Used in playlist config. Also used in "Game Mode" field in main menu (though spaces are automatically replaced with underscores)
-MODE.PrintName = "Domination" -- name that's displayed everywhere
+MODE.Name = "example" -- internal name. Used in playlist config. Also used in "Game Mode" field in main menu (though spaces are automatically replaced with underscores). This also means that you shouldn't use spaces here
+MODE.PrintName = "Example" -- name that's displayed everywhere
 
 MODE.FriendlyFire = false -- whether players from the same team should be able to damage each other. This includes TEAM_UNASSIGNED, so it should be true in FFA modes, unless you do team stuff.
 MODE.RespawnTime = 3 -- respawn time in seconds. Negative values will disable automatic respawn, i.e permadeath. You will have to respawn players manually

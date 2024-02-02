@@ -45,8 +45,11 @@ local function start_map_votes()
     end
 
     for i = 1, GetConVar("dmu_server_num_of_map_choices"):GetInt() do
+        local game_mode = DMU.PlayLists[chosen_playlist]["modes"][math.random(1, #DMU.PlayLists[chosen_playlist]["modes"])]
+        game_mode = string.lower(game_mode)
+        game_mode = string.Replace(game_mode, " ", "_")
         vote_options[i] = {
-            mode = DMU.PlayLists[chosen_playlist]["modes"][math.random(1, #DMU.PlayLists[chosen_playlist]["modes"])],
+            mode = game_mode,
             map = maps[math.random(#maps)]
         }
     end
