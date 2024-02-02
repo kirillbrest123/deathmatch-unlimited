@@ -1,10 +1,11 @@
 "deathmatch_unlimited"
 {
-	"base"		"sandbox"
-	"title"		"Deathmatch Unlimited"
-	"maps"		"dmu"
+	"base"			"sandbox"
+	"title"			"Deathmatch Unlimited"
+	"maps"			"dmu"
 	"menusystem"	"1"
-	"category"	"pvp"
+	"category"		"pvp"
+	"workshopid"	"3152378542"
 	
 	"settings"
 	{
