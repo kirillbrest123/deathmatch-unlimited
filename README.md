@@ -1,12 +1,10 @@
 # Deathmatch Unlimited
 ## Workshop Link
-
+https://steamcommunity.com/sharedfiles/filedetails/?id=3152378542
 ## Full Console Command List
-
+https://github.com/kirillbrest123/deathmatch-unlimited/wiki/Full-Console-Commands-List
 ## Creating Custom Game Modes
-
-## Dedicated Server Instructions
-
+https://github.com/kirillbrest123/deathmatch-unlimited/wiki/Custom-Game-Mode-Creation
 ## Licence and Legal Quetions
 
 Protected under CC BY-NC-SA 3.0
