@@ -8,7 +8,7 @@ function ENT:KeyValue(key, value)
     if key == "respawntime" then
         self.RespawnTime = tonumber(value)
     elseif key == "speed" then
-        self.RespawnTime = value
+        self.RespawnTime = tonumber(value)
     end
 end
 

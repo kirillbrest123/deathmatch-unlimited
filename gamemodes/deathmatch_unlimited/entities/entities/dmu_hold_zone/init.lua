@@ -8,15 +8,14 @@ ENT.PlayersInZone = {}
 ENT.Team = -1
 ENT.HoldProgress = 0
 ENT.Disabled = false
-ENT.Identifier = "a"
+ENT.Identifier = 0
 
 util.AddNetworkString("DMU_HoldZoneHUD")
 
 function ENT:KeyValue(key, value)
 	key = string.lower(key)
-    value = string.lower(value)
-    if key == "globalname" and value != "" then
-        self.Identifier = value
+    if key == "target" and value != "" then
+        self.Identifier = tonumber(value) or 0
     end
 end
 
@@ -24,7 +23,9 @@ function ENT:Initialize()
     if !DMU.Mode.HillsEnabled or !DMU.Mode.Teams then self:Remove() return end
     self.Disabled = false
     self.LastThink = CurTime()
-    DMU.Add3D2DEnt(self, "hold_zone_icons/hold_zone_" .. self.Identifier .. ".png")
+    timer.Simple(0.1, function() -- will hopefully make sure that it networks the right thing
+        DMU.Add3D2DEnt(self, "hold_zone_icons/hold_zone_" .. self.Identifier .. ".png")
+    end)
 
     for k, _ in ipairs(DMU.Mode.Teams) do
         table.insert(DMU.BotTeamObjectives[k], self)
@@ -32,7 +33,7 @@ function ENT:Initialize()
 
     -- OH MY FUCKING GOD
     -- even if collision group is set to debris, bullets still collide with an invisible error model, that's why we have to use fence
-    -- but then you still can't +USE while inside it
+    -- but then you can't +USE while inside it
     -- all of the problem are solved if we only set solid to none
     -- BUT then you can't grab/click on it at all, so you can't even make it permament in MMM
     self:SetModel("models/props_c17/fence01a.mdl")
@@ -57,6 +58,9 @@ function ENT:UpdateTransmitState()
 end
 
 function ENT:OnRemove()
+    for k, _ in ipairs(DMU.Mode.Teams) do
+        table.RemoveByValue(DMU.BotTeamObjectives[k], self)
+    end
     DMU.Remove3D2DEnt(self)
 end
 
@@ -132,12 +136,12 @@ function ENT:Think()
             table.insert(DMU.BotTeamObjectives[self.Team], self) -- bots should care when their zone is captured
             self.Team = -1
             self.HoldProgress = 0
-            DMU.Add3D2DPos(self:EntIndex(), self:GetPos(), "hold_zone_icons/hold_zone_" .. self.Identifier .. ".png")
+            DMU.Add3D2DEnt(self, "hold_zone_icons/hold_zone_" .. self.Identifier .. ".png")
         else
             self.Team = biggest_team
             table.RemoveByValue(DMU.BotTeamObjectives[self.Team], self) -- bots shouldn't care about zones they have captured
             self.HoldProgress = 0
-            DMU.Add3D2DPos(self:EntIndex(), self:GetPos(), "hold_zone_icons/hold_zone_" .. self.Identifier .. ".png", team.GetColor(biggest_team))
+            DMU.Add3D2DEnt(self, "hold_zone_icons/hold_zone_" .. self.Identifier .. ".png", team.GetColor(biggest_team))
         end
     end
 

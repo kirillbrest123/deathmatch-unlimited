@@ -86,7 +86,7 @@ function SWEP:PrimaryAttack()
 
 	if ( !owner:IsNPC() ) then owner:ViewPunch( Angle( -0.2, util.SharedRandom(self:GetClass(),-0.2,0.2), 0 ) ) end
 
-	self:SetOverheat(math.min(100, self:GetOverheat() + 12))
+	self:SetOverheat(math.min(100, self:GetOverheat() + 11))
 	if self:GetOverheat() >= 100 then
 		self:SetOverheated(true)
 		self:EmitSound("buttons/blip2.wav")

@@ -14,16 +14,28 @@ function ENT:KeyValue(key, value)
         self.FallbackRarity = string.lower(value)
     elseif key == "respawntime" then
         self.RespawnTime = tonumber(value)
-    elseif key == "globalname" then
-        self.WeaponClassName = value
     elseif key == "target" then
-        self.FallbackRarity = string.lower(value)
+        self.WeaponClassName = string.lower(value)
+        self:SetupWeapon() -- i think mmm remembers datatables and overwrites them after ENT:KeyValue(), so we need to set the weapon instantly 
     elseif key == "speed" then
         self.RespawnTime = tonumber(value)
     end
 end
 
 local respawn_time_convar = GetConVar("dmu_server_weapon_respawn_time")
+
+function ENT:SetupWeapon()
+    if self.WeaponClassName and DMU.weapon_to_rarity[self.WeaponClassName] then
+        self:SetWeapon(self.WeaponClassName)
+    elseif self.FallbackWeapon and DMU.weapon_to_rarity[self.FallbackWeapon] then -- try again
+        self:SetWeapon(self.FallbackWeapon)
+    elseif self.FallbackRarity and DMU.Weapons[self.FallbackRarity] then -- try harder
+        local tbl = DMU.Weapons[self.FallbackRarity]
+        self:SetWeapon(tbl[math.random(#tbl)])
+    else
+        self:SetWeapon("weapon_pistol")
+    end
+end
 
 function ENT:Initialize()
 
@@ -43,17 +55,8 @@ function ENT:Initialize()
 
     self:SetTrigger(true)
     self:UseTriggerBounds(true, 8)
-
-    if self.WeaponClassName and DMU.weapon_to_rarity[self.WeaponClassName] then
-        self:SetWeapon(self.WeaponClassName)
-    elseif self.FallbackWeapon and DMU.weapon_to_rarity[self.FallbackWeapon] then -- try again
-        self:SetWeapon(self.FallbackWeapon)
-    elseif self.FallbackRarity and DMU.Weapons[self.FallbackRarity] then -- try harder
-        local tbl = DMU.Weapons[self.FallbackRarity]
-        self:SetWeapon(tbl[math.random(#tbl)])
-    else
-        self:SetWeapon("weapon_pistol")
-    end
+    
+    self:SetupWeapon()
 end
 
 local sandbox = GetConVar("dmu_server_sandbox")

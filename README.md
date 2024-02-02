@@ -1,4 +1,4 @@
-# Deathmatch: Unlimited
+# Deathmatch Unlimited
 ## Workshop Link
 
 ## Full Console Command List
@@ -9,7 +9,7 @@
 
 ## Licence and Legal Quetions
 
-Protected under BY-NC-SA 3.0
+Protected under CC BY-NC-SA 3.0
 
 1. You are free to modify the code and share them as long as you credit my work and use them for non-commercial purposes.
 2. You should not modify the code in a way that will directly or indirectly, generate revenue without explicit, written permission from me.

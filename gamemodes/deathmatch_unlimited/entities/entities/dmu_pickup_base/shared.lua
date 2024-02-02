@@ -1,7 +1,6 @@
 ENT.Type = "anim"
 ENT.Base = "base_anim"
 
--- i kinda hate data tables
 function ENT:SetupDataTables()
 	self:NetworkVar( "Bool", 0, "Empty" )
 

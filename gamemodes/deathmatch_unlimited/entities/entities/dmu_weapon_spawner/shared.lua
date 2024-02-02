@@ -1,8 +1,8 @@
-ENT.PrintName = "spawn platfrom"
+ENT.PrintName = "weapon spawner"
 
 ENT.Type = "anim"
 ENT.Base = "base_anim"
-ENT.Category = "admin"
+ENT.Category = "Deathmatch Unlimited"
 ENT.Spawnable = true
 ENT.AdminOnly = false
 

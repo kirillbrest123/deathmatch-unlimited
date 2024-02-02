@@ -1,6 +1,6 @@
 DeriveGamemode( "sandbox" )
 
-GM.Name = "Deathmatch: Unlimited"
+GM.Name = "Deathmatch Unlimited"
 GM.Author = ".kkrill"
 GM.Email = "N/A"
 GM.Website = "N/A"

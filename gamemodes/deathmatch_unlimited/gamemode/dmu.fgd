@@ -1,0 +1,46 @@
+@include "base.fgd" 
+
+@PointClass base(Targetname, Angles) studio("models/props_junk/sawblade001a.mdl") = dmu_weapon_spawner :
+	""
+[
+	// Keys
+	weapon(string) : "Weapon" :  : "Weapon that will be spawned if defined in DMU.Weapons (i.e a server or a specific game mode doesn't use it)."
+	fallbackweapon(string) : "Fallback Weapon" :  : "Weapon that will be spawned if main weapon isn't defined in DMU.Weapons."
+	fallbackrarity(string) : "Fallback Rarity" : "Common" : "Rarity of a weapon that will be spawned if both main and fallback weapon aren't defined in DMU.Weapons."
+	respawntime(integer) : "Respawn Time" : 0 : ""
+]
+
+@PointClass base(Targetname, Angles) studio("models/items/healthkit.mdl") = dmu_pickup_medkit :
+	""
+[
+	// Keys
+	respawntime(integer) : "Respawn Time" : 0 : ""
+]
+
+@PointClass base(Targetname, Angles) studio("models/Items/battery.mdl") = dmu_pickup_battery :
+	""
+[
+	// Keys
+	respawntime(integer) : "Respawn Time" : 0 : ""
+]
+
+@PointClass base(Targetname, Angles) studio("models/healthvial.mdl") = dmu_pickup_healthvial :
+	""
+[
+	// Keys
+	respawntime(integer) : "Respawn Time" : 0 : ""
+]
+
+@SolidClass base(Trigger, Targetname) = trigger_dmu_hold_zone :
+	""
+[
+	// Keys
+	identifier(choices)  : "Identifier" : "0" : "Identifier of the hill." =
+	[
+		0 : "A"
+		1 : "B"
+		2 : "C"
+		3 : "E"
+		4 : "D"
+	]
+]

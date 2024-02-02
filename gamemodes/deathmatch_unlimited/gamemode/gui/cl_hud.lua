@@ -66,9 +66,9 @@ local function display_time(time)
 end
 
 local function draw_score_team()
-
+    
     local my_team = LocalPlayer():Team()
-    if my_team == TEAM_UNASSIGNED or my_team == TEAM_SPECTATOR then return end
+    if my_team == TEAM_UNASSIGNED or my_team == TEAM_SPECTATOR or my_team == TEAM_CONNECTING then return end
 
     local best_team = nil
     for k, v in pairs(DMU.Mode.Teams) do

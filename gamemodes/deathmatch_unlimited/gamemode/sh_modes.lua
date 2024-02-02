@@ -85,4 +85,8 @@ local function load_mode(name)
 end
 
 load_modes()
-load_mode( string.lower( GetConVar("dmu_server_mode"):GetString() ) ) -- thank GOD these are networked automatically
+local mode_convar = GetConVar("dmu_server_mode")
+if not IsValid(mode_convar) then
+    mode_convar = CreateConVar( "dmu_server_mode", "tdm", FCVAR_ARCHIVE + FCVAR_REPLICATED, "Game Mode. If you're unsure, enter TDM or FFA.") -- failsafe in case client doesn't receive deathmatch_unlimited.txt
+end
+load_mode( string.lower( GetConVar("dmu_server_mode"):GetString() ) )

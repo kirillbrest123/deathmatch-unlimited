@@ -40,13 +40,11 @@ function DMU.EndGame(winner)
         end
     end
 
-    print(winner)
+    hook.Run("DMU_GameEnded", winner)
 
     if isentity(winner) then
         winner = winner:EntIndex()
     end
-
-    print(winner)
 
     net.Start("DMU_MatchVictoryAnnouncement")
         net.WriteUInt(winner, 13)
@@ -98,7 +96,7 @@ hook.Add("PlayerDeathThink", "dmu_PlayerDeathThink", function (ply)
     return false
 end)
 
-hook.Add("PlayerDeath", "dmu_PlayerDeath", function(ply)
+hook.Add("PlayerDeath", "DMU_PlayerDeath", function(ply)
     ply:StripAmmo()
     if DMU.Mode.RespawnTime < 0 then death_spectate(ply) return end
     timer.Create(ply:Nick() .. "respawn_timer", DMU.Mode.RespawnTime, 1, function()
@@ -107,7 +105,7 @@ hook.Add("PlayerDeath", "dmu_PlayerDeath", function(ply)
     end)
 end)
 
-hook.Add("PlayerSilentDeath", "dmu_PlayerDeath", function(ply)
+hook.Add("PlayerSilentDeath", "DMU_PlayerDeath", function(ply)
     ply:StripAmmo()
     if DMU.Mode.RespawnTime < 0 or (!DMU.Mode.FFA and ply:Team() == TEAM_UNASSIGNED and !ply:IsBot()) then death_spectate(ply) return end
     timer.Create(ply:Nick() .. "respawn_timer", DMU.Mode.RespawnTime, 1, function()

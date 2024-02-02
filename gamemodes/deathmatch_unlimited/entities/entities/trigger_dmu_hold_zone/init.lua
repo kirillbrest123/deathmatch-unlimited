@@ -14,8 +14,6 @@ function ENT:KeyValue(key, value)
 	key = string.lower(key)
     value = string.lower(value)
 	if key == "identifier" then
-        self.Identifier = value
-    elseif key == "target" and value != "" then
         self.Identifier = tonumber(value)
     end
 end

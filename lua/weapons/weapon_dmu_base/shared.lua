@@ -98,6 +98,8 @@ function SWEP:Deploy()
 	if self.Scoped then -- why is holster() not enough
 		self:SetADS( false )
 	end
+
+	return true
 end
 
 function SWEP:COnRemove()
@@ -230,7 +232,9 @@ if CLIENT then
 	SWEP.vRenderOrder = nil
 	function SWEP:ViewModelDrawn()
 		
-		local vm = self:GetOwner():GetViewModel()
+		local owner = self:GetOwner()
+		if !IsValid(owner) then return end
+		local vm = owner:GetViewModel()
 		if !IsValid(vm) then return end
 		
 		if (!self.VElements) then return end

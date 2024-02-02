@@ -1,7 +1,7 @@
 "deathmatch_unlimited"
 {
 	"base"		"sandbox"
-	"title"		"Deathmatch: Unlimited"
+	"title"		"Deathmatch Unlimited"
 	"maps"		"dmu"
 	"menusystem"	"1"
 	"category"	"pvp"

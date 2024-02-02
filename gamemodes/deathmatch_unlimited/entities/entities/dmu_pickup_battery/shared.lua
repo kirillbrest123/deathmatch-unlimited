@@ -3,7 +3,7 @@ AddCSLuaFile()
 ENT.PrintName = "battery pickup"
 
 ENT.Base = "dmu_pickup_base"
-ENT.Category = "admin"
+ENT.Category = "Deathmatch Unlimited"
 ENT.Spawnable = true
 ENT.AdminOnly = false
 
