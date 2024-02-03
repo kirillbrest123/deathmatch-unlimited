@@ -84,14 +84,16 @@ function DMU.EndRound(winner)
 end
 
 hook.Add("player_activate", "DMU_InitialRoundSync", function(ply)
-    if DMU.Round then
-        net.Start("DMU_SyncRound")
-            net.WriteUInt(DMU.Round,8)
-        net.Send(ply)
-    end
-    if DMU.Mode.TimeLimit then
-        net.Start("DMU_SyncTimeLeft")
-            net.WriteUInt(DMU.CurTimeLimit, 32)
-        net.Send(ply)
-    end
+    timer.Simple(1, function()
+        if DMU.Round then
+            net.Start("DMU_SyncRound")
+                net.WriteUInt(DMU.Round,8)
+            net.Send(ply)
+        end
+        if DMU.Mode.TimeLimit then
+            net.Start("DMU_SyncTimeLeft")
+                net.WriteUInt(DMU.CurTimeLimit, 32)
+            net.Send(ply)
+        end
+    end)
 end)
