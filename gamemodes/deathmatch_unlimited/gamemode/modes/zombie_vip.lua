@@ -99,7 +99,7 @@ MODE.Hooks.PlayerDeath = function(victim, inflictor, attacker)
         attacker:AddScore(1)
     end
 
-    if team.GetScore(att_team) >= DMU.DefaultScoreLimit:GetInt()/2 then
+    if team.GetScore(att_team) >= DMU.DefaultScoreLimit/2 then
         DMU.EndGame(att_team)
     end
 end

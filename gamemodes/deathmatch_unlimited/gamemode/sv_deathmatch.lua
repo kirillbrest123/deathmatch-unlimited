@@ -99,7 +99,7 @@ end)
 hook.Add("PlayerDeath", "DMU_PlayerDeath", function(ply)
     ply:StripAmmo()
     if DMU.Mode.RespawnTime < 0 then death_spectate(ply) return end
-    timer.Create(ply:Nick() .. "respawn_timer", DMU.Mode.RespawnTime, 1, function()
+    timer.Create(ply:SteamID() .. "respawn_timer", DMU.Mode.RespawnTime, 1, function()
         if !IsValid(ply) then return end
         ply:Spawn()
     end)
@@ -108,7 +108,7 @@ end)
 hook.Add("PlayerSilentDeath", "DMU_PlayerDeath", function(ply)
     ply:StripAmmo()
     if DMU.Mode.RespawnTime < 0 or (!DMU.Mode.FFA and ply:Team() == TEAM_UNASSIGNED and !ply:IsBot()) then death_spectate(ply) return end
-    timer.Create(ply:Nick() .. "respawn_timer", DMU.Mode.RespawnTime, 1, function()
+    timer.Create(ply:SteamID() .. "respawn_timer", DMU.Mode.RespawnTime, 1, function()
         if !IsValid(ply) then return end
         ply:Spawn()
     end)
