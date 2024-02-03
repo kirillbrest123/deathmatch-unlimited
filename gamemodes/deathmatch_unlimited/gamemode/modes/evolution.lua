@@ -84,7 +84,7 @@ end
 MODE.Hooks.PlayerInitialSpawn = function(ply)
     if DMU.RoundEnded or DMU.GameEnded then return end
     if #player.GetAll() <= 2 then return end
-    if dead_players[ply] then
+    if dead_players[ply:SteamID64()] then
         timer.Simple(0, function()
             ply:KillSilent()
         end)
@@ -99,7 +99,7 @@ MODE.Hooks.PlayerDeath = function(victim, inflictor, attacker)
     if CLIENT then return end
     if DMU.GameEnded or DMU.RoundEnded then return end
 
-    dead_players[victim] = true
+    dead_players[victim:SteamID64()] = true
 
     if victim == attacker then
         victim:AddScore(-2)

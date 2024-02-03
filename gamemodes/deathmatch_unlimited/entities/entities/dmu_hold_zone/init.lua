@@ -58,6 +58,7 @@ function ENT:UpdateTransmitState()
 end
 
 function ENT:OnRemove()
+    if (!DMU.Mode.Teams) then return end
     for k, _ in ipairs(DMU.Mode.Teams) do
         table.RemoveByValue(DMU.BotTeamObjectives[k], self)
     end
