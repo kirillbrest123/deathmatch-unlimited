@@ -146,7 +146,7 @@ function ENT:OnRemove()
 end
 
 function ENT:WeaponChanged(name, old, new_weapon)
-	if new == "" then return end -- I HAVE NO IDEA WHY, BUT WHEN PLAYING WITH NET_FAKELAG 100 ENT:INITIALIZE() GETS CALLED WHENEVER IT ENTERS PVS (?) AND SELF:GETWEAPONTABLE() RETURNS ""
+	if new_weapon == "" then return end -- I HAVE NO IDEA WHY, BUT WHEN PLAYING WITH NET_FAKELAG 100 ENT:INITIALIZE() GETS CALLED WHENEVER IT ENTERS PVS (?) AND SELF:GETWEAPONTABLE() RETURNS ""
 	local weapon = weapons.GetStored(new_weapon)
 	if !weapon then
 		weapon = engine_weapon_tables[new_weapon]

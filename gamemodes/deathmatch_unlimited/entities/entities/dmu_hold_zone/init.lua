@@ -8,14 +8,13 @@ ENT.PlayersInZone = {}
 ENT.Team = -1
 ENT.HoldProgress = 0
 ENT.Disabled = false
-ENT.Identifier = 0
 
 util.AddNetworkString("DMU_HoldZoneHUD")
 
 function ENT:KeyValue(key, value)
 	key = string.lower(key)
     if key == "target" and value != "" then
-        self.Identifier = tonumber(value) or 0
+        self:SetIdentifier( tonumber(value) ) -- backwards compatibility
     end
 end
 
@@ -24,7 +23,7 @@ function ENT:Initialize()
     self.Disabled = false
     self.LastThink = CurTime()
     timer.Simple(0.1, function() -- will hopefully make sure that it networks the right thing
-        DMU.Add3D2DEnt(self, "hold_zone_icons/hold_zone_" .. self.Identifier .. ".png")
+        DMU.Add3D2DEnt(self, "hold_zone_icons/hold_zone_" .. self:GetIdentifier() .. ".png")
     end)
 
     for k, _ in ipairs(DMU.Mode.Teams) do
@@ -88,7 +87,7 @@ end
 function ENT:Enable()
     self.Disabled = false
     self.LastThink = CurTime()
-    DMU.Add3D2DEnt(self, "hold_zone_icons/hold_zone_" .. self.Identifier .. ".png")
+    DMU.Add3D2DEnt(self, "hold_zone_icons/hold_zone_" .. self:GetIdentifier() .. ".png")
 
     for k, _ in ipairs(DMU.Mode.Teams) do
         table.insert(DMU.BotTeamObjectives[k], self)
@@ -137,12 +136,12 @@ function ENT:Think()
             table.insert(DMU.BotTeamObjectives[self.Team], self) -- bots should care when their zone is captured
             self.Team = -1
             self.HoldProgress = 0
-            DMU.Add3D2DEnt(self, "hold_zone_icons/hold_zone_" .. self.Identifier .. ".png")
+            DMU.Add3D2DEnt(self, "hold_zone_icons/hold_zone_" .. self:GetIdentifier() .. ".png")
         else
             self.Team = biggest_team
             table.RemoveByValue(DMU.BotTeamObjectives[self.Team], self) -- bots shouldn't care about zones they have captured
             self.HoldProgress = 0
-            DMU.Add3D2DEnt(self, "hold_zone_icons/hold_zone_" .. self.Identifier .. ".png", team.GetColor(biggest_team))
+            DMU.Add3D2DEnt(self, "hold_zone_icons/hold_zone_" .. self:GetIdentifier() .. ".png", team.GetColor(biggest_team))
         end
     end
 
@@ -151,7 +150,7 @@ function ENT:Think()
             net.WriteBool(true)
             net.WriteInt(self.Team, 12)
             net.WriteInt(self.HoldProgress, 8)
-            net.WriteUInt(self.Identifier, 4)
+            net.WriteUInt(self:GetIdentifier(), 4)
         net.Send(ply)
     end
 end
@@ -163,7 +162,7 @@ function ENT:StartTouch(ent)
         net.WriteBool(true)
         net.WriteInt(self.Team, 12)
         net.WriteInt(self.HoldProgress, 8)
-        net.WriteUInt(self.Identifier, 4)
+        net.WriteUInt(self:GetIdentifier(), 4)
     net.Send(ent)
 end
 

@@ -7,6 +7,8 @@ ENT.Category = "Deathmatch Unlimited"
 ENT.Spawnable = true
 ENT.AdminOnly = false
 
+ENT.Editable = true
+
 ENT.Model = "models/Items/battery.mdl"
 
 if SERVER then

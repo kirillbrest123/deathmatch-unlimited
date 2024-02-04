@@ -1,8 +1,12 @@
 ENT.Type = "anim"
 ENT.Base = "base_anim"
 
+ENT.Editable = true
+
 function ENT:SetupDataTables()
 	self:NetworkVar( "Bool", 0, "Empty" )
+
+    self:NetworkVar( "Int", 0, "RespawnTime", { KeyName = "respawntime", Edit = { type = "Int"} } )
 
     self:NetworkVarNotify("Empty", self.EmptyChanged)
 end

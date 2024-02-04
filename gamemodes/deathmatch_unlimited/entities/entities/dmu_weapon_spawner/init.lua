@@ -2,35 +2,32 @@ AddCSLuaFile("shared.lua")
 AddCSLuaFile("cl_init.lua")
 include("shared.lua")
 
-ENT.RespawnTime = 0
-
 function ENT:KeyValue(key, value)
 	key = string.lower(key)
 	if key == "weapon" then
-        self.WeaponClassName = value
+        self:SetMainWeapon(value)
     elseif key == "fallbackweapon" then
-        self.FallbackWeapon = value
+        self:SetFallbackWeapon(value)
     elseif key == "fallbackrarity" then
-        self.FallbackRarity = string.lower(value)
+        self:SetFallbackRarity( tonumber(value) )
     elseif key == "respawntime" then
-        self.RespawnTime = tonumber(value)
-    elseif key == "target" then
-        self.WeaponClassName = string.lower(value)
-        self:SetupWeapon() -- i think mmm remembers datatables and overwrites them after ENT:KeyValue(), so we need to set the weapon instantly 
-    elseif key == "speed" then
-        self.RespawnTime = tonumber(value)
+        self:SetRespawnTime( tonumber(value) )
     end
 end
 
 local respawn_time_convar = GetConVar("dmu_server_weapon_respawn_time")
 
+local num_to_rarity = {
+    "common", "uncommon", "rare", "very_rare"
+}
+
 function ENT:SetupWeapon()
-    if self.WeaponClassName and DMU.weapon_to_rarity[self.WeaponClassName] then
-        self:SetWeapon(self.WeaponClassName)
-    elseif self.FallbackWeapon and DMU.weapon_to_rarity[self.FallbackWeapon] then -- try again
+    if DMU.weapon_to_rarity[self:GetMainWeapon()] then
+        self:SetWeapon(self:GetMainWeapon())
+    elseif DMU.weapon_to_rarity[self:GetFallbackWeapon()] then -- try again
         self:SetWeapon(self.FallbackWeapon)
-    elseif self.FallbackRarity and DMU.Weapons[self.FallbackRarity] then -- try harder
-        local tbl = DMU.Weapons[self.FallbackRarity]
+    elseif DMU.Weapons[ num_to_rarity[self:GetFallbackRarity()] ] then -- try harder
+        local tbl = DMU.Weapons[ num_to_rarity[self:GetFallbackRarity()] ]
         self:SetWeapon(tbl[math.random(#tbl)])
     else
         self:SetWeapon("weapon_pistol")
@@ -40,10 +37,6 @@ end
 function ENT:Initialize()
 
     if DMU.Mode.WeaponSpawnsDisabled then self:Remove() return end
-
-    if self.RespawnTime == 0 then
-        self.RespawnTime = respawn_time_convar:GetInt()
-    end
 
     self:SetModel("models/props_junk/sawblade001a.mdl")
 
@@ -56,7 +49,9 @@ function ENT:Initialize()
     self:SetTrigger(true)
     self:UseTriggerBounds(true, 8)
     
-    self:SetupWeapon()
+    timer.Simple(0, function()
+        self:SetupWeapon()
+    end)
 end
 
 local sandbox = GetConVar("dmu_server_sandbox")
@@ -80,7 +75,11 @@ function ENT:StartTouch(entity)
         end
 
         self:SetEmpty(true)
-        timer.Create("dmu_weapon_spawner" .. self:GetCreationID(), self.RespawnTime, 1, function()
+        local respawn_time = self:GetRespawnTime()
+        if respawn_time == 0 then
+            respawn_time = respawn_time_convar:GetInt()
+        end
+        timer.Create("dmu_weapon_spawner" .. self:GetCreationID(), respawn_time, 1, function()
             if not self:IsValid() then return end
             self:SetEmpty(false)
         end)

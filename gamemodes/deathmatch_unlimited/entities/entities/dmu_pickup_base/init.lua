@@ -18,10 +18,6 @@ function ENT:Initialize()
 
     if DMU.Mode.HealthPickUpsDisabled then self:Remove() return end
 
-    if self.RespawnTime == 0 then
-        self.RespawnTime = respawn_time_convar:GetInt()
-    end
-
     self:SetModel(self.Model)
 
     self:PhysicsInitBox(Vector(-16, -16, 0), Vector(16, 16, 8))
@@ -47,7 +43,11 @@ function ENT:StartTouch(entity)
         local pickup = entity:Give(self.PickUpClass)
 
         self:SetEmpty(true)
-        timer.Create(self:GetClass() .. self:GetCreationID(), self.RespawnTime, 1, function()
+        local respawn_time = self:GetRespawnTime()
+        if respawn_time == 0 then
+            respawn_time = respawn_time_convar:GetInt()
+        end
+        timer.Create(self:GetClass() .. self:GetCreationID(), respawn_time, 1, function()
             if not self:IsValid() then return end
             self:SetEmpty(false)
         end)

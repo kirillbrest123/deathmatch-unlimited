@@ -6,7 +6,13 @@
 	// Keys
 	weapon(string) : "Weapon" :  : "Weapon that will be spawned if defined in DMU.Weapons (i.e a server or a specific game mode doesn't use it)."
 	fallbackweapon(string) : "Fallback Weapon" :  : "Weapon that will be spawned if main weapon isn't defined in DMU.Weapons."
-	fallbackrarity(string) : "Fallback Rarity" : "Common" : "Rarity of a weapon that will be spawned if both main and fallback weapon aren't defined in DMU.Weapons."
+	fallbackrarity(choices)  : "Fallback Rarity" : "1" : "Rarity of a weapon that will be spawned if both main and fallback weapon aren't defined in DMU.Weapons." =
+	[
+		1 : "Common"
+		2 : "Uncommon"
+		3 : "Rare"
+		4 : "Very Rare"
+	]
 	respawntime(integer) : "Respawn Time" : 0 : ""
 ]
 
