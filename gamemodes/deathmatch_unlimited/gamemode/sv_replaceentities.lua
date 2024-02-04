@@ -56,7 +56,7 @@ function DMU.ReplaceMapEntities()
             new_ent:SetPos(pos)
              
             new_ent:Spawn()
-            new_ent:SetWeapon(DMU.Weapons.common[ math.random(#DMU.Weapons.common) ])
+            new_ent:SetFallbackRarity(1)
             continue
         end
 
@@ -67,7 +67,7 @@ function DMU.ReplaceMapEntities()
             new_ent:SetPos(pos)
              
             new_ent:Spawn()
-            new_ent:SetWeapon(DMU.Weapons.uncommon[ math.random(#DMU.Weapons.uncommon) ])
+            new_ent:SetFallbackRarity(2)
             continue
         end
 
@@ -78,7 +78,7 @@ function DMU.ReplaceMapEntities()
             new_ent:SetPos(pos)
             
             new_ent:Spawn()
-            new_ent:SetWeapon(DMU.Weapons.rare[ math.random(#DMU.Weapons.rare) ])
+            new_ent:SetFallbackRarity(3)
             continue
         end
 
@@ -89,7 +89,7 @@ function DMU.ReplaceMapEntities()
             new_ent:SetPos(pos)
             
             new_ent:Spawn()
-            new_ent:SetWeapon(DMU.Weapons.very_rare[ math.random(#DMU.Weapons.very_rare) ])
+            new_ent:SetFallbackRarity(4)
             continue
         end
 
