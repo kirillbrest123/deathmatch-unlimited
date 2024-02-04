@@ -51,6 +51,12 @@ local function load_mode(name)
         end
     end
 
+    -- string.Split() still returns a table with an empty string if the string is empty
+    -- we only do this for the starter weapons because it's just useless for everything else
+    if DMU.Weapons.starter[1] == "" then
+        DMU.Weapons.starter = {}
+    end
+
     DMU.weapon_to_rarity = {}
 
     for rarity, sweps in pairs(DMU.Weapons) do
