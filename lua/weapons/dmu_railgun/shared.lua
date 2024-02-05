@@ -44,8 +44,6 @@ SWEP.Secondary.Ammo			= ""
 SWEP.Scoped = true
 SWEP.ADS_fov = 40
 
-SWEP.Delay = 0
-
 SWEP.Slot = 4
 SWEP.SlotPos = 3
 
@@ -118,9 +116,11 @@ function SWEP:CThink()
 
 	if self:GetOwner():IsBot() or !(self:GetDelay() < CurTime()) then return end
  
-	if self:GetOwner():KeyPressed( IN_ATTACK ) and self:GetOwner():GetAmmoCount( self.Primary.Ammo ) > 0 and IsFirstTimePredicted() then
+	if self:GetOwner():KeyPressed( IN_ATTACK ) and self:GetOwner():GetAmmoCount( self.Primary.Ammo ) > 0 then
 		self:SetChargeTimer(CurTime() + self.ChargeTime)
-		self.LoopSound = self:StartLoopingSound( "Jeep.GaussCharge" )
+		if IsFirstTimePredicted() then
+			self.LoopSound = self:StartLoopingSound( "Jeep.GaussCharge" )
+		end
 	end
 
 	if !self:GetOwner():KeyDown( IN_ATTACK ) and self:GetOwner():KeyDownLast( IN_ATTACK ) then
