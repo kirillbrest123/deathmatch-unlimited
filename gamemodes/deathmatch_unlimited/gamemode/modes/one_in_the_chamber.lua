@@ -5,12 +5,13 @@ MODE.FFA = true -- mostly used in GUIs
 MODE.RespawnTime = 3
 MODE.TimeLimit = 600
 MODE.WeaponSpawnsDisabled = true
+MODE.DontDropWeapons = true
 
 MODE.Hooks = {}
 
 MODE.Weapons = {
     ["common"] = {
-        "weapon_crowbar"
+        "dmu_fists"
     },
     ["uncommon"] = {
         "dmu_carbine"
@@ -25,7 +26,7 @@ MODE.Hooks.PlayerLoadout = function(ply)
     ply:StripWeapons() -- strip the loadout given by game_player_equip, which is present in some hl2dm maps
 
     local wpn = ply:Give("dmu_carbine", true)
-    ply:Give("weapon_crowbar")
+    ply:Give("dmu_fists")
 
     wpn:SetClip1(1)
 
