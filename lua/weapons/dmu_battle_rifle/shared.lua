@@ -105,3 +105,7 @@ function SWEP:CThink()
 	self:SetNextBullet(CurTime() + 0.04)
 	self:SetBulletsToShoot( self:GetBulletsToShoot() - 1 )
 end
+
+function SWEP:OnDrop()
+	self:SetClip1(self.Primary.ClipSize)
+end

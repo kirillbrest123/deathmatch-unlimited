@@ -81,3 +81,7 @@ function SWEP:PrimaryAttack()
 		owner:SetEyeAngles(ang)
 	end
 end
+
+function SWEP:OnDrop()
+	self:SetClip1(self.Primary.ClipSize)
+end

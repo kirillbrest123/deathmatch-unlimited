@@ -242,7 +242,8 @@ hook.Add("PlayerInitialSpawn", "DMU_PlayerInit", function(ply)
     end)
 end)
 
-hook.Add("PlayerSpawn", "DMU_SetPlayerColor", function(ply)
+hook.Add("PlayerSpawn", "DMU_SetPlayerSpawn", function(ply)
+    ply:DisableWorldClicking(true)
     timer.Simple(0, function()
         if ply:IsBot() and !DMU.Mode.FFA then
             DMU.AutoAssign(ply)

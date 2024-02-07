@@ -63,7 +63,7 @@ function SWEP:PrimaryAttack()
 	local owner = self:GetOwner()
 	local powered = owner:GetAmmoCount(self.Primary.Ammo) >= 25
 
-	local hit_distance = powered and 196 or 64
+	local hit_distance = powered and 160 or 64
 
 	owner:SetAnimation( PLAYER_ATTACK1 )
 

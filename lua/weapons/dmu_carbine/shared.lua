@@ -72,3 +72,7 @@ end
 function SWEP:SecondaryAttack()
 
 end
+
+function SWEP:OnDrop()
+	self:SetClip1(self.Primary.ClipSize)
+end

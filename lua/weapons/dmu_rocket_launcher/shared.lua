@@ -48,6 +48,12 @@ function SWEP:PrimaryAttack()
 
 	if ( !owner:IsNPC() ) then owner:ViewPunch( Angle( -3, 0, 0 ) ) end
 
+	self:ShootEffects()
+
+	self:TakePrimaryAmmo( 1 )
+
+    self:SetNextPrimaryFire( CurTime() + 1 ) 
+
 	if !SERVER then return end
 
 	local dest = owner:GetAimVector()
@@ -61,12 +67,6 @@ function SWEP:PrimaryAttack()
 	proj:Spawn()
 
 	proj:SetVelocity(dest * 500)
-
-	self:ShootEffects()
-
-	self:TakePrimaryAmmo( 1 )
-
-    self:SetNextPrimaryFire( CurTime() + 1 ) 
 end
 
 function SWEP:Think()

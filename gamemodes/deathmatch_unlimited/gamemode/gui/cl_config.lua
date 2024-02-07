@@ -312,7 +312,7 @@ function PANEL:Init()
     reset:Dock(BOTTOM)
     reset:SetText("Reset to default")
     reset.DoClick = function()
-        starter = "dmu_pistol,dmu_carbine"
+        starter = "dmu_pistol,dmu_carbine,dmu_fists"
         common = "dmu_pistol,dmu_carbine"
         uncommon = "dmu_assault_rifle,dmu_battle_rifle"
         rare = "dmu_smg,dmu_sniper_rifle,dmu_plasma_rifle"

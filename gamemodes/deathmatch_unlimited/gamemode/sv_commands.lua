@@ -81,7 +81,7 @@ function plymeta:VoteBotQuota(max_bots)
     max_bots = tonumber(max_bots)
     local leadbot_quota = GetConVar("leadbot_quota")
 
-    if !max_bots or max_bots < 0 or max_bots > game.MaxPlayers() - 1 then DMU.SendNotification("Invalid argument!", self) return end
+    if !max_bots or max_bots < 0 or max_bots > math.min(12, game.MaxPlayers() - 1) then DMU.SendNotification("Invalid argument!", self) return end
     if leadbot_quota:GetInt() == max_bots then DMU.SendNotification("Bot quota is already " .. max_bots .. "!", self) return end
     self.BotQuota = max_bots
 
@@ -114,7 +114,7 @@ hook.Add("PlayerSay", "DMU_Commands", function(ply, input, teamChat)
         end
         if LeadBot then
             ply:PrintMessage(HUD_PRINTTALK, "'!botskill [0-3]' - Initiate a vote to change bots' skill level")
-            ply:PrintMessage(HUD_PRINTTALK, "'!botquota [0-" .. game.MaxPlayers() - 1 .. "]' - Initiate a vote to change bot quota")
+            ply:PrintMessage(HUD_PRINTTALK, "'!botquota [0-" .. math.min(12, game.MaxPlayers() - 1) .. "]' - Initiate a vote to change bot quota")
         end
 
         ply:PrintMessage(HUD_PRINTTALK, "Current Game Mode: " .. DMU.Mode.PrintName)

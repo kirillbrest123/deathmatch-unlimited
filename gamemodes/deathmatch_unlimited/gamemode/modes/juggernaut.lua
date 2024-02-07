@@ -87,6 +87,8 @@ MODE.Hooks.PlayerDeath = function(victim, inflictor, attacker)
     set_juggernaut(attacker)
 end
 
+MODE.Hooks.PlayerSilentDeath = MODE.Hooks.PlayerDeath
+
 local next_think = 0
 
 MODE.Hooks.Think = function()

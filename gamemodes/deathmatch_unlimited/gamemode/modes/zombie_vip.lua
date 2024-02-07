@@ -104,6 +104,8 @@ MODE.Hooks.PlayerDeath = function(victim, inflictor, attacker)
     end
 end
 
+MODE.Hooks.PlayerSilentDeath = MODE.Hooks.PlayerDeath
+
 --local color_gold = Color(255,200,0)
 
 MODE.Hooks.PreDrawHalos = function()

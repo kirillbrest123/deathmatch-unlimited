@@ -174,8 +174,10 @@ if not CLIENT then return end
 
 local color_overheat = Color(236,100,37)
 
-function SWEP:DoDrawCrosshair( x, y )
-	if x == 0 or y == 0 then return end -- why does it happen??
+function SWEP:DrawHUD()
+	local x = ScrW()/2
+	local y = ScrH()/2
+
 	surface.SetDrawColor(color_white)
 	surface.DrawLine( x - 32, y + 48, x - 32, y + 57)
 	surface.DrawLine( x + 32, y + 48, x + 32, y + 57)

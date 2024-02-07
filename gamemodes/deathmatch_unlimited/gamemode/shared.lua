@@ -24,6 +24,28 @@ local function check_allow_feature()
     end
 end
 
+function GM:ScalePlayerDamage( ply, hitgroup, dmginfo )
+
+	-- More damage if we're shot in the head
+	if ( hitgroup == HITGROUP_HEAD ) then
+
+		dmginfo:ScaleDamage( 2 )
+
+	end
+
+	-- Less damage if we're shot in the arms or legs
+	if ( hitgroup == HITGROUP_LEFTARM ||
+		 hitgroup == HITGROUP_RIGHTARM ||
+		 hitgroup == HITGROUP_LEFTLEG ||
+		 hitgroup == HITGROUP_RIGHTLEG ||
+		 hitgroup == HITGROUP_GEAR ) then
+
+		dmginfo:ScaleDamage( 0.55 )
+
+	end
+
+end
+
 hook.Add("SpawnMenuOpen", "dmu_SpawnMenu", check_allow_feature)
 
 local context_menu_disabled = CreateConVar( "dmu_server_disable_context_menu", "0", FCVAR_ARCHIVE + FCVAR_REPLICATED, "Prevents players from opening the context menu. Note that even with context menu enabled players won't be able to use properties without sandbox mode enabled.")
