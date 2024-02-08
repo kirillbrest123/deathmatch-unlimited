@@ -12,6 +12,7 @@ AddCSLuaFile("gui/cl_voteitem.lua")
 AddCSLuaFile("gui/cl_scoreboard.lua")
 AddCSLuaFile("gui/cl_config.lua")
 AddCSLuaFile("gui/cl_team_selection.lua")
+AddCSLuaFile("gui/cl_nametags.lua")
 
 include("shared.lua")
 include("sv_deathmatch.lua")

@@ -23,8 +23,6 @@ local function set_juggernaut(ply)
 
     if IsValid(juggernaut) then
         juggernaut:SetMaxHealth(100)
-        juggernaut:SetWalkSpeed( ply:GetWalkSpeed() / 1.25 )
-        juggernaut:SetRunSpeed( ply:GetRunSpeed() / 1.25 )
         juggernaut:SetTeam(1)
     end 
 
@@ -35,8 +33,6 @@ local function set_juggernaut(ply)
     local new_health = ply:GetMaxHealth() + 20 * player.GetCount()
     ply:SetMaxHealth(new_health)
     ply:SetHealth(new_health)
-    ply:SetWalkSpeed( ply:GetWalkSpeed() * 1.25 )
-    ply:SetRunSpeed( ply:GetRunSpeed() * 1.25 )
     ply:SetTeam(2)
 
     ply:SetPlayerColor( DMU.Mode.Teams[2].color:ToVector() )

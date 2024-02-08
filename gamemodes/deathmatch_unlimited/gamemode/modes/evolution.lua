@@ -74,6 +74,7 @@ MODE.Hooks.PlayerLoadout = function(ply)
 
     local level = math.min(5, DMU.Round - team.GetScore(ply:Team()))
 
+    ply:Give("dmu_fists")
     for _, wep in ipairs(weps[level]) do
         ply:Give(wep)
     end

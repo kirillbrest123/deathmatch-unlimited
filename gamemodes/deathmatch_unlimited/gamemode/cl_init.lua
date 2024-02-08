@@ -11,6 +11,7 @@ include("gui/cl_voteitem.lua")
 include("gui/cl_scoreboard.lua")
 include("gui/cl_config.lua")
 include("gui/cl_team_selection.lua")
+include("gui/cl_nametags.lua")
 
 hook.Add("HUDShouldDraw", "dmu_RemoveRedScreen", function(name)
     if (name == "CHudDamageIndicator") then
