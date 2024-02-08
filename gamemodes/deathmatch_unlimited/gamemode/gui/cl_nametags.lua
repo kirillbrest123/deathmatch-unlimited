@@ -32,4 +32,4 @@ local function render(bDrawingDepth, bDrawingSkybox, isDraw3DSkybox)
     end
 end
 
-hook.Add("PostDrawTranslucentRenderables", "dmu_Render3d2d", render)
+hook.Add("PostDrawTranslucentRenderables", "DMU_DrawNameTags", render)
