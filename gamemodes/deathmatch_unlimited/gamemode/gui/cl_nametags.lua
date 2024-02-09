@@ -13,6 +13,7 @@ local scale = CreateClientConVar("dmu_client_name_tags_scale", "1", true, false)
 local function render(bDrawingDepth, bDrawingSkybox, isDraw3DSkybox)
     if !should_draw:GetBool() then return end
     local my_team = LocalPlayer():Team()
+    if my_team == TEAM_UNASSIGNED then return end
 
     for _, ply in ipairs(player.GetAll()) do
         if ply:Team() != my_team or !ply:Alive() or ply == LocalPlayer() then continue end
