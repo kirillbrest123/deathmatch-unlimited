@@ -206,22 +206,24 @@ function GM:PlayerRequestTeam(ply, t)
 
     if t == -1 then
         if ply:Team() == TEAM_UNASSIGNED then
+            DMU.AutoAssign(ply)
             ply:Spawn()
         else
             ply:KillSilent()
+            DMU.AutoAssign(ply)
         end
-        DMU.AutoAssign(ply)
         ply.TeamChangeCooldown = CurTime() + 60
         return
     end
 
     if GAMEMODE:PlayerCanJoinTeam(ply, t) then
         if ply:Team() == TEAM_UNASSIGNED then
+            ply:SetTeam(t)
             ply:Spawn() -- it's a hack to allow game modes like showdown to function
         else
+            ply:SetTeam(t)
             ply:KillSilent()
         end
-        ply:SetTeam(t)
         ply.TeamChangeCooldown = CurTime() + 60
     end
 end
@@ -244,10 +246,12 @@ end)
 
 hook.Add("PlayerSpawn", "DMU_SetPlayerSpawn", function(ply)
     ply:DisableWorldClicking(true)
+
+    if ply:IsBot() and !DMU.Mode.FFA then
+        DMU.AutoAssign(ply)
+    end
+
     timer.Simple(0, function()
-        if ply:IsBot() and !DMU.Mode.FFA then
-            DMU.AutoAssign(ply)
-        end
         local color = team.GetColor( ply:Team() )
         ply:SetPlayerColor( color:ToVector() )
     end)
@@ -261,3 +265,124 @@ hook.Add("EntityTakeDamage", "dmu_FriendlyFire", function(target, dmginfo)
         return true
     end
 end)
+
+function GM:PlayerSelectSpawn( pl, transiton )
+
+	-- If we are in transition, do not reset player's position
+	if ( transiton ) then return end
+
+	if DMU.Mode.UseTeamSpawns then
+		local ent = self:PlayerSelectTeamSpawn( pl:Team(), pl )
+		if ( IsValid( ent ) ) then return ent end
+	end
+
+	-- Save information about all of the spawn points
+	-- in a team based game you'd split up the spawns
+	if ( !IsTableOfEntitiesValid( self.SpawnPoints ) ) then
+
+		self.LastSpawnPoint = 0
+		self.SpawnPoints = ents.FindByClass( "info_player_start" )
+		self.SpawnPoints = table.Add( self.SpawnPoints, ents.FindByClass( "info_player_deathmatch" ) )
+		self.SpawnPoints = table.Add( self.SpawnPoints, ents.FindByClass( "info_player_combine" ) )
+		self.SpawnPoints = table.Add( self.SpawnPoints, ents.FindByClass( "info_player_rebel" ) )
+
+		-- CS Maps
+		self.SpawnPoints = table.Add( self.SpawnPoints, ents.FindByClass( "info_player_counterterrorist" ) )
+		self.SpawnPoints = table.Add( self.SpawnPoints, ents.FindByClass( "info_player_terrorist" ) )
+
+		-- DOD Maps
+		self.SpawnPoints = table.Add( self.SpawnPoints, ents.FindByClass( "info_player_axis" ) )
+		self.SpawnPoints = table.Add( self.SpawnPoints, ents.FindByClass( "info_player_allies" ) )
+
+		-- (Old) GMod Maps
+		self.SpawnPoints = table.Add( self.SpawnPoints, ents.FindByClass( "gmod_player_start" ) )
+
+		-- TF Maps
+		self.SpawnPoints = table.Add( self.SpawnPoints, ents.FindByClass( "info_player_teamspawn" ) )
+
+		-- INS Maps
+		self.SpawnPoints = table.Add( self.SpawnPoints, ents.FindByClass( "ins_spawnpoint" ) )
+
+		-- AOC Maps
+		self.SpawnPoints = table.Add( self.SpawnPoints, ents.FindByClass( "aoc_spawnpoint" ) )
+
+		-- Dystopia Maps
+		self.SpawnPoints = table.Add( self.SpawnPoints, ents.FindByClass( "dys_spawn_point" ) )
+
+		-- PVKII Maps
+		self.SpawnPoints = table.Add( self.SpawnPoints, ents.FindByClass( "info_player_pirate" ) )
+		self.SpawnPoints = table.Add( self.SpawnPoints, ents.FindByClass( "info_player_viking" ) )
+		self.SpawnPoints = table.Add( self.SpawnPoints, ents.FindByClass( "info_player_knight" ) )
+
+		-- DIPRIP Maps
+		self.SpawnPoints = table.Add( self.SpawnPoints, ents.FindByClass( "diprip_start_team_blue" ) )
+		self.SpawnPoints = table.Add( self.SpawnPoints, ents.FindByClass( "diprip_start_team_red" ) )
+
+		-- OB Maps
+		self.SpawnPoints = table.Add( self.SpawnPoints, ents.FindByClass( "info_player_red" ) )
+		self.SpawnPoints = table.Add( self.SpawnPoints, ents.FindByClass( "info_player_blue" ) )
+
+		-- SYN Maps
+		self.SpawnPoints = table.Add( self.SpawnPoints, ents.FindByClass( "info_player_coop" ) )
+
+		-- ZPS Maps
+		self.SpawnPoints = table.Add( self.SpawnPoints, ents.FindByClass( "info_player_human" ) )
+		self.SpawnPoints = table.Add( self.SpawnPoints, ents.FindByClass( "info_player_zombie" ) )
+
+		-- ZM Maps
+		self.SpawnPoints = table.Add( self.SpawnPoints, ents.FindByClass( "info_player_zombiemaster" ) )
+
+		-- FOF Maps
+		self.SpawnPoints = table.Add( self.SpawnPoints, ents.FindByClass( "info_player_fof" ) )
+		self.SpawnPoints = table.Add( self.SpawnPoints, ents.FindByClass( "info_player_desperado" ) )
+		self.SpawnPoints = table.Add( self.SpawnPoints, ents.FindByClass( "info_player_vigilante" ) )
+
+		-- L4D Maps
+		self.SpawnPoints = table.Add( self.SpawnPoints, ents.FindByClass( "info_survivor_rescue" ) )
+		-- Removing this one for the time being, c1m4_atrium has one of these in a box under the map
+		--self.SpawnPoints = table.Add( self.SpawnPoints, ents.FindByClass( "info_survivor_position" ) )
+
+	end
+
+	local Count = table.Count( self.SpawnPoints )
+
+	if ( Count == 0 ) then
+		Msg("[PlayerSelectSpawn] Error! No spawn points!\n")
+		return nil
+	end
+
+	-- If any of the spawnpoints have a MASTER flag then only use that one.
+	-- This is needed for single player maps.
+	for k, v in pairs( self.SpawnPoints ) do
+
+		if ( v:HasSpawnFlags( 1 ) && hook.Call( "IsSpawnpointSuitable", GAMEMODE, pl, v, true ) ) then
+			return v
+		end
+
+	end
+
+	local ChosenSpawnPoint = nil
+
+	-- Try to work out the best, random spawnpoint
+	for i = 1, Count do
+
+		ChosenSpawnPoint = table.Random( self.SpawnPoints )
+
+		if ( IsValid( ChosenSpawnPoint ) && ChosenSpawnPoint:IsInWorld() ) then
+			if ( ( ChosenSpawnPoint == pl:GetVar( "LastSpawnpoint" ) || ChosenSpawnPoint == self.LastSpawnPoint ) && Count > 1 ) then continue end
+
+			if ( hook.Call( "IsSpawnpointSuitable", GAMEMODE, pl, ChosenSpawnPoint, i == Count ) ) then
+
+				self.LastSpawnPoint = ChosenSpawnPoint
+				pl:SetVar( "LastSpawnpoint", ChosenSpawnPoint )
+				return ChosenSpawnPoint
+
+			end
+
+		end
+
+	end
+
+	return ChosenSpawnPoint
+
+end

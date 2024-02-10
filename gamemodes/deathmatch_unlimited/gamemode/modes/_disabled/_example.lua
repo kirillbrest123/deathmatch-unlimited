@@ -15,6 +15,8 @@ MODE.DontDropWeapons = false
 
 MODE.HillsEnabled = false -- if this is set to false, trigger_dmu_hold_zone and dmu_hold_zone will spawn
 
+MODE.UseTeamSpawns = false -- if this is set to true, players will spawn on their respective team's hl2dm spawnpoints (info_spawn_rebel, info_spawn_combine). Only supports 2 teams.
+
 MODE.Teams = { -- FFA modes can have teams too, but you will have to manually assign players to them
     {
         name = "Rebels",

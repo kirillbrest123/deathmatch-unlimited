@@ -3,12 +3,16 @@ DMU.Modes = DMU.Modes or {}
 local prefix = "deathmatch_unlimited/gamemode/modes/"
 
 local function create_teams(teams)
+    
     for k, v in ipairs(teams) do
         team.SetUp(k, v.name, v.color, true)
         if SERVER then
             DMU.BotTeamObjectives[k] = {}
         end
     end
+
+    team.SetSpawnPoint(1, {"info_player_rebel", "info_player_terrorist"})
+    team.SetSpawnPoint(2, {"info_player_combine", "info_player_counterterrorist"})
 end
 
 local function load_modes()

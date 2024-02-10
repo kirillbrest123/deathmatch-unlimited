@@ -31,9 +31,9 @@ MODE.Hooks.PlayerLoadout = function(ply)
 
     ply:StripWeapons() -- strip the loadout given by game_player_equip, which is present in hl2dm maps
 
-    ply:Give("dmu_fists")
     ply:Give("dmu_sniper_rifle")
     ply:Give("dmu_pistol")
+    ply:Give("dmu_fists")
     ply:GiveAmmo(8, "357", true)
     return true
 end

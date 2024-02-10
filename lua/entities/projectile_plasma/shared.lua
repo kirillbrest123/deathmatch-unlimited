@@ -86,7 +86,7 @@ function ENT:StartTouch(entity)
 
 		local effectData = EffectData()
 		effectData:SetEntity(entity)
-		effectData:SetMagnitude(3)
+		effectData:SetMagnitude(6)
 	
 		util.Effect("TeslaHitboxes", effectData)
 

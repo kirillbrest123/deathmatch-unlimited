@@ -79,7 +79,7 @@ local PLAYER_LINE = {
 		self.Score:SetTextColor( color_white )
 		self.Score:SetContentAlignment( 5 )
 
-		if !DMU.Mode.FFA then
+		if DMU.Mode.Teams then
 			timer.Simple(0, function()
 				self.Name:SetTextColor( team.GetColor(self.Player:Team()) )
 				self.Ping:SetTextColor( team.GetColor(self.Player:Team()) )

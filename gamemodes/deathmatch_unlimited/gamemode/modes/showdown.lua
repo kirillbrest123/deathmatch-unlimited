@@ -5,6 +5,7 @@ MODE.RespawnTime = -1
 MODE.TimeLimit = 180
 MODE.RoundBased = true
 MODE.RoundLimit = 7
+MODE.UseTeamSpawns = true
 
 MODE.Teams = {
     {

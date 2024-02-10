@@ -12,6 +12,8 @@ function DMU.StartNextRound()
     game.CleanUpMap( false, { "env_fire", "entityflame", "_firesmoke" } )
     DMU.ReplaceMapEntities()
 
+    hook.Run("DMU_PreRoundStart")
+
     for _, ply in ipairs(player.GetAll()) do
         if !DMU.Mode.FFA and ply:Team() == TEAM_UNASSIGNED then continue end -- don't respawn players who didn't choice their team yet
         ply:StripWeapons() -- maybe we need to use DMU.Mode.Teams here?
@@ -19,8 +21,6 @@ function DMU.StartNextRound()
         ply:Spawn() -- does it even matter??
         ply:Freeze(true)
     end
-
-    hook.Run("DMU_PreRoundStart")
 
     timer.Simple(1, function()
         DMU.SendAnnouncement("Round starting", 2, "fvox/bell.wav")
