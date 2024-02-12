@@ -1,5 +1,4 @@
-MODE.Name = "snipers"
-MODE.PrintName = "Snipers"
+MODE.Name = "Snipers"
 MODE.FriendlyFire = false
 MODE.RespawnTime = 3
 MODE.TimeLimit = 600

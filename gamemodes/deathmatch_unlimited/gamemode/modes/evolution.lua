@@ -1,5 +1,4 @@
-MODE.Name = "evolution"
-MODE.PrintName = "Evolution"
+MODE.Name = "Evolution"
 MODE.FriendlyFire = false
 MODE.RespawnTime = -1
 MODE.TimeLimit = 180

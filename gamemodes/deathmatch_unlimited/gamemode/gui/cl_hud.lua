@@ -49,6 +49,7 @@ local panel_color = Color(0,0,0,120)
 
 net.Receive("DMU_SyncRound", function()
     DMU.Round = net.ReadUInt(8)
+    hook.Run("DMU_PreRoundStart")
 end)
 
 net.Receive("DMU_SyncTimeLeft", function()
@@ -259,6 +260,8 @@ net.Receive("DMU_MatchVictoryAnnouncement", function()
     announcement_fadein_timer = CurTime() + 0.2
     local winner = net.ReadUInt(13)
 
+    hook.Run("DMU_GameEnded", winner)
+
     if DMU.Mode.FFA and winner == LocalPlayer():EntIndex() or !DMU.Mode.FFA and winner == LocalPlayer():Team() then
         announcement_text = "Victory"
         if !(DMU.Mode.RoundBased) and !music_disabled:GetBool() then -- music will be already playing from round victory announcement. Too bad there's no way to stop sounds played with surface.PlaySound()
@@ -286,6 +289,8 @@ net.Receive("DMU_RoundVictoryAnnouncement", function()
     end
 
     winner = winner - 1
+
+    hook.Run("DMU_RoundEnd", winner)
 
     if DMU.Mode.FFA and winner == LocalPlayer():EntIndex() or !DMU.Mode.FFA and winner == LocalPlayer():Team() then
         announcement_text = "Round Won"

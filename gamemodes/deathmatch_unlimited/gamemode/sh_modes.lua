@@ -21,17 +21,16 @@ local function load_modes()
         AddCSLuaFile(prefix .. f)
         include(prefix .. f)
 
-        MODE.Name = string.lower(MODE.Name or string.Explode(".", f)[1])
+        MODE.Name = MODE.Name or string.Explode(".", f)[1]
 
-        DMU.Modes[MODE.Name] = MODE
+        DMU.Modes[string.lower(MODE.Name)] = MODE
     end
     MODE = nil
 end
 
 local function load_mode(name)
     name = string.lower(name)
-    name = string.Replace(name, " ", "_")
-    DMU.Mode = DMU.Modes[name] or DMU.Modes["tdm"]
+    DMU.Mode = DMU.Modes[name] or DMU.Modes["team deathmatch"]
 
     for k,v in pairs(DMU.Mode.Hooks or {}) do
         hook.Add(k, "dmu_mode_" .. name, v)
@@ -97,6 +96,6 @@ end
 load_modes()
 local mode_convar = GetConVar("dmu_server_mode")
 if not IsValid(mode_convar) then
-    mode_convar = CreateConVar( "dmu_server_mode", "tdm", FCVAR_ARCHIVE + FCVAR_REPLICATED, "Game Mode. If you're unsure, enter TDM or FFA.") -- failsafe in case client doesn't receive deathmatch_unlimited.txt
+    mode_convar = CreateConVar( "dmu_server_mode", "Team Deathmatch", FCVAR_ARCHIVE + FCVAR_REPLICATED, "Game Mode. If you're unsure, enter Team Deathmatch or FFA Deathmatch.") -- failsafe in case client doesn't receive deathmatch_unlimited.txt
 end
 load_mode( string.lower( GetConVar("dmu_server_mode"):GetString() ) )

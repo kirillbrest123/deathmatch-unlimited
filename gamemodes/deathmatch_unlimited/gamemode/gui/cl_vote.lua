@@ -81,7 +81,7 @@ function PANEL:UpdateItems()
 
         self.items[k].Name = item.map
         if item.mode then
-            self.items[k].Mode = DMU.Modes[item.mode]["PrintName"]
+            self.items[k].Mode = DMU.Modes[item.mode].PrintName or DMU.Modes[item.mode].Name
         end
 
         local mat = Material(item.thumbnail or "")

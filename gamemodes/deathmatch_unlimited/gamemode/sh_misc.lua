@@ -9,32 +9,32 @@ DMU.color_crimson = Color(255,0,60)
 DMU.DefaultPlayLists = {
     {
         name = "Team Deathmatch",
-        modes = {"tdm",},
+        modes = {"Team Deathmatch",},
         thumbnail = "game_mode_banners/tdm.png"
     },
     {
         name = "FFA Brawl",
-        modes = {"ffa", "instagib", "one_in_the_chamber", "juggernaut", "gun_game"},
+        modes = {"FFA Deathmatch", "Instagib", "One In The Chamber", "Juggernaut", "Gun Game"},
         thumbnail = "game_mode_banners/ffa_brawl.png"
     },
     {
         name = "Sniper Frenzy",
-        modes = {"snipers", "shotty_snipers", "hot_rockets"},
+        modes = {"Snipers", "Shotty Snipers", "Hot Rockets"},
         thumbnail = "game_mode_banners/sniper_frenzy.png"
     },   
     {
         name = "Team Objective",
-        modes = {"domination", "kill_confirmed", "king_of_the_hill"},
+        modes = {"Domination", "Kill Confirmed", "King Of The Hill"},
         thumbnail = "game_mode_banners/team_objective.png"
     },
     {
         name = "Team Rumble",
-        modes = {"laser_tag", "swat", "zombie_vip"},
+        modes = {"Laser Tag", "SWAT", "Zombie VIP"},
         thumbnail = "game_mode_banners/team_rumble.png"
     },
     {
         name = "Search and Survive",
-        modes = {"showdown", "survival", "evolution", "takedown"},
+        modes = {"Showdown", "Survival", "Evolution", "Takedown"},
         thumbnail = "game_mode_banners/search_and_survive.png"
     },
 }
@@ -82,7 +82,7 @@ else
 
     hook.Add("InitPostEntity", "DMU_GiveInstructions", function()
         timer.Simple(5, function()
-            chat.AddText(color_white, "Current Game Mode: ", DMU.color_crimson, DMU.Mode.PrintName)
+            chat.AddText(color_white, "Current Game Mode: ", DMU.color_crimson, DMU.Mode.PrintName or DMU.Mode.Name)
 
             if DMU.Mode.Instructions then
                 chat.AddText(Color(255,225,120), "========================\n", DMU.Mode.Instructions, "\n========================")

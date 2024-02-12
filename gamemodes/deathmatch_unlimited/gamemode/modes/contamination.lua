@@ -1,5 +1,4 @@
-MODE.Name = "contamination"
-MODE.PrintName = "Contamination"
+MODE.Name = "Contamination"
 MODE.FFA = true
 MODE.RoundBased = true
 MODE.RoundLimit = 5

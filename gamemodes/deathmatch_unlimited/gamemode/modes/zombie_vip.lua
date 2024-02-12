@@ -1,5 +1,4 @@
-MODE.Name = "zombie_vip"
-MODE.PrintName = "Zombie Vip"
+MODE.Name = "Zombie Vip"
 MODE.FriendlyFire = false
 MODE.RespawnTime = 4
 MODE.TimeLimit = 600

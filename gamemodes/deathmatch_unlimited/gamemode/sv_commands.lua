@@ -102,6 +102,67 @@ function plymeta:VoteBotQuota(max_bots)
     end
 end
 
+function plymeta:VoteMap(msg)
+    local map
+    local mode
+
+    for i = 10, #msg do
+        if msg[i] == " " then
+            map = string.sub(msg, 10, i - 1)
+            mode = string.sub(msg, i + 1)
+            break
+        end
+    end
+
+    if !map or !mode then DMU.SendNotification("Invalid argument!", self) return end
+
+    mode = string.lower(mode)
+
+    local playlist = DMU.ModeToPlaylist[mode]
+    local print_name = DMU.Modes[mode] and (DMU.Modes[mode].PrintName or DMU.Modes[mode].Name)
+
+    if !print_name then DMU.SendNotification("Invalid game mode!", self) return end
+
+    local map_is_valid = false
+
+    if DMU.PlayLists[playlist].maps and !table.IsEmpty(DMU.PlayLists[playlist].maps) and DMU.PlayLists[playlist].maps[1] != "" then
+        for _, v in ipairs(DMU.PlayLists[playlist].maps) do
+            if v == map then map_is_valid = true break end
+        end
+    else
+        for _, v in ipairs(file.Find( "maps/*.bsp", "GAME")) do
+            v = v:sub(1, -5)
+            if v == map then map_is_valid = true break end
+        end
+    end
+
+    if !map_is_valid then DMU.SendNotification("Invalid map!", self) return end
+
+    local players = player.GetHumans()
+
+    local votes = 0
+    local required_votes = math.floor(#players / 2 + 1)
+
+    self.VotedMap = map .. ";" .. mode
+
+    for k,v in ipairs(player.GetHumans()) do
+        if v.VotedMap == self.VotedMap then
+            votes = votes + 1
+        end
+    end
+
+    DMU.SendNotification(self:Nick() .. " wants to change map to "  .. map .. " - " .. print_name  .. " (" .. votes .. "/" .. required_votes .. ")")
+
+    if votes >= required_votes then
+        DMU.SendNotification("Changing map to " .. map .. " - " .. print_name  .. " in 10 seconds!")
+
+        timer.Simple(10, function()
+            GetConVar("dmu_server_mode"):SetString(mode)
+            RunConsoleCommand("changelevel", map)
+        end)
+    end
+end
+
 hook.Add("PlayerSay", "DMU_Commands", function(ply, input, teamChat)
     local text = string.Split(input, " ")
     local command = string.lower(text[1])
@@ -109,6 +170,7 @@ hook.Add("PlayerSay", "DMU_Commands", function(ply, input, teamChat)
     if command == "!help" then
         ply:PrintMessage(HUD_PRINTTALK, "'!endmatch' - Initiate a vote to end match early")
         ply:PrintMessage(HUD_PRINTTALK, "'!endround' - Initiate a vote to end round early")
+        ply:PrintMessage(HUD_PRINTTALK, "'!votemap <map> <game mode>' - Initiate a vote to change map and game mode")
         if ply:IsSuperAdmin() then
             ply:PrintMessage(HUD_PRINTTALK, "'!config' - Open config menu")
         end
@@ -117,7 +179,7 @@ hook.Add("PlayerSay", "DMU_Commands", function(ply, input, teamChat)
             ply:PrintMessage(HUD_PRINTTALK, "'!botquota [0-" .. math.min(12, game.MaxPlayers() - 1) .. "]' - Initiate a vote to change bot quota")
         end
 
-        ply:PrintMessage(HUD_PRINTTALK, "Current Game Mode: " .. DMU.Mode.PrintName)
+        ply:PrintMessage(HUD_PRINTTALK, "Current Game Mode: " .. (DMU.Mode.PrintName or DMU.Mode.Name))
 
         if !DMU.Mode.Tips then return "" end
 
@@ -131,6 +193,9 @@ hook.Add("PlayerSay", "DMU_Commands", function(ply, input, teamChat)
         return ""
     elseif command == "!endround" then
         ply:VoteEndRound()
+        return ""
+    elseif command == "!votemap" then
+        ply:VoteMap(input)
         return ""
     elseif command == "!config" and ply:IsSuperAdmin() then
         net.Start("DMU_SendPlayLists")

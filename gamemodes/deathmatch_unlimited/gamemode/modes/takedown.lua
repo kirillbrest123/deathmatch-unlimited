@@ -1,5 +1,4 @@
-MODE.Name = "takedown"
-MODE.PrintName = "Takedown"
+MODE.Name = "Takedown"
 MODE.FriendlyFire = false
 MODE.RespawnTime = -1
 MODE.TimeLimit = 300

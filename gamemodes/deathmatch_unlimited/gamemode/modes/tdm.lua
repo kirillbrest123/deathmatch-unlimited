@@ -1,5 +1,4 @@
-MODE.Name = "TDM"
-MODE.PrintName = "Team Deathmatch"
+MODE.Name = "Team Deathmatch"
 MODE.FriendlyFire = false
 MODE.RespawnTime = 3
 MODE.TimeLimit = 600

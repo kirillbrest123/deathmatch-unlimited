@@ -1,5 +1,4 @@
 MODE.Name = "Survival"
-MODE.PrintName = "Survival"
 MODE.FriendlyFire = false
 MODE.RespawnTime = -1
 MODE.TimeLimit = 300

@@ -1,5 +1,4 @@
-MODE.Name = "one_in_the_chamber"
-MODE.PrintName = "One in the Chamber"
+MODE.Name = "One in the Chamber"
 MODE.FriendlyFire = true
 MODE.FFA = true -- mostly used in GUIs
 MODE.RespawnTime = 3

@@ -17,6 +17,17 @@ function DMU.LoadPlayLists()
         DMU.LoadDefaultPlayLists()
         DMU.SavePlayLists()
     end
+
+    DMU.ModeToPlaylist = {}
+
+    -- NOTE: i'm really starting to regret my life choices here
+
+    for k, playlist in ipairs(DMU.PlayLists) do
+        for _, mode in ipairs(playlist.modes) do
+            mode = string.lower(mode)
+            DMU.ModeToPlaylist[mode] = k
+        end
+    end
 end
 
 function DMU.SavePlayLists()

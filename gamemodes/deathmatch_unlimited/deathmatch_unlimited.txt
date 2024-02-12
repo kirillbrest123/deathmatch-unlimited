@@ -12,10 +12,10 @@
 		1
 		{
 			"name"		"dmu_server_mode"
-			"text"		"Game Mode. If you're unsure, enter TDM or FFA."
+			"text"		"Game Mode. If you're unsure, enter Team Deathmatch or FFA Deathmatch."
 			"help"		"No effect after server start-up."
 			"type"		"Text"
-			"default"	"TDM"
+			"default"	"Team Deathmatch"
 			"singleplayer" "1"
 		}
 

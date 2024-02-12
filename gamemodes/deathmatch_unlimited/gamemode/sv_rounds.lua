@@ -10,7 +10,9 @@ function DMU.StartNextRound()
     net.Broadcast()
 
     game.CleanUpMap( false, { "env_fire", "entityflame", "_firesmoke" } )
-    DMU.ReplaceMapEntities()
+    timer.Simple(0, function()
+        DMU.ReplaceMapEntities()
+    end)
 
     hook.Run("DMU_PreRoundStart")
 
@@ -72,7 +74,7 @@ function DMU.EndRound(winner)
         net.Broadcast()
     end
 
-    hook.Run("DMU_RoundEnd")
+    hook.Run("DMU_RoundEnd", winner)
 
     timer.Simple(10, function()
         if DMU.Round >= DMU.Mode.RoundLimit and !DMU.GameEnded then

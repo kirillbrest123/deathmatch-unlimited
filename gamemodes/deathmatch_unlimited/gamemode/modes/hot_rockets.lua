@@ -1,5 +1,4 @@
-MODE.Name = "hot_rockets"
-MODE.PrintName = "Hot Rockets"
+MODE.Name = "Hot Rockets"
 MODE.FriendlyFire = false
 MODE.RespawnTime = 2
 MODE.TimeLimit = 600

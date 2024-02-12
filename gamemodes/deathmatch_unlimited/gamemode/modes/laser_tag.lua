@@ -1,5 +1,4 @@
-MODE.Name = "laser_tag"
-MODE.PrintName = "Laser Tag"
+MODE.Name = "Laser Tag"
 MODE.FriendlyFire = false
 MODE.RespawnTime = 2
 MODE.TimeLimit = 600

@@ -1,5 +1,4 @@
 MODE.Name = "Domination"
-MODE.PrintName = "Domination"
 MODE.FriendlyFire = false
 MODE.RespawnTime = 3
 MODE.TimeLimit = 600

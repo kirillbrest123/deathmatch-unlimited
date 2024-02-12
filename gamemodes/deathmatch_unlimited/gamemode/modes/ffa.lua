@@ -1,5 +1,4 @@
-MODE.Name = "FFA"
-MODE.PrintName = "Deathmatch\nFree For All"
+MODE.Name = "FFA Deathmatch"
 MODE.FriendlyFire = true
 MODE.FFA = true -- mostly used in GUIs
 MODE.RespawnTime = 3

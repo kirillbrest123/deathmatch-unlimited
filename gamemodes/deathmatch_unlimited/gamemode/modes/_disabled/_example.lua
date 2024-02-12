@@ -1,9 +1,9 @@
-MODE.Name = "example" -- internal name. Used in playlist config. Also used in "Game Mode" field in main menu (though spaces are automatically replaced with underscores). This also means that you shouldn't use spaces here
-MODE.PrintName = "Example" -- name that's displayed everywhere
+MODE.Name = "Example" -- name of the game mode
+MODE.PrintName = "Example" -- not required. If defined, will visually replace MODE.Name. Ideally this should be just MODE.PrintName but with \n or a translation string
 
 MODE.FriendlyFire = false -- whether players from the same team should be able to damage each other. This includes TEAM_UNASSIGNED, so it should be true in FFA modes, unless you do team stuff.
 MODE.RespawnTime = 3 -- respawn time in seconds. Negative values will disable automatic respawn, i.e permadeath. You will have to respawn players manually
-MODE.FFA = false -- will disable most default team things, change GUI to FFA version. Also used to figure out whether a team or a player should be a victor when the time limit is reached.
+MODE.FFA = false -- will disable most default team things and change GUI to FFA version. Also used to figure out whether a team or a player should be a victor when the time limit is reached.
 
 MODE.TimeLimit = 600 -- time limit in seconds
 

@@ -1,5 +1,4 @@
-MODE.Name = "king_of_the_hill"
-MODE.PrintName = "King Of The Hill"
+MODE.Name = "King Of The Hill"
 MODE.FriendlyFire = false
 MODE.RespawnTime = 3
 MODE.TimeLimit = 600

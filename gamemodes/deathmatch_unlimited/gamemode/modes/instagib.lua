@@ -1,5 +1,4 @@
-MODE.Name = "instagib"
-MODE.PrintName = "Instagib"
+MODE.Name = "Instagib"
 MODE.FriendlyFire = true
 MODE.FFA = true -- mostly used in GUIs
 MODE.RespawnTime = 2

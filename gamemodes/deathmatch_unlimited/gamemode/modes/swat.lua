@@ -1,5 +1,4 @@
-MODE.Name = "swat"
-MODE.PrintName = "SWAT"
+MODE.Name = "SWAT"
 MODE.FriendlyFire = false
 MODE.RespawnTime = 3
 MODE.TimeLimit = 600

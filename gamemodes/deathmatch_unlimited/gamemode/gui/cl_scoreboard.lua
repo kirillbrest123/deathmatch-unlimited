@@ -309,7 +309,7 @@ local SCORE_BOARD = {
 		self.Mode:Dock( LEFT )
 		self.Mode:SetSize( ScrW()/2 - 200, 40 )
 		self.Mode:SetExpensiveShadow( 2, Color( 0, 0, 0, 200 ) )
-		self.Mode:SetText( string.Replace(DMU.Mode.PrintName, "\n", " ") .. " - " .. game.GetMap() )
+		self.Mode:SetText( string.Replace(DMU.Mode.PrintName or DMU.Mode.Name, "\n", " ") .. " - " .. game.GetMap() )
 
 		self.Info = self:Add( "Panel" )
 		self.Info:Dock( TOP )

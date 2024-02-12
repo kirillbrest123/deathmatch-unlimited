@@ -1,5 +1,4 @@
-MODE.Name = "Kill_Confirmed"
-MODE.PrintName = "Kill Confirmed"
+MODE.Name = "Kill Confirmed"
 MODE.FriendlyFire = false
 MODE.RespawnTime = 3
 MODE.TimeLimit = 600

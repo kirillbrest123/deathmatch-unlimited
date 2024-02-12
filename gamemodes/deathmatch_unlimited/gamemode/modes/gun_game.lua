@@ -1,5 +1,4 @@
-MODE.Name = "gun_game"
-MODE.PrintName = "Gun Game"
+MODE.Name = "Gun Game"
 MODE.FriendlyFire = true
 MODE.FFA = true -- mostly used in GUIs
 MODE.RespawnTime = 3

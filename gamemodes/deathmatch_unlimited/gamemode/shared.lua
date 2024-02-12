@@ -6,6 +6,36 @@ GM.Email = "N/A"
 GM.Website = "N/A"
 
 DMU = {}
+DMU.Version = 1101
+print("[DMU] DMU Version is v" .. DMU.Version)
+
+-- Convert old playlist files
+if SERVER and cookie.GetNumber( "DMU_LastVersion", 0 ) < 1101 then
+	local replace_table = {
+		tdm = "Team Deathmatch",
+		gun_game = "Gun Game",
+		hot_rockets = "Hot Rockets",
+		kill_confirmed = "Kill Confirmed",
+		king_of_the_hill = "King Of The Hill",
+		laser_tag = "Laser Tag",
+		one_in_the_chamber = "One In The Chamber",
+		shotty_snipers = "Shotty Snipers",
+		zombie_vip = "Zombie VIP",
+	}
+
+	timer.Simple(0, function()
+		for i = 1, #DMU.PlayLists do
+			for j = 1, #DMU.PlayLists[i].modes do
+				DMU.PlayLists[i].modes[j] = replace_table[string.lower(DMU.PlayLists[i].modes[j])] or DMU.PlayLists[i].modes[j]
+			end
+		end
+
+		print("[DMU] Playlists have been updated!")
+		DMU.SavePlayLists()
+	end)
+end
+
+cookie.Set( "DMU_LastVersion", DMU.Version )
 
 function GM:Initialize()
 

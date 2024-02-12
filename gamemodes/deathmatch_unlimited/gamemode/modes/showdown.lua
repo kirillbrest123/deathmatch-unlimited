@@ -1,5 +1,4 @@
 MODE.Name = "Showdown"
-MODE.PrintName = "Showdown"
 MODE.FriendlyFire = false
 MODE.RespawnTime = -1
 MODE.TimeLimit = 180

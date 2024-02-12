@@ -33,6 +33,7 @@ if SERVER then
         net.Start("DMU_Medal")
             net.WriteString(medal)
         net.Send(ply)
+        hook.Run("DMU_PlayerReceivedMedal", ply, medal)
     end
 
     hook.Add("PlayerDeath", "DMU_KillMedals", function(victim, inflictor, attacker)
@@ -144,6 +145,8 @@ if CLIENT then
     net.Receive("DMU_Medal", function()
         if not show_medals:GetBool() then return end
         local medal = net.ReadString()
+
+        hook.Run("DMU_PlayerReceivedMedal", LocalPlayer(), medal)
 
         table.insert(medals_to_display, medal)
 

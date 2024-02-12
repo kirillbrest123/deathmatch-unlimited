@@ -1,5 +1,4 @@
-MODE.Name = "sandbox"
-MODE.PrintName = "Sandbox"
+MODE.Name = "Sandbox"
 MODE.FriendlyFire = true
 MODE.RespawnTime = 2
 MODE.HillsEnabled = true

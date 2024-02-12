@@ -1,5 +1,4 @@
-MODE.Name = "juggernaut"
-MODE.PrintName = "Juggernaut"
+MODE.Name = "Juggernaut"
 MODE.FriendlyFire = false
 MODE.FFA = true -- mostly used in GUIs
 MODE.RespawnTime = 3
