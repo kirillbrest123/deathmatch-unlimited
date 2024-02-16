@@ -1,8 +1,8 @@
 include("shared.lua")
 include("sh_playerscore.lua")
+include("sh_medals.lua")
 include("sh_modes.lua")
 include("sh_misc.lua")
-include("sh_medals.lua")
 
 include("gui/cl_hud.lua")
 include("gui/cl_3d2d.lua")

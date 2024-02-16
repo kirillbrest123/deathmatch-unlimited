@@ -27,6 +27,7 @@ SWEP.Secondary.Automatic = true
 SWEP.Secondary.Ammo = "none"
 
 SWEP.Slot = 0
+SWEP.SlotPos = 1
 
 SWEP.Melee = true -- used by bots
 

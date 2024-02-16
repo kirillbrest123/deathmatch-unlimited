@@ -74,6 +74,7 @@ MODE.Hooks.PlayerSpawn = function(ply)
 end
 
 MODE.Hooks.DMU_PreRoundStart = function()
+    if CLIENT then return end
     local plys = player.GetAll()
 
     for _, ply in ipairs(plys) do

@@ -40,6 +40,7 @@ MODE.Hooks.PlayerLoadout = function(ply)
 end
 
 MODE.Hooks.DMU_PreRoundStart = function()
+    if CLIENT then return end
     DMU.Mode.RespawnTimes = {
         [1] = 3,
         [2] = 3,

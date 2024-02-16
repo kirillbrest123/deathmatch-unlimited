@@ -11,8 +11,8 @@ local function create_teams(teams)
         end
     end
 
-    team.SetSpawnPoint(1, {"info_player_rebel", "info_player_terrorist"})
-    team.SetSpawnPoint(2, {"info_player_combine", "info_player_counterterrorist"})
+    team.SetSpawnPoint(1, {"info_player_rebel", "info_player_terrorist", "dmu_team_spawn_1"})
+    team.SetSpawnPoint(2, {"info_player_combine", "info_player_counterterrorist", "dmu_team_spawn_2"})
 end
 
 local function load_modes()
@@ -79,13 +79,17 @@ local function load_mode(name)
             if DMU.Mode.RoundBased then
                 hook.Add("Think", "DMU_TimeLimit", function()
                     if CurTime() >= DMU.CurTimeLimit and !DMU.GameEnded and !DMU.RoundEnded then
-                        DMU.EndRound()
+                        if !hook.Run("DMU_TimeLimitReached") then
+                            DMU.EndRound()
+                        end
                     end
                 end)
             else
                 hook.Add("Think", "DMU_TimeLimit", function()
                     if CurTime() >= DMU.CurTimeLimit and !DMU.GameEnded then
-                        DMU.EndGame()
+                        if !hook.Run("DMU_TimeLimitReached") then
+                            DMU.EndGame()
+                        end
                     end
                 end)
             end

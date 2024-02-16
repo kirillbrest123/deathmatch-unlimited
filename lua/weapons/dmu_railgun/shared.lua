@@ -193,7 +193,13 @@ function SWEP:Reload()
 end
 
 function SWEP:CHolster()
-    self.ADS = nil
+	self:SetChargeTimer(0)
+
+	if self.LoopSound then
+		self:StopLoopingSound(self.LoopSound)
+		self.LoopSound = nil
+	end
+
     return true
 end
 

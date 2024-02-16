@@ -24,7 +24,7 @@ DMU.DefaultPlayLists = {
     },   
     {
         name = "Team Objective",
-        modes = {"Domination", "Kill Confirmed", "King Of The Hill"},
+        modes = {"Domination", "Kill Confirmed", "King Of The Hill", "CTF", "One Flag CTF"},
         thumbnail = "game_mode_banners/team_objective.png"
     },
     {

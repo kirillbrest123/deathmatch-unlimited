@@ -93,6 +93,7 @@ MODE.Hooks.PlayerInitialSpawn = function(ply)
 end
 
 MODE.Hooks.DMU_PreRoundStart = function()
+    if CLIENT then return end
     dead_players = {}
 end
 
@@ -120,3 +121,5 @@ MODE.Hooks.PlayerDeath = function(victim, inflictor, attacker)
     team.AddScore(attacker_team, 1)
     DMU.EndRound(attacker_team)
 end
+
+MODE.Hooks.PlayerSilentDeath = MODE.Hooks.PlayerDeath

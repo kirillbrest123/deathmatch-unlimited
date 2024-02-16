@@ -27,7 +27,7 @@ function ENT:Initialize()
     end)
 
     for k, _ in ipairs(DMU.Mode.Teams) do
-        table.insert(DMU.BotTeamObjectives[k], self)
+        DMU.AddBotTeamObjective(k, self)
     end
 
     -- OH MY FUCKING GOD
@@ -59,7 +59,7 @@ end
 function ENT:OnRemove()
     if (!DMU.Mode.Teams) then return end
     for k, _ in ipairs(DMU.Mode.Teams) do
-        table.RemoveByValue(DMU.BotTeamObjectives[k], self)
+        DMU.RemoveBotTeamObjective(k, self)
     end
     DMU.Remove3D2DEnt(self)
 end
@@ -67,7 +67,7 @@ end
 function ENT:Disable()
     DMU.Remove3D2DEnt(self)
     for k, _ in ipairs(DMU.Mode.Teams) do
-        table.RemoveByValue(DMU.BotTeamObjectives[k], self)
+        DMU.AddBotTeamObjective(k, self)
     end
 
     self.Disabled = true
@@ -90,7 +90,7 @@ function ENT:Enable()
     DMU.Add3D2DEnt(self, "hold_zone_icons/hold_zone_" .. self:GetIdentifier() .. ".png")
 
     for k, _ in ipairs(DMU.Mode.Teams) do
-        table.insert(DMU.BotTeamObjectives[k], self)
+        DMU.AddBotTeamObjective(k, self)
     end
 end
 
@@ -133,13 +133,13 @@ function ENT:Think()
 
     if self.HoldProgress >= 100 then
         if self.Team != -1 then
-            table.insert(DMU.BotTeamObjectives[self.Team], self) -- bots should care when their zone is captured
+            DMU.AddBotTeamObjective(self.Team, self)
             self.Team = -1
             self.HoldProgress = 0
             DMU.Add3D2DEnt(self, "hold_zone_icons/hold_zone_" .. self:GetIdentifier() .. ".png")
         else
             self.Team = biggest_team
-            table.RemoveByValue(DMU.BotTeamObjectives[self.Team], self) -- bots shouldn't care about zones they have captured
+            DMU.RemoveBotTeamObjective(self.Team, self)
             self.HoldProgress = 0
             DMU.Add3D2DEnt(self, "hold_zone_icons/hold_zone_" .. self:GetIdentifier() .. ".png", team.GetColor(biggest_team))
         end

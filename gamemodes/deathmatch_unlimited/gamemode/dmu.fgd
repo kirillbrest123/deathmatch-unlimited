@@ -50,3 +50,10 @@
 		4 : "D"
 	]
 ]
+
+@PointClass base(Targetname, Angles) studio("models/hunter/tubes/circle2x2.mdl") = dmu_flag_base :
+	""
+[
+	// Keys
+	team(integer) : "Team Index" : 1 : "Index of the team that this base belongs to. Usually it's 1 or 2."
+]

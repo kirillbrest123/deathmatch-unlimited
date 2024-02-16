@@ -57,35 +57,14 @@ function SWEP:Initialize()
 					vm:SetColor(Color(255,255,255,1))
 					// ^ stopped working in GMod 13 because you have to do Entity:SetRenderMode(1) for translucency to kick in
 					// however for some reason the view model resets to render mode 0 every frame so we just apply a debug material to prevent it from drawing
-					vm:SetMaterial("Debug/hsv")			
+					-- vm:SetMaterial("Models/effects/vol_light001") -- debug/Hsv doensn't seem to work, but this is good enough		
+					-- ^ nvm. all weapons use the same viewmodel, changing its material will cause all viewmodels to be invisible and i cba to fix it
 				end
 			end
 		end
 		
 	end
 
-end
-
-function SWEP:CHolster()
-
-end
-
-function SWEP:Holster()
-
-	self:CHolster()	
-
-	if self.Scoped then
-		self:SetADS( false )
-	end
-	
-	if CLIENT and IsValid(self.Owner) then
-		local vm = self.Owner:GetViewModel()
-		if IsValid(vm) then
-			self:ResetBonePositions(vm)
-		end
-	end
-	
-	return true
 end
 
 function SWEP:CDeploy()
@@ -139,27 +118,33 @@ function SWEP:Reload()
 	local owner = self:GetOwner()
 	local vm = owner:GetViewModel()
 
-	--self:SendWeaponAnim(ACT_VM_RELOAD)
 	vm:SendViewModelMatchingSequence( vm:SelectWeightedSequence( ACT_VM_RELOAD ) )
 	owner:SetAnimation( PLAYER_RELOAD )
 
 	self:SetReloading(true)
 	self:SetReloadTimer( CurTime() + vm:SequenceDuration() )
-	-- timer.Simple( vm:SequenceDuration(), function()
-	-- 	if !IsValid(self) or !IsValid(owner) then return end
-	-- 	self.Reloading = nil 
-
-	-- 	local num = math.min(owner:GetAmmoCount(self:GetPrimaryAmmoType()), self:GetMaxClip1() - self:Clip1())
-	
-	-- 	self:SetClip1( self:Clip1() + num )
-	-- 	owner:RemoveAmmo( num, self:GetPrimaryAmmoType() )
-		
-	-- end)
 end
 
+function SWEP:CHolster()
+
+end
+
+
 function SWEP:Holster()
+
+	if self.Scoped then
+		self:SetADS( false )
+	end
+	
+	if CLIENT and IsValid(self.Owner) then
+		local vm = self.Owner:GetViewModel()
+		if IsValid(vm) then
+			self:ResetBonePositions(vm)
+		end
+	end
+
 	self:SetReloading(false)
-	return true
+	return self:CHolster() or true
 end
 
 function SWEP:OwnerChanged()
@@ -340,11 +325,18 @@ if CLIENT then
 	end
 
 	SWEP.wRenderOrder = nil
+
+	function SWEP:CDrawWorldModel()
+
+	end
+
 	function SWEP:DrawWorldModel()
 		
 		if (self.ShowWorldModel == nil or self.ShowWorldModel) then
 			self:DrawModel()
 		end
+
+		self:CDrawWorldModel()
 		
 		if (!self.WElements) then return end
 		

@@ -27,7 +27,7 @@ SWEP.Scoped = true
 SWEP.ADS_fov = 30
 
 SWEP.Slot = 3
-SWEP.SlotPos = 2
+SWEP.SlotPos = 3
 
 if CLIENT then
 	SWEP.WepSelectIcon = surface.GetTextureID( "vgui/hud/dmu_sniper_rifle" )

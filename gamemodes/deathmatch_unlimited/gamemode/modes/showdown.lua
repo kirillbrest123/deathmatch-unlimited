@@ -48,6 +48,7 @@ MODE.Hooks.PlayerSpawn = function(ply) -- kill dead players that disconnected fr
 end
 
 MODE.Hooks.DMU_PreRoundStart = function()
+    if CLIENT then return end
     dead_players = {}
 end
 
@@ -75,6 +76,8 @@ MODE.Hooks.PlayerDeath = function(victim, inflictor, attacker)
     team.AddScore(attacker_team, 1)
     DMU.EndRound(attacker_team)
 end
+
+MODE.Hooks.PlayerSilentDeath = MODE.Hooks.PlayerDeath
 
 MODE.Hooks.PlayerDisconnected = function(victim)
     if victim:Team() == TEAM_UNASSIGNED then return end

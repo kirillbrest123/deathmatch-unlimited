@@ -30,6 +30,8 @@ MODE.Weapons = { -- even though weapon spawns are disabled, bots use this to fig
 
 MODE.Hooks = {}
 
+DMU.RegisterMedal("vip_kill", "VIP Kill", "medals/star_yellow.png") -- yes you can absolutely do that
+
 MODE.OldVips = {}
 
 MODE.Hooks.PlayerLoadout = function(ply)
@@ -64,7 +66,7 @@ MODE.Hooks.PlayerSpawn = function(ply)
     SetGlobalEntity("DMU_CurrentVip" .. ply:Team(), ply)
 
     local att_team = ply_team == 1 and 2 or 1
-    DMU.BotTeamObjectives[ att_team ] = { GetGlobalEntity("DMU_CurrentVip" .. ply_team) }
+    DMU.BotTeamObjectives[ att_team ] = { [GetGlobalEntity("DMU_CurrentVip" .. ply_team)] = true }
 
     DMU.Mode.OldVips[ ply:Team() ] = ply
     DMU.SendAnnouncement("You are VIP!", 1, "buttons/bell1.wav", ply)
@@ -96,6 +98,7 @@ MODE.Hooks.PlayerDeath = function(victim, inflictor, attacker)
 
     if IsValid(attacker) and attacker:IsPlayer() and attacker != victim then
         attacker:AddScore(1)
+        DMU.GiveMedal(attacker, "vip_kill")
     end
 
     if team.GetScore(att_team) >= DMU.DefaultScoreLimit/2 then

@@ -14,7 +14,7 @@ function ENT:Initialize()
     self:SetTrigger(true)
     self:UseTriggerBounds(true, 8)
 
-    table.insert(DMU.BotObjectives, self)
+    DMU.AddBotObjective(self)
 
     timer.Simple(15, function()
         if IsValid(self) then
@@ -32,5 +32,5 @@ function ENT:StartTouch(entity)
 end
 
 function ENT:OnRemove()
-    table.RemoveByValue(DMU.BotObjectives, self)
+    DMU.RemoveBotObjective(self)
 end

@@ -34,6 +34,7 @@ MODE.Hooks.PlayerInitialSpawn = function(ply)
 end
 
 MODE.Hooks.DMU_PreRoundStart = function()
+    if CLIENT then return end
     dead_players = {}
 end
 
@@ -59,6 +60,8 @@ MODE.Hooks.PlayerDeath = function(victim, inflictor, attacker)
         DMU.EndRound(survivor)
     end
 end
+
+MODE.Hooks.PlayerSilentDeath = MODE.Hooks.PlayerDeath
 
 MODE.Hooks.PlayerDisconnected = function()
     if DMU.GameEnded or DMU.RoundEnded then return end
