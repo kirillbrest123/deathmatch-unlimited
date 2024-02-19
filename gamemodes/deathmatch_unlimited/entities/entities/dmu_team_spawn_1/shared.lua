@@ -8,6 +8,8 @@ ENT.Category = "Deathmatch Unlimited"
 ENT.Spawnable = true
 ENT.AdminOnly = false
 
+local sandbox = GetConVar("dmu_server_sandbox")
+
 if SERVER then
 
 
@@ -17,13 +19,18 @@ function ENT:Initialize()
     self:SetMaterial("models/debug/debugwhite")
     self:PhysicsInitBox(Vector(-1,-1,-1), Vector(1,1,1))
     self:SetCollisionGroup(COLLISION_GROUP_DEBRIS)
+
+    self:SetAngles(Angle(0,0,0))
+
+    if !sandbox:GetBool() then
+        self:SetNoDraw(true)
+    end
 end
 
 
 else
 
 
-local sandbox = GetConVar("dmu_server_sandbox")
 function ENT:Draw()
     if !sandbox:GetBool() then return end
     self:DrawModel()

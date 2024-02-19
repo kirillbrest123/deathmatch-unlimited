@@ -66,8 +66,10 @@ end
 
 function ENT:Disable()
     DMU.Remove3D2DEnt(self)
-    for k, _ in ipairs(DMU.Mode.Teams) do
-        DMU.AddBotTeamObjective(k, self)
+    if self.Team != -1 then
+        for k, _ in ipairs(DMU.Mode.Teams) do
+            DMU.AddBotTeamObjective(k, self)
+        end
     end
 
     self.Disabled = true

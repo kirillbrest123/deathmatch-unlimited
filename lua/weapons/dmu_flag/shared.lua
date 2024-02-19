@@ -243,7 +243,6 @@ end
 function SWEP:SelfDestruct() -- stolen from rb655
 
 	self:OnRemove()
-	EmitSound("NPC_CombineBall.Explosion", self:GetPos())
 
 	if CLIENT then return end
 

@@ -51,7 +51,7 @@ function ENT:StartTouch(entity)
 
         if self:GetTeam() == entity:Team() and flag:GetTeam() != self:GetTeam() then
             hook.Run("DMU_FlagCaptured", flag, entity)
-            -- entity:DropNamedWeapon("dmu_flag") -- makes you switch weapons
+            self:EmitSound("NPC_CombineBall.Explosion")
             flag:SelfDestruct()
 
             return
@@ -75,6 +75,7 @@ function ENT:Disable()
     self.Disabled = true
     self:SetEmpty(true)
     if IsValid(self.Flag) then
+        self:EmitSound("NPC_CombineBall.Explosion")
         self.Flag:SelfDestruct()
     end
 end

@@ -47,6 +47,8 @@ function DMU.ReplaceMapEntities()
             ent:Remove()
         end
 
+        if IsValid(ent:GetOwner()) then continue end
+
         if not replace_weapons then goto cont end
 
         if ents_to_replace_common[class] then

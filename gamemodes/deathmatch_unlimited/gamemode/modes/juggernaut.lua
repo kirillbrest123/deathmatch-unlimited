@@ -27,7 +27,7 @@ local function set_juggernaut(ply)
 
     SetGlobalEntity("DMU_CurrentJuggernaut", ply)
 
-    DMU.BotTeamObjectives[1] = {GetGlobalEntity("DMU_CurrentJuggernaut")}
+    DMU.BotTeamObjectives[1] = {[GetGlobalEntity("DMU_CurrentJuggernaut")] = true}
 
     local new_health = ply:GetMaxHealth() + 20 * player.GetCount()
     ply:SetMaxHealth(new_health)

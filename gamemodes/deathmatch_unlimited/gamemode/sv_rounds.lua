@@ -10,9 +10,7 @@ function DMU.StartNextRound()
     net.Broadcast()
 
     game.CleanUpMap( false, { "env_fire", "entityflame", "_firesmoke" } )
-    timer.Simple(0, function()
-        DMU.ReplaceMapEntities()
-    end)
+    DMU.ReplaceMapEntities()
 
     hook.Run("DMU_PreRoundStart")
 

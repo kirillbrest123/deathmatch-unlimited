@@ -94,7 +94,7 @@ function SWEP:PrimaryAttack()
 		proj:Fire("SetDamage", "40") -- HAAHAHAHAHAHA I FOUND IT
 	
 		proj:SetOwner(owner)
-		proj:SetVelocity(dest * 3500)
+		proj:SetVelocity(dest * 4000)
 	end
 end
 

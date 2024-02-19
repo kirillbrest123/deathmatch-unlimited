@@ -125,7 +125,7 @@ function PANEL:ShowVoteResults(winning_vote)
 
 
     if self.VoteOptions[winning_vote].mode then
-        self.WinningVote = DMU.Modes[self.VoteOptions[winning_vote].mode]["PrintName"] .. " - " .. self.VoteOptions[winning_vote].map
+        self.WinningVote = (DMU.Modes[self.VoteOptions[winning_vote].mode].PrintName or DMU.Modes[self.VoteOptions[winning_vote].mode].Name) .. " - " .. self.VoteOptions[winning_vote].map
     else
         self.WinningVote = self.VoteOptions[winning_vote].map
     end
