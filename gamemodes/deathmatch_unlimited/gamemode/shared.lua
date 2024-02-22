@@ -6,7 +6,7 @@ GM.Email = "N/A"
 GM.Website = "N/A"
 
 DMU = {}
-DMU.Version = 1200
+DMU.Version = 1203
 print("[DMU] DMU Version is v" .. DMU.Version)
 
 -- Convert old playlist files
@@ -48,7 +48,7 @@ function GM:ShouldCollide(ent1, ent2)
 end
 
 local function check_allow_feature()
-    if GetConVar("dmu_server_sandbox"):GetBool() then
+    if GetConVar("dmu_server_sandbox") and GetConVar("dmu_server_sandbox"):GetBool() then
         return true
     else
         return false

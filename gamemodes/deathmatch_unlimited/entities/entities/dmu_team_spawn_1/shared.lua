@@ -21,6 +21,7 @@ function ENT:Initialize()
     self:SetCollisionGroup(COLLISION_GROUP_DEBRIS)
 
     self:SetAngles(Angle(0,0,0))
+    self:GetPhysicsObject():EnableMotion(false)
 
     if !sandbox:GetBool() then
         self:SetNoDraw(true)

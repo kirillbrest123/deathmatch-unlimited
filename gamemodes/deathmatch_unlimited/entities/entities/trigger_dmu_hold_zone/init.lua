@@ -34,10 +34,8 @@ end
 
 function ENT:Disable()
     DMU.Remove3D2DPos(self:EntIndex())
-    if self.Team != -1 then
-        for k, _ in ipairs(DMU.Mode.Teams) do
-            DMU.RemoveBotTeamObjective(self.Team, self)
-        end
+    for k, _ in ipairs(DMU.Mode.Teams) do
+        DMU.RemoveBotTeamObjective(k, self)
     end
 
     self.Disabled = true
