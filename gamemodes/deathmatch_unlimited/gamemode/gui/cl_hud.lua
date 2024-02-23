@@ -258,11 +258,17 @@ local music_disabled = CreateClientConVar( "dmu_client_disable_victory_music", "
 net.Receive("DMU_MatchVictoryAnnouncement", function()
     announcement_time = CurTime() + 10
     announcement_fadein_timer = CurTime() + 0.2
-    local winner = net.ReadUInt(13)
+    local is_winner_player = net.ReadBool()
+    local winner
+    if is_winner_player then
+        winner = net.ReadPlayer()
+    else
+        winner = net.ReadUInt(13)
+    end
 
     hook.Run("DMU_GameEnded", winner)
 
-    if DMU.Mode.FFA and winner == LocalPlayer():EntIndex() or !DMU.Mode.FFA and winner == LocalPlayer():Team() then
+    if is_winner_player and winner == LocalPlayer() or !is_winner_player and winner == LocalPlayer():Team() then
         announcement_text = "Victory"
         if !(DMU.Mode.RoundBased) and !music_disabled:GetBool() then -- music will be already playing from round victory announcement. Too bad there's no way to stop sounds played with surface.PlaySound()
             surface.PlaySound("music/hl2_song15.mp3")
@@ -278,7 +284,13 @@ end)
 net.Receive("DMU_RoundVictoryAnnouncement", function()
     announcement_time = CurTime() + 10
     announcement_fadein_timer = CurTime() + 0.2
-    local winner = net.ReadUInt(13)
+    local is_winner_player = net.ReadBool()
+    local winner
+    if is_winner_player then
+        winner = net.ReadPlayer()
+    else
+        winner = net.ReadUInt(13)
+    end
     
     if winner == 0 then
         announcement_text = "Round End"
@@ -288,11 +300,9 @@ net.Receive("DMU_RoundVictoryAnnouncement", function()
         return
     end
 
-    winner = winner - 1
-
     hook.Run("DMU_RoundEnd", winner)
-
-    if DMU.Mode.FFA and winner == LocalPlayer():EntIndex() or !DMU.Mode.FFA and winner == LocalPlayer():Team() then
+    
+    if is_winner_player and winner == LocalPlayer() or !is_winner_player and winner == LocalPlayer():Team() then
         announcement_text = "Round Won"
         if !music_disabled:GetBool() then
             surface.PlaySound("music/hl2_song15.mp3")

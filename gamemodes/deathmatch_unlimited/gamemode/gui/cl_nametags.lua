@@ -16,20 +16,19 @@ local function render(bDrawingDepth, bDrawingSkybox, isDraw3DSkybox)
     if my_team == TEAM_UNASSIGNED then return end
 
     for _, ply in ipairs(player.GetAll()) do
-        if ply:Team() != my_team or !ply:Alive() or ply == LocalPlayer() then continue end
-        local pos = ply:EyePos() + offset
-        local ang = _EyeAngles()
-        ang:RotateAroundAxis(ang:Right(),90)
-        ang:RotateAroundAxis(-ang:Up(),90)
+        if (ply:Team() == my_team or !LocalPlayer():Alive()) and ply:Alive() and ply != LocalPlayer() then
+            local pos = ply:EyePos() + offset
+            local ang = _EyeAngles()
+            ang:RotateAroundAxis(ang:Right(),90)
+            ang:RotateAroundAxis(-ang:Up(),90)
 
-        //local alpha = 1 - math.Clamp((pos:DistToSqr(LocalPlayer():GetPos()) - min_distance) / max_distance, 0, 1)
-        local color = team_GetColor(ply:Team())
-        //color.a = 255 * alpha
+            local color = team_GetColor(ply:Team())
 
-        cam.Start3D2D(pos, ang, scale:GetFloat() * 0.2)
-            draw_SimpleTextOutlined( ply:Name(), "DermaLarge", 0, 0, color, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 1, color_black)
-            draw_SimpleTextOutlined( ply:Health() .. "% | " .. ply:Armor() .. "%", "DermaLarge", 0, 24, color, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 1, color_black)
-        cam.End3D2D()
+            cam.Start3D2D(pos, ang, scale:GetFloat() * 0.2)
+                draw_SimpleTextOutlined( ply:Name(), "DermaLarge", 0, 0, color, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 1, color_black)
+                draw_SimpleTextOutlined( ply:Health() .. "% | " .. ply:Armor() .. "%", "DermaLarge", 0, 24, color, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 1, color_black)
+            cam.End3D2D()
+        end
     end
 end
 

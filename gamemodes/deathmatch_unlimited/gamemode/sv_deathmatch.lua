@@ -17,6 +17,7 @@ util.AddNetworkString("DMU_MatchVictoryAnnouncement")
 
 function DMU.EndGame(winner)
 
+    if DMU.GameEnded then return end
     DMU.GameEnded = true
 
     if !winner then -- try to find a winner
@@ -42,12 +43,15 @@ function DMU.EndGame(winner)
 
     hook.Run("DMU_GameEnded", winner)
 
-    if isentity(winner) then
-        winner = winner:EntIndex()
-    end
+    local is_winner_player = isentity(winner)
 
     net.Start("DMU_MatchVictoryAnnouncement")
-        net.WriteUInt(winner, 13)
+        net.WriteBool(is_winner_player)
+        if is_winner_player then
+            net.WritePlayer(winner)
+        else
+            net.WriteUInt(winner, 13)
+        end
     net.Broadcast()
 
     timer.Simple(10, function()

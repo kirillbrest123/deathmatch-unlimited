@@ -1,9 +1,8 @@
 MODE.Name = "Survival"
-MODE.FriendlyFire = false
+MODE.FriendlyFire = true
 MODE.RespawnTime = -1
 MODE.TimeLimit = 300
 MODE.FFA = true
-MODE.FriendlyFire = true
 MODE.RoundBased = true
 MODE.RoundLimit = 7
 
@@ -63,20 +62,4 @@ end
 
 MODE.Hooks.PlayerSilentDeath = MODE.Hooks.PlayerDeath
 
-MODE.Hooks.PlayerDisconnected = function()
-    if DMU.GameEnded or DMU.RoundEnded then return end
-
-    local players_alive = 0
-    local survivor
-    for _, ply in ipairs(player.GetAll()) do
-        if ply:Alive() then
-            players_alive = players_alive + 1
-            survivor = ply
-        end
-    end
-
-    if players_alive == 1 then
-        survivor:AddScore(1)
-        DMU.EndRound(survivor)
-    end
-end
+MODE.Hooks.PlayerDisconnected = MODE.Hooks.PlayerDeath

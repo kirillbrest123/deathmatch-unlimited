@@ -94,9 +94,11 @@ function ENT:TeamChanged(name, old, new)
 end
 
 function ENT:OnRemove()
-    for k,v in ipairs(DMU.Mode.Teams) do
-        if k == new then continue end
-        DMU.RemoveBotTeamObjective(k, self)
+    if DMU.Mode.Teams then
+        for k,v in ipairs(DMU.Mode.Teams) do
+            if k == new then continue end
+            DMU.RemoveBotTeamObjective(k, self)
+        end
     end
 end
 

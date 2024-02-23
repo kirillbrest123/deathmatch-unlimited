@@ -14,7 +14,7 @@ DMU.DefaultPlayLists = {
     },
     {
         name = "FFA Brawl",
-        modes = {"FFA Deathmatch", "Instagib", "One In The Chamber", "Juggernaut", "Gun Game"},
+        modes = {"FFA Deathmatch", "Instagib", "One In The Chamber", "Juggernaut", "Gun Game", "Contamination"},
         thumbnail = "game_mode_banners/ffa_brawl.png"
     },
     {

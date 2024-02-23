@@ -56,19 +56,27 @@ end
 
 function DMU.EndRound(winner)
 
+    if DMU.RoundEnded then return end
     DMU.RoundEnded = true
 
     if !winner then
         net.Start("DMU_RoundVictoryAnnouncement")
+            net.WriteBool(false)
             net.WriteUInt(0, 13)
         net.Broadcast()
     else
+        local is_winner_player = false
         if isentity(winner) then
-            winner = winner:EntIndex()
+            is_winner_player = true
         end
 
         net.Start("DMU_RoundVictoryAnnouncement")
-            net.WriteUInt(winner + 1, 13)
+            net.WriteBool(is_winner_player)
+            if is_winner_player then
+                net.WritePlayer(winner)
+            else
+                net.WriteUInt(winner, 13)
+            end
         net.Broadcast()
     end
 

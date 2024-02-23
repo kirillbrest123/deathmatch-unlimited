@@ -57,17 +57,20 @@ function ENT:UpdateTransmitState()
 end
 
 function ENT:OnRemove()
-    if (!DMU.Mode.Teams) then return end
-    for k, _ in ipairs(DMU.Mode.Teams) do
-        DMU.RemoveBotTeamObjective(k, self)
+    if DMU.Mode.Teams then
+        for k, _ in ipairs(DMU.Mode.Teams) do
+            DMU.RemoveBotTeamObjective(k, self)
+        end
     end
     DMU.Remove3D2DEnt(self)
 end
 
 function ENT:Disable()
     DMU.Remove3D2DEnt(self)
-    for k, _ in ipairs(DMU.Mode.Teams) do
-        DMU.RemoveBotTeamObjective(k, self)
+    if DMU.Mode.Teams then
+        for k, _ in ipairs(DMU.Mode.Teams) do
+            DMU.RemoveBotTeamObjective(k, self)
+        end
     end
 
     self.Disabled = true

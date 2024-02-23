@@ -23,8 +23,10 @@ function ENT:Initialize()
     self.LastThink = CurTime()
     DMU.Add3D2DPos(self:EntIndex(), self:GetPos(), "hold_zone_icons/hold_zone_" .. self.Identifier .. ".png")
 
-    for k, _ in ipairs(DMU.Mode.Teams) do
-        DMU.AddBotTeamObjective(k, self)
+    if DMU.Mode.Teams then
+        for k, _ in ipairs(DMU.Mode.Teams) do
+            DMU.AddBotTeamObjective(k, self)
+        end
     end
 end
 
@@ -34,8 +36,10 @@ end
 
 function ENT:Disable()
     DMU.Remove3D2DPos(self:EntIndex())
-    for k, _ in ipairs(DMU.Mode.Teams) do
-        DMU.RemoveBotTeamObjective(k, self)
+    if DMU.Mode.Teams then
+        for k, _ in ipairs(DMU.Mode.Teams) do
+            DMU.RemoveBotTeamObjective(k, self)
+        end
     end
 
     self.Disabled = true
