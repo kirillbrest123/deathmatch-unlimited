@@ -34,7 +34,7 @@ DMU.DefaultPlayLists = {
     },
     {
         name = "Search and Survive",
-        modes = {"Showdown", "Survival", "Evolution", "Takedown"},
+        modes = {"Showdown", "Survival", "Evolution", "Takedown", "Survival Duo"},
         thumbnail = "game_mode_banners/search_and_survive.png"
     },
 }

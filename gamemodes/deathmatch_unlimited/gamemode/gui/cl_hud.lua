@@ -261,7 +261,7 @@ net.Receive("DMU_MatchVictoryAnnouncement", function()
     local is_winner_player = net.ReadBool()
     local winner
     if is_winner_player then
-        winner = net.ReadPlayer()
+        winner = net.ReadEntity()
     else
         winner = net.ReadUInt(13)
     end
@@ -287,7 +287,7 @@ net.Receive("DMU_RoundVictoryAnnouncement", function()
     local is_winner_player = net.ReadBool()
     local winner
     if is_winner_player then
-        winner = net.ReadPlayer()
+        winner = net.ReadEntity()
     else
         winner = net.ReadUInt(13)
     end

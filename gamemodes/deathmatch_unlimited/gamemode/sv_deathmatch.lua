@@ -48,7 +48,7 @@ function DMU.EndGame(winner)
     net.Start("DMU_MatchVictoryAnnouncement")
         net.WriteBool(is_winner_player)
         if is_winner_player then
-            net.WritePlayer(winner)
+            net.WriteEntity(winner)
         else
             net.WriteUInt(winner, 13)
         end
