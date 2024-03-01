@@ -66,7 +66,7 @@ function SWEP:PrimaryAttack()
     self:SetNextPrimaryFire( CurTime() + 0.25 ) 
 
 	local owner = self:GetOwner()
-	if ( !owner:IsNPC() ) then owner:ViewPunch( Angle( -1, 0, 0 ) ) end
+	if !owner:IsNPC() then owner:ViewPunch( Angle( -1, 0, 0 ) ) end
 end
 
 function SWEP:SecondaryAttack()

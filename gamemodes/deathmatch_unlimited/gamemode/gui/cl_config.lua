@@ -168,6 +168,8 @@ function PANEL:Init()
     self.Modes = vgui.Create("DTextEntry", options_holder)
     self.Modes:Dock(TOP)
     self.Modes:SetUpdateOnType(true)
+    self.Modes:SetTall(96)
+    self.Modes:SetMultiline(true)
     self.Modes.OnValueChange = function(panel, value)
         if !self.SelectedPlaylist then return end
         value = string.Split(value, ",")
@@ -182,6 +184,9 @@ function PANEL:Init()
 
     self.Maps = vgui.Create("DTextEntry", options_holder)
     self.Maps:Dock(TOP)
+    self.Maps:SetUpdateOnType(self)
+    self.Maps:SetTall(96)
+    self.Maps:SetMultiline(true)
     self.Maps.OnValueChange = function(panel, value)
         if !self.SelectedPlaylist then return end
         value = string.Split(value, ",")

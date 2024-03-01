@@ -41,6 +41,7 @@ if SERVER then
 
         if !attacker:IsPlayer() then return end
         if attacker == victim then return end
+        if DMU.Mode.FriendlyFire and victim:Team() == attacker:Team() then return end
 
         -- First Blood
         if !DMU.FirstBloodHappened then

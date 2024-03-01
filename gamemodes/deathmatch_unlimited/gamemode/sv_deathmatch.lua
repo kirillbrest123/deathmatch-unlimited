@@ -1,5 +1,3 @@
-gameevent.Listen( "player_activate" )
-
 DMU.BotObjectives = {}
 DMU.BotTeamObjectives = {}
 

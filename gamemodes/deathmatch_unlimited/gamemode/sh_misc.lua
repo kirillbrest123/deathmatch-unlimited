@@ -80,7 +80,8 @@ else
         surface.PlaySound("ui/hint.wav")
     end)
 
-    hook.Add("InitPostEntity", "DMU_GiveInstructions", function()
+    hook.Add("player_activate", "DMU_GiveInstructions", function(data)
+        if Player(data.userid) != LocalPlayer() then return end
         timer.Simple(5, function()
             chat.AddText(color_white, "Current Game Mode: ", DMU.color_crimson, DMU.Mode.PrintName or DMU.Mode.Name)
 

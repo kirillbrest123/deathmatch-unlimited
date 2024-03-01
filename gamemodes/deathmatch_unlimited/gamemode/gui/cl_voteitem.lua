@@ -53,6 +53,10 @@ function PANEL:Paint(w, h)
         surface.SetDrawColor(DMU.color_crimson)
     end
     surface.DrawRect(0, 0, w, h)
+
+	if self.Material:IsError() then
+		self.Material = Material("gui/noicon.png")
+	end
     surface.SetMaterial( self.Material )
 
     if !self.NoResizing then

@@ -6,7 +6,7 @@ GM.Email = "N/A"
 GM.Website = "N/A"
 
 DMU = {}
-DMU.Version = 1204
+DMU.Version = 1206
 print("[DMU] DMU Version is v" .. DMU.Version)
 
 -- Convert old playlist files
@@ -37,6 +37,8 @@ if SERVER and cookie.GetNumber( "DMU_LastVersion", 0 ) < 1200 then
 end
 
 cookie.Set( "DMU_LastVersion", DMU.Version )
+
+gameevent.Listen( "player_activate" )
 
 function GM:Initialize()
 

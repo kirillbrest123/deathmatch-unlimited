@@ -73,6 +73,7 @@ function SWEP:PrimaryAttack()
 
 	if tr.Hit then
 		if IsValid(tr.Entity) then
+			print("HI")
 			local dmginfo = DamageInfo()
 			dmginfo:SetDamage(45)
 			dmginfo:SetAttacker(self:GetOwner())
@@ -86,15 +87,17 @@ function SWEP:PrimaryAttack()
 	else
 
 		local proj = ents.Create("crossbow_bolt")
-		proj:SetPos(owner:GetShootPos() + dest * 48)
-		proj:SetAngles(dest:Angle())
-		
-		proj:Spawn()
-
 		proj:Fire("SetDamage", "40") -- HAAHAHAHAHAHA I FOUND IT
-	
 		proj:SetOwner(owner)
+
+		proj:SetPos(owner:GetShootPos())
+		proj:SetAngles(dest:Angle())
+	
 		proj:SetVelocity(dest * 3500)
+
+		timer.Simple(0, function() -- WHY DOES IT NOT APPLY DAMAGE UNTIL 1 TICK HAS PASSED
+			proj:Spawn()
+		end)
 	end
 end
 

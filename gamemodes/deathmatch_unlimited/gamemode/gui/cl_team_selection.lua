@@ -105,6 +105,11 @@ function PANEL:Init()
         else
             btn.Material = Material("team_banners/" .. k .. ".png")
         end
+
+        if btn.Material:IsError() then
+            btn.Material = Material("gui/noicon.png")
+        end
+
         x = x + item_wide + gap
     end
 
