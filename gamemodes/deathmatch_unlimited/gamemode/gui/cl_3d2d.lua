@@ -1,20 +1,20 @@
-local _3D2D_entities = {
+DMU._3D2D_entities = {
 
 }
-local _3D2D_positions = {
+DMU._3D2D_positions = {
 
 }
 
 net.Receive("DMU_Sync3D2DEnt", function()
-    _3D2D_entities = net.ReadTable()
-    for _, tbl in ipairs(_3D2D_entities) do
+    DMU._3D2D_entities = net.ReadTable()
+    for _, tbl in ipairs(DMU._3D2D_entities) do
         tbl.mat = Material(tbl.mat)
     end
 end)
 
 net.Receive("DMU_Sync3D2DPos", function()
-    _3D2D_positions = net.ReadTable()
-    for _, tbl in ipairs(_3D2D_positions) do
+    DMU._3D2D_positions = net.ReadTable()
+    for _, tbl in ipairs(DMU._3D2D_positions) do
         tbl.mat = Material(tbl.mat)
     end
 end)
@@ -27,7 +27,7 @@ local function render(bDrawingDepth, bDrawingSkybox, isDraw3DSkybox)
 
 
     cam.IgnoreZ(true)
-    for _, tbl in ipairs(_3D2D_entities) do
+    for _, tbl in ipairs(DMU._3D2D_entities) do
         if tbl.entity != NULL then -- sometimes entities get networked to client with a delay???? or maybe they don't get networked until they are in PVS??
             cam.Start3D2D(tbl.entity:GetPos(), render_ang, 0.5)
                 surface.SetMaterial(tbl.mat)
@@ -37,7 +37,7 @@ local function render(bDrawingDepth, bDrawingSkybox, isDraw3DSkybox)
         end
     end
 
-    for _, tbl in ipairs(_3D2D_positions) do
+    for _, tbl in ipairs(DMU._3D2D_positions) do
         cam.Start3D2D(tbl.pos, render_ang, 0.5)
             surface.SetMaterial(tbl.mat)
             surface.SetDrawColor(tbl.color or color_white)

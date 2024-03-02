@@ -29,7 +29,7 @@ DMU.DefaultPlayLists = {
     },
     {
         name = "Team Rumble",
-        modes = {"Laser Tag", "SWAT", "Zombie VIP"},
+        modes = {"Laser Tag", "SWAT", "Zombie VIP", "Team Fiesta"},
         thumbnail = "game_mode_banners/team_rumble.png"
     },
     {
@@ -71,6 +71,22 @@ if SERVER then
     function plymeta:DMU_SetGravity( gravity )
         self:SetGravity(gravity)
         self:SetNWFloat("DMU_Gravity", gravity)
+    end
+
+    function DMU.GetRandomSpotOnNavmesh()
+        local navareas = navmesh.GetAllNavAreas()
+        if table.IsEmpty(navareas) then return end
+
+        for i = 1, 10 do
+            local navarea = navareas[math.random(#navareas)]
+
+            if navarea:IsUnderwater() or navarea:IsDamaging() or bit.band(navarea:GetAttributes(), NAV_MESH_INVALID + NAV_MESH_AVOID + NAV_MESH_TRANSIENT + NAV_MESH_STAIRS) != 0 then
+                continue 
+            end
+            return navarea:GetCenter()
+        end
+
+        return navareas[math.random(#navareas)]:GetCenter()
     end
 
 else

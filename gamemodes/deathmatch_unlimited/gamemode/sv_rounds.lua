@@ -19,6 +19,7 @@ function DMU.StartNextRound()
         ply:StripWeapons() -- maybe we need to use DMU.Mode.Teams here?
         ply:RemoveAllAmmo() -- i'm a bit confused. it can potentially cause problems with game modes like round-based juggernaut or smth
         ply:Spawn() -- does it even matter??
+        timer.Remove(ply:SteamID64() .. "respawn_timer")
         ply:Freeze(true)
     end
 

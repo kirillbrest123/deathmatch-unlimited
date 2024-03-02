@@ -104,6 +104,8 @@ function ENT:Think()
     end
 
     if self.HoldProgress >= 100 then
+        local old_team = self.Team
+
         if self.Team != -1 then
             DMU.AddBotTeamObjective(self.Team, self)
             self.Team = -1
@@ -115,6 +117,8 @@ function ENT:Think()
             self.HoldProgress = 0
             DMU.Add3D2DPos(self:EntIndex(), self:GetPos(), "hold_zone_icons/hold_zone_" .. self.Identifier .. ".png", team.GetColor(biggest_team))
         end
+
+        hook.Run("DMU_HoldZoneCaptured", biggest_team, self.Team, old_team)
     end
 
     for _, ply in pairs(self.PlayersInZone) do
@@ -147,4 +151,12 @@ function ENT:EndTouch(ent)
         net.WriteInt(0, 8)
         net.WriteUInt(0, 4) 
     net.Send(ent)
+end
+
+function ENT:GetIdentifier()
+    return self.Identifier
+end
+
+function ENT:SetIdentifier(i)
+    self.Identifier = i
 end

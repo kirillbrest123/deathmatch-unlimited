@@ -24,6 +24,60 @@ MODE.Weapons = {
 
 MODE.Instructions = "Steal the enemy flag and bring it back to your base to score points."
 
+MODE.Hooks.InitPostEntity = function()
+    if CLIENT then return end
+    timer.Simple(0, function()
+        if !table.IsEmpty(ents.FindByClass("dmu_flag_base")) then return end
+
+        MsgC(Color(255,0,0), "\n[DMU] There are no flag bases! Using navmesh to create some. There can be issues!")
+        MsgC(Color(255,0,0), "\n[DMU] You should really add some flags using Modest Map Manipulator or Hammer instead!\n")
+
+        local red_spawns = team.GetSpawnPoints(1)
+        local blue_spawns = team.GetSpawnPoints(2)
+
+        if table.IsEmpty(red_spawns) then
+            local pos = DMU.GetRandomSpotOnNavmesh()
+            if !pos then
+                ErrorNoHalt("There are no flags AND no navmesh! You must either add some flags or generate a navmesh with 'nav_generate'!")
+                return
+            end
+
+            local navmeshes = navmesh.Find(pos, 256, 128, 128)
+
+            local flag = ents.Create("dmu_flag_base")
+            flag:SetPos( navmeshes[math.random(#navmeshes)]:GetCenter() )
+            flag:SetTeam(1)
+            flag:Spawn()
+
+            local pos = DMU.GetRandomSpotOnNavmesh()
+
+            local navmeshes = navmesh.Find(pos, 256, 128, 128)
+
+            local flag = ents.Create("dmu_flag_base")
+            flag:SetPos( navmeshes[math.random(#navmeshes)]:GetCenter() )
+            flag:SetTeam(2)
+            flag:Spawn()
+        else
+            local navmeshes = navmesh.Find(red_spawns[1]:GetPos(), 256, 128, 128)
+            if table.IsEmpty(navmeshes) then
+                
+                return
+            end
+
+            local flag = ents.Create("dmu_flag_base")
+            flag:SetPos( navmeshes[math.random(#navmeshes)]:GetCenter() )
+            flag:SetTeam(1)
+            flag:Spawn()
+
+            local navmeshes = navmesh.Find(blue_spawns[1]:GetPos(), 256, 128, 128)
+            local flag = ents.Create("dmu_flag_base")
+            flag:SetPos( navmeshes[math.random(#navmeshes)]:GetCenter() )
+            flag:SetTeam(2)
+            flag:Spawn()
+        end
+    end)
+end
+
 MODE.Hooks.PlayerLoadout = function(ply)
     if CLIENT then return end
 

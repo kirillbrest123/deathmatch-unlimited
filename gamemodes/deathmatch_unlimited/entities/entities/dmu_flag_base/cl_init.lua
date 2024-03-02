@@ -72,6 +72,7 @@ function ENT:EmptyChanged(name, old, new)
 end
 
 -- i would rather avoid using sv_3d2d.lua whenever an entity exists on client
+-- \/ this doesn't actually work properly for some reason. It draws the thing slightly off and i have no idea why it happens
 hook.Add("HUDPaint", "DMU_FlagBases3D2D", function()
 
         for k,v in pairs(flag_bases) do

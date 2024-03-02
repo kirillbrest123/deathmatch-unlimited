@@ -22,7 +22,29 @@ MODE.Hooks = {}
 
 MODE.Hooks.InitPostEntity = function()
     if CLIENT then return end
-    DMU.Mode.ScoreLimit = #ents.FindByClass("*dmu_hold_zone") * 200
+
+    timer.Simple(0, function() -- navmesh is not loaded on initpostentity for some reason
+        DMU.Mode.ScoreLimit = #ents.FindByClass("*dmu_hold_zone") * 200
+
+        if DMU.Mode.ScoreLimit != 0 then return end
+    
+        MsgC(Color(255,0,0), "\n[DMU] There are no hills! Using navmesh to create some. There can be issues!")
+        MsgC(Color(255,0,0), "\n[DMU] You should really add some hills using Modest Map Manipulator or Hammer instead!\n")
+
+        for i = 0, 2 do
+            local pos = DMU.GetRandomSpotOnNavmesh()
+            if pos == nil then
+                ErrorNoHalt("There are no hills AND no navmesh! You must either add some hills or generate a navmesh with 'nav_generate'!")
+                return
+            end
+            local hill = ents.Create("dmu_hold_zone")
+            hill:SetPos(pos + Vector(0,0,48))
+            hill:SetIdentifier(i)
+            hill:Spawn()
+        end
+
+        DMU.Mode.ScoreLimit = 600
+    end)
 end
 
 MODE.Hooks.PlayerLoadout = function(ply)

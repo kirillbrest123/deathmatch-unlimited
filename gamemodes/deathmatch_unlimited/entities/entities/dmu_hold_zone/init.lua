@@ -22,9 +22,9 @@ function ENT:Initialize()
     if !DMU.Mode.HillsEnabled or !DMU.Mode.Teams then self:Remove() return end
     self.Disabled = false
     self.LastThink = CurTime()
-    timer.Simple(0.1, function() -- will hopefully make sure that it networks the right thing
+    -- timer.Simple(0.1, function() -- will hopefully make sure that it networks the right thing
         DMU.Add3D2DEnt(self, "hold_zone_icons/hold_zone_" .. self:GetIdentifier() .. ".png")
-    end)
+    -- end)
 
     for k, _ in ipairs(DMU.Mode.Teams) do
         DMU.AddBotTeamObjective(k, self)
@@ -135,6 +135,8 @@ function ENT:Think()
     end
 
     if self.HoldProgress >= 100 then
+        local old_team = self.Team
+
         if self.Team != -1 then
             DMU.AddBotTeamObjective(self.Team, self)
             self.Team = -1
@@ -146,6 +148,8 @@ function ENT:Think()
             self.HoldProgress = 0
             DMU.Add3D2DEnt(self, "hold_zone_icons/hold_zone_" .. self:GetIdentifier() .. ".png", team.GetColor(biggest_team))
         end
+
+        hook.Run("DMU_HoldZoneCaptured", biggest_team, self.Team, old_team)
     end
 
     for _, ply in pairs(self.PlayersInZone) do

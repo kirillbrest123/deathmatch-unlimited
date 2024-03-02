@@ -65,7 +65,7 @@ function DMU.Sync3D2DPos()
 end
 
 hook.Add("player_activate", "DMU_Initial3D2DSync",function()
-    timer.Simple(1, function() -- networking is hell
+    timer.Simple(3, function() -- networking is hell
         DMU.Sync3D2DEnt()
         DMU.Sync3D2DPos()
     end)

@@ -44,6 +44,55 @@ MODE.Hooks.DMU_PreRoundStart = function()
     if CLIENT then return end
     local attacking_team = DMU.Round % 2 + 1
 
+    if table.IsEmpty(ents.FindByClass("dmu_flag_base")) then
+        MsgC(Color(255,0,0), "\n[DMU] There are no flag bases! Using navmesh to create some. There can be issues!")
+        MsgC(Color(255,0,0), "\n[DMU] You should really add some flags using Modest Map Manipulator or Hammer instead!\n")
+
+        local red_spawns = team.GetSpawnPoints(1)
+        local blue_spawns = team.GetSpawnPoints(2)
+
+        if table.IsEmpty(red_spawns) then
+            local pos = DMU.GetRandomSpotOnNavmesh()
+            if !pos then
+                ErrorNoHalt("There are no flags AND no navmesh! You must either add some flags or generate a navmesh with 'nav_generate'!")
+                return
+            end
+
+            local navmeshes = navmesh.Find(pos, 256, 128, 128)
+
+            local flag = ents.Create("dmu_flag_base")
+            flag:SetPos( navmeshes[math.random(#navmeshes)]:GetCenter() )
+            flag:SetTeam(1)
+            flag:Spawn()
+
+            local pos = DMU.GetRandomSpotOnNavmesh()
+
+            local navmeshes = navmesh.Find(pos, 256, 128, 128)
+
+            local flag = ents.Create("dmu_flag_base")
+            flag:SetPos( navmeshes[math.random(#navmeshes)]:GetCenter() )
+            flag:SetTeam(2)
+            flag:Spawn()
+        else
+            local navmeshes = navmesh.Find(red_spawns[1]:GetPos(), 256, 128, 128)
+            if table.IsEmpty(navmeshes) then
+                
+                return
+            end
+
+            local flag = ents.Create("dmu_flag_base")
+            flag:SetPos( navmeshes[math.random(#navmeshes)]:GetCenter() )
+            flag:SetTeam(1)
+            flag:Spawn()
+
+            local navmeshes = navmesh.Find(blue_spawns[1]:GetPos(), 256, 128, 128)
+            local flag = ents.Create("dmu_flag_base")
+            flag:SetPos( navmeshes[math.random(#navmeshes)]:GetCenter() )
+            flag:SetTeam(2)
+            flag:Spawn()
+        end
+    end
+
     for k,v in ipairs(ents.FindByClass("dmu_flag_base")) do
         if v:GetTeam() == attacking_team then
             v:Disable()
@@ -51,7 +100,11 @@ MODE.Hooks.DMU_PreRoundStart = function()
     end
 end
 
-MODE.Hooks.InitPostEntity = MODE.Hooks.DMU_PreRoundStart
+MODE.Hooks.InitPostEntity = function()
+    timer.Simple(0, function()
+        hook.Run("DMU_PreRoundStart")
+    end)
+end
 
 MODE.Hooks.DMU_RoundStart = function()
     if CLIENT then return end
