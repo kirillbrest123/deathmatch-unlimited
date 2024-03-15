@@ -34,7 +34,7 @@ MODE.Hooks.PlayerLoadout = function(ply)
     return true
 end
 
-MODE.Hooks.DMU_HoldZoneScore = function(index, t)
+MODE.Hooks.DMU_HoldZoneScore = function(hill, t)
     if DMU.GameEnded then return end
     team.AddScore(t, 1)
 

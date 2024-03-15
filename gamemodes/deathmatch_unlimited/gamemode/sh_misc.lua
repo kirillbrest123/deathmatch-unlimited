@@ -24,12 +24,12 @@ DMU.DefaultPlayLists = {
     },   
     {
         name = "Team Objective",
-        modes = {"Domination", "Kill Confirmed", "King Of The Hill", "CTF", "One Flag CTF"},
+        modes = {"Domination", "Kill Confirmed", "King Of The Hill", "CTF", "One Flag CTF", "Oddball"},
         thumbnail = "game_mode_banners/team_objective.png"
     },
     {
         name = "Team Rumble",
-        modes = {"Laser Tag", "SWAT", "Zombie VIP", "Team Fiesta"},
+        modes = {"Laser Tag", "SWAT", "Zombie VIP", "Team Fiesta", "Flying Oddball"},
         thumbnail = "game_mode_banners/team_rumble.png"
     },
     {
@@ -80,7 +80,7 @@ if SERVER then
         for i = 1, 10 do
             local navarea = navareas[math.random(#navareas)]
 
-            if navarea:IsUnderwater() or navarea:IsDamaging() or bit.band(navarea:GetAttributes(), NAV_MESH_INVALID + NAV_MESH_AVOID + NAV_MESH_TRANSIENT + NAV_MESH_STAIRS) != 0 then
+            if navarea:IsUnderwater() or bit.band(navarea:GetAttributes(), NAV_MESH_INVALID + NAV_MESH_AVOID + NAV_MESH_TRANSIENT + NAV_MESH_STAIRS) != 0 then
                 continue 
             end
             return navarea:GetCenter()
@@ -93,7 +93,7 @@ else
 
     net.Receive("DMU_Notification", function()
         notification.AddLegacy( net.ReadString(), 0, 5 )
-        surface.PlaySound("ui/hint.wav")
+        surface.PlaySound("ui/hint.wav") -- no way it's from css
     end)
 
     hook.Add("player_activate", "DMU_GiveInstructions", function(data)

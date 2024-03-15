@@ -13,6 +13,7 @@ DMU.RegisterMedal("headshot", "Headshot", "medals/headshot.png")
 DMU.RegisterMedal("premature_burial", "Premature Burial", "medals/premature_burial.png")
 DMU.RegisterMedal("king_slayer", "King Slayer", "medals/kingslayer.png")
 DMU.RegisterMedal("collateral", "Collateral", "medals/collateral.png")
+DMU.RegisterMedal("mvp", "MVP", "medals/star_yellow.png")
 
 DMU.RegisterMedal("double_kill", "Double Kill", "medals/killstreak1.png")
 DMU.RegisterMedal("triple_kill", "Triple Kill", "medals/killstreak2.png")

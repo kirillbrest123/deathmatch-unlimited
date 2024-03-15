@@ -1,4 +1,4 @@
-ENT.PrintName = "weapon spawner"
+ENT.PrintName = "Weapon Spawner"
 
 ENT.Type = "anim"
 ENT.Base = "base_anim"

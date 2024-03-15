@@ -73,7 +73,6 @@ function SWEP:PrimaryAttack()
 
 	if tr.Hit then
 		if IsValid(tr.Entity) then
-			print("HI")
 			local dmginfo = DamageInfo()
 			dmginfo:SetDamage(45)
 			dmginfo:SetAttacker(self:GetOwner())

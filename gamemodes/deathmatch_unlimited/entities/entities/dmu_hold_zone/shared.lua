@@ -1,4 +1,4 @@
-ENT.PrintName = "hold zone"
+ENT.PrintName = "Hill"
 
 --ENT.Type = "anim"
 ENT.Base = "base_entity"

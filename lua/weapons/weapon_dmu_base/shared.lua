@@ -136,15 +136,20 @@ function SWEP:Holster()
 		self:SetADS( false )
 	end
 	
-	if CLIENT and IsValid(self.Owner) then
-		local vm = self.Owner:GetViewModel()
+	-- if SERVER and IsValid(self:GetOwner()) then -- "Before WEAPON:OnRemove is called, this function is only called serverside." - FUCK YOU
+	-- 	self:CallOnClient("Holster")
+	-- end
+
+	if CLIENT and IsValid(self:GetOwner()) then
+		local vm = self:GetOwner():GetViewModel()
 		if IsValid(vm) then
 			self:ResetBonePositions(vm)
 		end
 	end
 
 	self:SetReloading(false)
-	return self:CHolster() or true
+	local ret = self:CHolster()
+	return ret == nil or ret
 end
 
 function SWEP:OwnerChanged()

@@ -1,18 +1,17 @@
-SWEP.PrintName = "Flag"
+SWEP.PrintName = "Oddball"
     
 SWEP.Author = ".kkrill"
-SWEP.Instructions = "A flag. Press RMB to drop it. You should probably bring it to your base."
+SWEP.Instructions = "An odd-looking ball. Press RMB to drop it."
 SWEP.Category = "Deathmatch Unlimited"
 
 SWEP.Spawnable = true
 
 SWEP.Base = "weapon_dmu_base"
-SWEP.SubCategory = "FUCK"
 
 SWEP.HoldType = "melee2"
 SWEP.ViewModel = "models/weapons/c_crowbar.mdl"
-SWEP.WorldModel = "models/weapons/w_crowbar.mdl"
-SWEP.ViewModelFOV = 54
+SWEP.WorldModel = "models/weapons/w_bugbait.mdl"
+SWEP.ViewModelFOV = 70
 SWEP.ShowViewModel = true
 SWEP.ShowWorldModel = true
 SWEP.ViewModelBoneMods = {
@@ -38,25 +37,45 @@ SWEP.Melee = true -- used by bots
 SWEP.ShowWorldModel = false
 
 SWEP.WElements = {
-	["element_name1"] = { type = "Model", model = "models/hunter/plates/plate05x075.mdl", bone = "ValveBiped.Bip01_R_Hand", rel = "", pos = Vector(7.225, -10.745, -30.733), angle = Angle(94.378, -6.52, 0), size = Vector(0.5, 0.5, 0.009), color = Color(255, 255, 255, 255), surpresslightning = false, material = "models/debug/debugwhite", skin = 0, bodygroup = {} },
-	["element_name"] = { type = "Model", model = "models/hunter/plates/plate2.mdl", bone = "ValveBiped.Bip01_R_Hand", rel = "", pos = Vector(3.849, 0.639, -13.863), angle = Angle(6.446, 0, 90), size = Vector(0.5, 0.5, 0.5), color = Color(255, 255, 255, 255), surpresslightning = false, material = "", skin = 0, bodygroup = {} }
+	["ball"] = { type = "Model", model = "models/Gibs/HGIBS.mdl", bone = "ValveBiped.Bip01_R_Hand", rel = "", pos = Vector(3.766, 1.455, 0.388), angle = Angle(-17.074, -138.945, -180), size = Vector(1.463, 1.463, 1.463), color = Color(255, 255, 255, 255), surpresslightning = false, material = "", skin = 0, bodygroup = {} }
 }
 SWEP.VElements = {
-	["element_name1"] = { type = "Model", model = "models/hunter/plates/plate05x075.mdl", bone = "ValveBiped.Bip01_R_Hand", rel = "", pos = Vector(3.371, -4.861, -32.243), angle = Angle(90, 90, 90), size = Vector(0.5, 0.5, 0.009), color = Color(255, 255, 255, 255), surpresslightning = false, material = "models/debug/debugwhite", skin = 0, bodygroup = {} },
-	["element_name"] = { type = "Model", model = "models/hunter/plates/plate2.mdl", bone = "ValveBiped.Bip01_R_Hand", rel = "", pos = Vector(3.371, 0.686, -14.837), angle = Angle(0, 0, 90), size = Vector(0.5, 0.5, 0.5), color = Color(255, 255, 255, 255), surpresslightning = false, material = "", skin = 0, bodygroup = {} }
+	["ball"] = { type = "Model", model = "models/Gibs/HGIBS.mdl", bone = "ValveBiped.Bip01_R_Hand", rel = "", pos = Vector(3.444, 1.536, -2.564), angle = Angle(180, 0, 0), size = Vector(1.327, 1.327, 1.327), color = Color(255, 255, 255, 255), surpresslightning = false, material = "", skin = 0, bodygroup = {} }
 }
 
-local flags = flags or {}
+local oddballs = oddballs or {}
 
 function SWEP:CInitialize()
 
 	self:SetHoldType( "melee2" )
 
 	if SERVER then
-		DMU.AddBotObjective(self)
+		if DMU.Mode.Teams then
+			for k, _ in ipairs(DMU.Mode.Teams) do
+				DMU.AddBotTeamObjective(k, self)
+			end
+		end
+
+		self.light = ents.Create("light_dynamic")
+		self.light:SetKeyValue("brightness", "4")
+		self.light:SetKeyValue("distance", "128")
+		self.light:SetPos(self:GetPos())
+		self.light:Fire("Color", "255 0 0")
+		self.light:SetParent(self)
+		self.light:Spawn()
+		self.light:Activate()
+		self.light:Fire("TurnOn", "", 0)
+		self:DeleteOnRemove(self.light)
+
+		self.ScoreTimer = CurTime() + 1
+
+		timer.Create(self:GetCreationID() .. "dropped_remove_timer", 30, 1, function()
+			if !IsValid(self) or IsValid(self:GetOwner()) then return end
+			self:Remove()
+		end)
 	end
 	if CLIENT then
-		flags[self] = true
+		oddballs[self] = true
 	end
 
 	self._owner = self:GetOwner()
@@ -66,9 +85,7 @@ function SWEP:CSetupDataTables()
 
 	self:NetworkVar( "Float", 0, "NextMeleeAttack" )
 	self:NetworkVar( "Float", 1, "NextIdle" )
-	self:NetworkVar( "Int", 0, "Team" )
 
-	self:NetworkVarNotify("Team", self.TeamChanged)
 end
 
 function SWEP:UpdateNextIdle()
@@ -140,10 +157,10 @@ function SWEP:PrimaryAttack()
     local vm = owner:GetViewModel()
 
     if tr.Hit then
-		self:EmitSound( "Weapon_Crowbar.Melee_Hit" )
+		self:EmitSound( "dmu/weapons/bfb/hit0" .. math.random(3) .. ".mp3", 110, 100, 0.8, CHAN_WEAPON )
         vm:SendViewModelMatchingSequence( vm:LookupSequence( "Hitcenter" .. math.floor( util.SharedRandom(self:GetClass(), 1, 3) ) ) )
     else
-		self:EmitSound( "Weapon_Crowbar.Single" )
+		self:EmitSound( "Zombie.AttackMiss" )
         vm:SendViewModelMatchingSequence( vm:LookupSequence( "Misscenter" .. math.floor( util.SharedRandom(self:GetClass(), 1, 2) ) ) )
     end
 
@@ -154,10 +171,6 @@ end
 function SWEP:SecondaryAttack()
 	if CLIENT then return end
 	self:GetOwner():DropWeapon(self)
-	timer.Create(self:GetCreationID() .. "dropped_remove_timer", 15, 1, function()
-		if !IsValid(self) or IsValid(self:GetOwner()) then return end
-		self:Remove()
-	end)
 end
 
 function SWEP:Deploy()
@@ -199,43 +212,28 @@ function SWEP:Think()
 
 	end
 
+	if SERVER and CurTime() > self.ScoreTimer then
+		hook.Run("DMU_OddballScore", self, self:GetOwner())
+		self.ScoreTimer = CurTime() + 1
+	end
+
 end
 
 function SWEP:Equip(owner)
-	timer.Remove(self:GetCreationID() .. "dropped_remove_timer")
-	if owner:Team() == self:GetTeam() then
-		self:Remove()
-		return
-	end
-	owner:SelectWeapon("dmu_flag")
-
-	local bases = ents.FindByClass("dmu_flag_base")
-	for k,v in ipairs(bases) do
-		if v:GetTeam() == owner:Team() then
-			self.valid_base = v
-			break
-		end
-	end
-	if self.valid_base then
-		DMU.AddBotPersonalObjective(owner, self.valid_base)
-	end
-end
-
-function SWEP:OnRemove()
-	if CLIENT then
-		flags[self] = nil
-		return
-	end
-	
-	DMU.RemoveBotObjective(self)
-	if IsValid(self.valid_base) then
-		DMU.RemoveBotPersonalObjective(self._owner, self.valid_base)
-	end
+	owner:SelectWeapon("dmu_oddball")
+	DMU.RemoveBotTeamObjective(owner:Team(), self)
 end
 
 function SWEP:OnDrop()
-	if IsValid(self.valid_base) then
-		DMU.RemoveBotPersonalObjective(self._owner, self.valid_base)
+	timer.Create(self:GetCreationID() .. "dropped_remove_timer", 30, 1, function()
+		if !IsValid(self) or IsValid(self:GetOwner()) then return end
+		self:Remove()
+	end)
+
+	if DMU.Mode.Teams then
+		for k, _ in ipairs(DMU.Mode.Teams) do
+			DMU.AddBotTeamObjective(k, self)
+		end
 	end
 end
 
@@ -252,9 +250,19 @@ function SWEP:OwnerChanged()
 	self._owner = self:GetOwner()
 end
 
-function SWEP:TeamChanged(name, old, new)
-	self.WElements.element_name1.color = team.GetColor(new)
-	self.VElements.element_name1.color = team.GetColor(new)
+function SWEP:OnRemove()
+	if CLIENT then
+		oddballs[self] = nil
+		return
+	end
+
+	hook.Run("DMU_OddballRemoved", self)
+	
+	if DMU.Mode.Teams then
+        for k, _ in ipairs(DMU.Mode.Teams) do
+            DMU.RemoveBotTeamObjective(k, self)
+        end
+    end
 end
 
 function SWEP:SelfDestruct() -- stolen from rb655
@@ -291,17 +299,15 @@ end
 
 if SERVER then return end
 
-local flag_mat = Material("dmu/flag.png")
+local oddball_mat = Material("dmu/oddball.png")
 
 -- i would rather avoid using sv_3d2d.lua whenever an entity exists on client
-hook.Add("HUDPaint", "DMU_Flags3D2D", function()
-
-	for k,v in pairs(flags) do
+hook.Add("HUDPaint", "DMU_Oddball3D2D", function()
+	for k,_ in pairs(oddballs) do
 		local data = k:GetPos():ToScreen()
 		if !data.visible then continue end
-		surface.SetMaterial(flag_mat)
-		surface.SetDrawColor(team.GetColor(k:GetTeam()))
+		surface.SetMaterial(oddball_mat)
+		surface.SetDrawColor( IsValid(k:GetOwner()) and team.GetColor(k:GetOwner():Team()) or color_white )
 		surface.DrawTexturedRect(data.x - 16, data.y - 16, 32, 32)
 	end
-
 end)

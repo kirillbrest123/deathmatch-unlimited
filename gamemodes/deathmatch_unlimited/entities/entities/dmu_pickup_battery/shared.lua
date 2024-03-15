@@ -1,6 +1,6 @@
 AddCSLuaFile()
 
-ENT.PrintName = "battery pickup"
+ENT.PrintName = "Battery Pickup"
 
 ENT.Base = "dmu_pickup_base"
 ENT.Category = "Deathmatch Unlimited"

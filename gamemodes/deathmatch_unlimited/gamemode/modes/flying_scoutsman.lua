@@ -38,6 +38,7 @@ MODE.Hooks.PlayerSpawn = function(ply)
         ply:ManipulateBoneScale( ply:LookupBone("ValveBiped.Bip01_Head1"), Vector(2,2,2) ) -- make heads 2x bigger because it's hilarious
         if SERVER then
             ply:DMU_SetGravity(0.3)
+            ply:SetJumpPower(300)
         end
     end)
 end

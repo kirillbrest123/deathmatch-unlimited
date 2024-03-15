@@ -3,8 +3,6 @@ include("shared.lua")
 local flag_bases = flag_bases or {}
 
 function ENT:Initialize()
-    flag_bases[self] = true
-
     self:CreateModels()
 end
 
@@ -41,6 +39,7 @@ function ENT:CreateModels()
     self.FlagModel.Banner:Spawn()
     self.FlagModel.Banner:SetRenderMode( RENDERMODE_TRANSCOLOR )
 
+    flag_bases[self] = true
 	self:TeamChanged(nil, nil, self:GetTeam())
 
 	self:EmptyChanged(nil, nil, self:GetEmpty())

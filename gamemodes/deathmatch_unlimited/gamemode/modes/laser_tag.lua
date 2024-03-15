@@ -41,6 +41,7 @@ MODE.Hooks.PlayerSpawn = function(ply)
         if SERVER then
             ply:SetMaxHealth(30) -- ain't not shared
             ply:DMU_SetGravity(0.5)
+            ply:SetJumpPower(300)
         end
     end)
 end

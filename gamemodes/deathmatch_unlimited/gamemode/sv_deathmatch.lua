@@ -52,6 +52,19 @@ function DMU.EndGame(winner)
         end
     net.Broadcast()
 
+    if !DMU.Mode.FFA and !is_winner_player then
+        local plys = team.GetPlayers(winner)
+        local mvp = plys[1]
+        for _, ply in ipairs(plys) do
+            if ply:GetScore() > mvp:GetScore() then
+                mvp = ply
+            end
+        end
+        timer.Simple(5, function()
+            DMU.GiveMedal(mvp, "mvp")
+        end)
+    end
+
     timer.Simple(10, function()
         DMU.StartVotes()
     end)
@@ -119,11 +132,11 @@ end)
 hook.Add("DoPlayerDeath", "DMU_DropWeaponsOnDeath", function(ply)
     if DMU.Mode.DontDropWeapons then return end
     for _, wpn in ipairs(ply:GetWeapons()) do
-        ply:DropWeapon(wpn)
-        timer.Simple(15, function()
+        timer.Create(wpn:GetCreationID() .. "dropped_remove_timer", 15, 1, function()
             if !wpn:IsValid() or wpn:GetOwner():IsValid() then return end
             wpn:Remove()
         end)
+        ply:DropWeapon(wpn)
     end
 end)
 
@@ -344,6 +357,8 @@ function GM:PlayerSelectSpawn( pl, transiton )
 		-- Removing this one for the time being, c1m4_atrium has one of these in a box under the map
 		--self.SpawnPoints = table.Add( self.SpawnPoints, ents.FindByClass( "info_survivor_position" ) )
 
+        self.SpawnPoints = table.Add( self.SpawnPoints, ents.FindByClass( "dmu_team_spawn_1" ) )
+		self.SpawnPoints = table.Add( self.SpawnPoints, ents.FindByClass( "dmu_team_spawn_2" ) )
 	end
 
 	local Count = table.Count( self.SpawnPoints )

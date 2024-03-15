@@ -31,6 +31,12 @@ function ENT:Initialize()
 end
 
 function ENT:OnRemove()
+    if DMU.Mode.Teams then
+        for k, _ in ipairs(DMU.Mode.Teams) do
+            DMU.RemoveBotTeamObjective(k, self)
+        end
+    end
+
     DMU.Remove3D2DPos(self:EntIndex())
 end
 
@@ -100,7 +106,7 @@ function ENT:Think()
     if self.Team == biggest_team then
         self.HoldProgress = math.Max(0, self.HoldProgress - 25)
     else
-        self.HoldProgress = self.HoldProgress + 25
+        self.HoldProgress = math.min(self.HoldProgress + 15 + team_players_in_zone[biggest_team] * 10, 100)
     end
 
     if self.HoldProgress >= 100 then
@@ -118,7 +124,7 @@ function ENT:Think()
             DMU.Add3D2DPos(self:EntIndex(), self:GetPos(), "hold_zone_icons/hold_zone_" .. self.Identifier .. ".png", team.GetColor(biggest_team))
         end
 
-        hook.Run("DMU_HoldZoneCaptured", biggest_team, self.Team, old_team)
+        hook.Run("DMU_HoldZoneCaptured", self, biggest_team, self.Team, old_team)
     end
 
     for _, ply in pairs(self.PlayersInZone) do

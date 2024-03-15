@@ -3,7 +3,6 @@ SWEP.PrintName = "Pistol"
 SWEP.Author = ".kkrill"
 SWEP.Instructions = "Fully-automatic 9mm handgun. Best suited for close range combat as a last resort."
 SWEP.Category = "Deathmatch Unlimited"
-
 SWEP.Spawnable = true
 
 SWEP.Base = "weapon_dmu_base"

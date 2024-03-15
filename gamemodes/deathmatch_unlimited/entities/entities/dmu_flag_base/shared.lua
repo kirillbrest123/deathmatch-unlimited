@@ -1,7 +1,7 @@
 ENT.Type = "anim"
 ENT.Base = "base_anim"
 
-ENT.PrintName = "flag"
+ENT.PrintName = "Flag Base"
 ENT.Category = "Deathmatch Unlimited"
 ENT.Spawnable = true
 ENT.AdminOnly = false

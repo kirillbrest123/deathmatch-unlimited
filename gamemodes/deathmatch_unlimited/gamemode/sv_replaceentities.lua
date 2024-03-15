@@ -43,13 +43,25 @@ function DMU.ReplaceMapEntities()
         local class = ent:GetClass()
         local pos = ent:GetPos()
 
-        if ents_to_delete[class] then
-            ent:Remove()
-        end
-
         if IsValid(ent:GetOwner()) then continue end
 
+        if _MMM and _MMM.AutoRemove[ent:GetClass()] then
+            ent:Remove()
+            continue
+        end
+
         if not replace_weapons then goto cont end
+
+        if class == "ttt_random_weapon" then
+            ent:Remove()
+            if DMU.Mode.WeaponSpawnsDisabled then continue end
+            local new_ent = ents.Create("dmu_weapon_spawner")
+            new_ent:SetPos(pos)
+             
+            new_ent:Spawn()
+            new_ent:SetFallbackRarity( 5 - math.ceil( math.sqrt( math.random(16) ) ) ) -- 6.25% for very rare; 18.75% for rare; 31.25% for uncommon; 43.75% for common
+            continue
+        end
 
         if ents_to_replace_common[class] then
             ent:Remove()
@@ -98,6 +110,11 @@ function DMU.ReplaceMapEntities()
         ::cont::
 
         if not replace_items then return end
+
+        if ents_to_delete[class] then
+            ent:Remove()
+            continue
+        end
 
         if class == "item_healthkit" then
             ent:Remove()

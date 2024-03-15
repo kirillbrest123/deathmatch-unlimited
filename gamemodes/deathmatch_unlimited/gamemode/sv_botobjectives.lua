@@ -8,11 +8,12 @@ function DMU.RemoveBotObjective(entity)
 end
 
 function DMU.AddBotTeamObjective(team_i, entity)
-    if !IsValid(entity) then return end
+    if !IsValid(entity) or !DMU.BotTeamObjectives[team_i] then return end
     DMU.BotTeamObjectives[team_i][entity] = true
 end
 
 function DMU.RemoveBotTeamObjective(team_i, entity)
+    if !DMU.BotTeamObjectives[team_i] then return end
     DMU.BotTeamObjectives[team_i][entity] = nil
 end
 
