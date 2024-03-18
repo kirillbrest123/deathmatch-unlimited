@@ -190,3 +190,13 @@ MODE.Hooks.DMU_HoldZoneScore = function(hill, t)
         DMU.EndGame(t)
     end
 end
+
+
+-- End the game early if a team has won the majority of the rounds
+MODE.Hooks.DMU_ShouldStartRound = function(round)
+    local halfway = math.floor(DMU.Mode.RoundLimit / 2)
+    if round == halfway + 1 and ( team.GetScore(1) >= halfway or team.GetScore(2) >= halfway ) then
+        DMU.EndGame( team.GetScore(1) > team.GetScore(2) and 1 or 2 )
+        return false
+    end
+end

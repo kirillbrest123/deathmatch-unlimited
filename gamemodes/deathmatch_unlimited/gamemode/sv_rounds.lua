@@ -12,7 +12,7 @@ function DMU.StartNextRound()
     game.CleanUpMap( false, { "env_fire", "entityflame", "_firesmoke" } )
     DMU.ReplaceMapEntities()
 
-    hook.Run("DMU_PreRoundStart")
+    hook.Run("DMU_PreRoundStart", DMU.Round)
 
     for _, ply in ipairs(player.GetAll()) do
         if !DMU.Mode.FFA and ply:Team() == TEAM_UNASSIGNED then continue end -- don't respawn players who didn't choice their team yet
@@ -51,7 +51,7 @@ function DMU.StartNextRound()
             net.Broadcast()
         end
 
-        hook.Run("DMU_RoundStart")
+        hook.Run("DMU_RoundStart", DMU.Round)
     end)
 end
 
@@ -84,10 +84,13 @@ function DMU.EndRound(winner)
     hook.Run("DMU_RoundEnd", winner)
 
     timer.Simple(10, function()
-        if DMU.Round >= DMU.Mode.RoundLimit and !DMU.GameEnded then
+        if (DMU.Round >= DMU.Mode.RoundLimit ) and !DMU.GameEnded then
             DMU.EndGame()
             return
         end
+
+        if hook.Run( "DMU_ShouldStartRound", DMU.Round + 1 ) == false then return end
+
         DMU.StartNextRound()
     end)
 end

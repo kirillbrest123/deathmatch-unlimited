@@ -1,6 +1,6 @@
 MODE.Name = "Total Control"
 MODE.FriendlyFire = false
-MODE.RespawnTime = 6
+MODE.RespawnTime = 10
 MODE.TimeLimit = 300
 MODE.HillsEnabled = true
 MODE.RoundBased = true
@@ -95,7 +95,7 @@ end
 local next_think = 3
 
 MODE.Hooks.Think = function()
-    if CurTime() < next_think then return end
+    if CurTime() < next_think or DMU.RoundEnded then return end
 
     if hills_under_control[1] >= num_of_hills then
         scores[1] = scores[1] + 1
@@ -134,6 +134,13 @@ MODE.Hooks.DMU_PreRoundStart = function()
     scores = {0,0}
 
     timer.Simple(1, DMU.Mode.Hooks.InitPostEntity)
+end
+
+MODE.Hooks.DMU_ShouldStartRound = function(round)
+    if round == 3 and team.GetScore(1) != team.GetScore(2) then
+        DMU.EndGame( team.GetScore(1) > team.GetScore(2) and 1 or 2 )
+        return false
+    end
 end
 
 MODE.Hooks.PlayerDeath = function(victim, inflictor, attacker)

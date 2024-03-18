@@ -85,6 +85,7 @@ function ENT:UpdateTransmitState()
 end
 
 function ENT:TeamChanged(name, old, new)
+    if !DMU.Mode.Teams then return end
     self:SetColor(team.GetColor(new))
 
     for k,v in ipairs(DMU.Mode.Teams) do
