@@ -22,6 +22,9 @@ SWEP.Secondary.DefaultClip	= 0
 SWEP.Secondary.Automatic	= false
 SWEP.Secondary.Ammo			= ""
 
+SWEP.VerticalRecoil			= 0.4
+SWEP.HorizontalRecoil		= 0.3
+
 SWEP.Slot = 2
 SWEP.SlotPos = 1
 
@@ -68,14 +71,16 @@ function SWEP:PrimaryAttack()
 
     self:SetNextPrimaryFire( CurTime() + 0.06 ) 
 
-	if owner:IsPlayer() and (CLIENT or game.SinglePlayer()) and IsFirstTimePredicted() then -- fuck off. I trust my clients to not use cheats to mitigate this tiny recoil
-		local rand = math.Rand(-0.3,0.3)
+	local rand = util.SharedRandom( self:GetClass(), -self.HorizontalRecoil, self.HorizontalRecoil )
 
-		owner:ViewPunch( Angle( -0.2, rand, 0 ) )
+	owner:ViewPunch( Angle( -self.VerticalRecoil * 0.5, rand * 0.5, 0 ) )
+
+	if owner:IsPlayer() and (CLIENT or game.SinglePlayer()) and IsFirstTimePredicted() then -- fuck off. I trust my clients to not use cheats to mitigate this tiny recoil
+		-- local rand = math.Rand( -self.HorizontalRecoil, self.HorizontalRecoil )
 
 		local ang = owner:EyeAngles()
 
-		ang.p = ang.p - 0.2
+		ang.p = ang.p - self.VerticalRecoil
 		ang.y = ang.y + rand
 
 		owner:SetEyeAngles(ang)

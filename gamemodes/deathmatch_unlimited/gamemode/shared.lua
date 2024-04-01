@@ -6,7 +6,7 @@ GM.Email = "N/A"
 GM.Website = "N/A"
 
 DMU = {}
-DMU.Version = 1304
+DMU.Version = 1305
 print("[DMU] DMU Version is v" .. DMU.Version)
 
 -- Convert old playlist files
@@ -109,8 +109,8 @@ function GM:PlayerSpawnEffect(ply,model) return check_allow_feature() end
 
 function GM:PlayerGiveSWEP(ply,weapon,swep) return check_allow_feature() end
 
-CreateConVar( "dmu_server_weapons_starter", "dmu_pistol,dmu_carbine", FCVAR_ARCHIVE + FCVAR_REPLICATED, "Default starter weapons, separated by commas. Can be overriden by game mode.")
-CreateConVar( "dmu_server_weapons_common", "dmu_pistol,dmu_carbine", FCVAR_ARCHIVE + FCVAR_REPLICATED, "Default common weapons, separated by commas. Can be overriden by game mode.")
+CreateConVar( "dmu_server_weapons_starter", "dmu_pistol,dmu_carbine,weapon_physcannon", FCVAR_ARCHIVE + FCVAR_REPLICATED, "Default starter weapons, separated by commas. Can be overriden by game mode.")
+CreateConVar( "dmu_server_weapons_common", "dmu_pistol,dmu_carbine,weapon_frag", FCVAR_ARCHIVE + FCVAR_REPLICATED, "Default common weapons, separated by commas. Can be overriden by game mode.")
 CreateConVar( "dmu_server_weapons_uncommon", "dmu_assault_rifle,dmu_battle_rifle,dmu_crossbow", FCVAR_ARCHIVE + FCVAR_REPLICATED, "Default uncommon weapons, separated by commas. Can be overriden by game mode.")
 CreateConVar( "dmu_server_weapons_rare", "dmu_smg,dmu_sniper_rifle,dmu_plasma_rifle", FCVAR_ARCHIVE + FCVAR_REPLICATED, "Rare weapons, separated by commas. Can be overriden by game mode.")
 CreateConVar( "dmu_server_weapons_very_rare", "dmu_railgun,dmu_rocket_launcher,dmu_shotgun,dmu_bfb", FCVAR_ARCHIVE + FCVAR_REPLICATED, "Very rare weapons, separated by commas. Can be overriden by game mode.")

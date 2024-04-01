@@ -22,6 +22,9 @@ SWEP.Secondary.DefaultClip	= 0
 SWEP.Secondary.Automatic	= false
 SWEP.Secondary.Ammo			= ""
 
+SWEP.VerticalRecoil			= 0.6
+SWEP.HorizontalRecoil		= 0.3
+
 SWEP.Slot = 1
 SWEP.SlotPos = 1
 
@@ -51,7 +54,7 @@ function SWEP:PrimaryAttack()
 	bullet.Spread	= Vector(0.0175,0.0175,0)
 	bullet.Tracer	= 2	
 	bullet.Force	= 1	
-	bullet.Damage	= 12
+	bullet.Damage	= 13
 	bullet.AmmoType = self.Primary.Ammo
 
 	bullet.Callback = function(attacker, tr, dmginfo)
@@ -68,9 +71,17 @@ function SWEP:PrimaryAttack()
 
     self:SetNextPrimaryFire( CurTime() + 0.13 ) 
 
-	local owner = self:GetOwner()
-	if owner:IsPlayer() then
-		owner:ViewPunch( Angle( -0.4, util.SharedRandom(self:GetClass(),-0.4,0.4), 0 ) )
+	local rand = util.SharedRandom( self:GetClass(), -self.HorizontalRecoil, self.HorizontalRecoil )
+
+	owner:ViewPunch( Angle( -self.VerticalRecoil * 1, rand * 1, 0 ) )
+
+	if owner:IsPlayer() and (CLIENT or game.SinglePlayer()) and IsFirstTimePredicted() then -- fuck off. I trust my clients to not use cheats to mitigate this tiny recoil
+		local ang = owner:EyeAngles()
+
+		ang.p = ang.p - self.VerticalRecoil
+		ang.y = ang.y + rand
+
+		owner:SetEyeAngles(ang)
 	end
 end
 

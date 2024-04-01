@@ -1,7 +1,7 @@
 SWEP.PrintName = "Oddball"
     
 SWEP.Author = ".kkrill"
-SWEP.Instructions = "An odd-looking ball. Press RMB to drop it."
+SWEP.Instructions = "An odd-looking ball. Press RMB to drop it. The light it casts feels wrong."
 SWEP.Category = "Deathmatch Unlimited"
 
 SWEP.Spawnable = true

@@ -91,13 +91,16 @@ if SERVER then
 
 else
 
+    local instructions_displayed = false
+
     net.Receive("DMU_Notification", function()
         notification.AddLegacy( net.ReadString(), 0, 5 )
         surface.PlaySound("ui/hint.wav") -- no way it's from css
     end)
 
     hook.Add("player_activate", "DMU_GiveInstructions", function(data)
-        if Player(data.userid) != LocalPlayer() then return end
+        if Player(data.userid) != LocalPlayer() or instructions_displayed then return end
+        instructions_displayed = true
         timer.Simple(10, function()
             chat.AddText(color_white, "Current Game Mode: ", DMU.color_crimson, DMU.Mode.PrintName or DMU.Mode.Name)
 

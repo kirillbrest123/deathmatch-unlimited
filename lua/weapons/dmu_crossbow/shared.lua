@@ -25,6 +25,9 @@ SWEP.Secondary.Ammo			= ""
 SWEP.Scoped = true 
 SWEP.ADS_fov = 40
 
+SWEP.VerticalRecoil			= 0.4
+SWEP.HorizontalRecoil		= 0.05
+
 SWEP.Slot = 3
 SWEP.SlotPos = 2
 
@@ -59,7 +62,18 @@ function SWEP:PrimaryAttack()
 	
 	self:EmitSound("Weapon_Crossbow.Single")
 
-	if ( !owner:IsNPC() ) then owner:ViewPunch( Angle( -1, util.SharedRandom(self:GetClass(),-0.2,0.2), 0 ) ) end
+	local rand = util.SharedRandom( self:GetClass(), -self.HorizontalRecoil, self.HorizontalRecoil )
+
+	owner:ViewPunch( Angle( -self.VerticalRecoil * 0.8, rand * 0.8, 0 ) )
+
+	if owner:IsPlayer() and (CLIENT or game.SinglePlayer()) and IsFirstTimePredicted() then -- fuck off. I trust my clients to not use cheats to mitigate this tiny recoil
+		local ang = owner:EyeAngles()
+
+		ang.p = ang.p - self.VerticalRecoil
+		ang.y = ang.y + rand
+
+		owner:SetEyeAngles(ang)
+	end
 
 	if !SERVER then return end
 
@@ -84,7 +98,6 @@ function SWEP:PrimaryAttack()
 			owner:EmitSound("Weapon_Crossbow.BoltHitWorld")
 		end
 	else
-
 		local proj = ents.Create("crossbow_bolt")
 		proj:Fire("SetDamage", "40") -- HAAHAHAHAHAHA I FOUND IT
 		proj:SetOwner(owner)

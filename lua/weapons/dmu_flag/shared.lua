@@ -228,15 +228,6 @@ function SWEP:OnRemove()
 	end
 	
 	DMU.RemoveBotObjective(self)
-	if IsValid(self.valid_base) then
-		DMU.RemoveBotPersonalObjective(self._owner, self.valid_base)
-	end
-end
-
-function SWEP:OnDrop()
-	if IsValid(self.valid_base) then
-		DMU.RemoveBotPersonalObjective(self._owner, self.valid_base)
-	end
 end
 
 function SWEP:OwnerChanged()
@@ -248,6 +239,9 @@ function SWEP:OwnerChanged()
 			vm:ManipulateBoneAngles( i, Angle(0, 0, 0) )
 			vm:ManipulateBonePosition( i, Vector(0, 0, 0) )
 		end
+	end
+	if IsValid(self.valid_base) then
+		DMU.RemoveBotPersonalObjective(self._owner, self.valid_base)
 	end
 	self._owner = self:GetOwner()
 end

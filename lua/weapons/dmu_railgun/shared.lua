@@ -44,6 +44,8 @@ SWEP.Secondary.Ammo			= ""
 SWEP.Scoped = true
 SWEP.ADS_fov = 40
 
+SWEP.VerticalRecoil			= 1.5
+
 SWEP.Slot = 4
 SWEP.SlotPos = 3
 
@@ -104,8 +106,16 @@ function SWEP:FirePrimary()
 
 	self:TakePrimaryAmmo( 25 )
 
-	local owner = self:GetOwner()
-	if ( !owner:IsNPC() ) then owner:ViewPunch( Angle( -3, 0, 0 ) ) end
+
+	owner:ViewPunch( Angle( -self.VerticalRecoil, 0, 0 ) )
+
+	if owner:IsPlayer() and (CLIENT or game.SinglePlayer()) and IsFirstTimePredicted() then -- fuck off. I trust my clients to not use cheats to mitigate this tiny recoil
+		local ang = owner:EyeAngles()
+
+		ang.p = ang.p - self.VerticalRecoil
+
+		owner:SetEyeAngles(ang)
+	end
 
 	if owner:GetAmmoCount( self.Primary.Ammo ) <= 0 then
 		self:SelfDestruct()

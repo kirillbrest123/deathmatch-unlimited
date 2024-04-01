@@ -83,7 +83,7 @@ function SWEP:PrimaryAttack()
 
     self:SetNextPrimaryFire( CurTime() + 0.85 ) 
 
-	owner:ViewPunch( Angle( -3, 0, 0 ) )
+	owner:ViewPunch( Angle( -1.5, 0, 0 ) )
 	
 	if owner:IsPlayer() and (CLIENT or game.SinglePlayer()) and IsFirstTimePredicted() then -- fuck off. I trust my clients to not use cheats to mitigate this tiny recoil
 

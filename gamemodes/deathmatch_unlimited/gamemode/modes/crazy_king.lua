@@ -1,23 +1,37 @@
-MODE.Name = "King Of The Hill"
+MODE.Name = "Crazy King"
 MODE.FriendlyFire = false
-MODE.RespawnTime = 3
+MODE.RespawnTime = 8
 MODE.TimeLimit = 600
+MODE.FFA = true
 MODE.HillsEnabled = true
 
-MODE.Teams = {
-    {
-        ["name"] = "Red",
-        ["color"] = Color(255,0,0)
-    },
-    {
-        ["name"] = "Blue",
-        ["color"] = Color(0,0,255)
-    }
-}
+local dead_players = {}
 
 MODE.Instructions = "Capture the hill to score points.\nThe hill moves every minute."
 
+MODE.Teams = {}
+
+-- Dynamically create teams
+-- NOTE: This is a hack. You should really just create/modify hill entities to work with FFA.
+for i = 1, math.ceil(game.MaxPlayers()) do
+    local color = HSVToColor( 360 * ( i / math.ceil( game.MaxPlayers() ) ), 1, 1 )
+    local t = {
+        name = "Team " .. i,
+        color = Color(color.r, color.g, color.b) -- FUCK YOU
+    }
+    table.insert(MODE.Teams, t)
+end
+
 MODE.Hooks = {}
+
+local team_to_player = {} -- team.GetPlayers() iterates over all players which is not efficient so we do this instead. I don't know why the scrapheads at facepunch don't do this
+
+MODE.Hooks.PlayerInitialSpawn = function(ply)
+    timer.Simple(0, function()
+        DMU.AutoAssign(ply)
+        team_to_player[ply:Team()] = ply
+    end)
+end
 
 MODE.Hooks.PlayerLoadout = function(ply)
     if CLIENT then return end
@@ -35,10 +49,14 @@ end
 
 MODE.Hooks.DMU_HoldZoneScore = function(hill, t)
     if DMU.GameEnded then return end
-    team.AddScore(t, 1)
 
-    if team.GetScore(t) >= 200 then
-        DMU.EndGame(t)
+    local ply = team_to_player[t]
+    if !IsValid(ply) then return end
+
+    ply:AddScore( 1 )
+
+    if ply:GetScore() >= 120 then
+        DMU.EndGame(ply)
     end
 end
 
@@ -96,17 +114,4 @@ MODE.Hooks.Think = function()
     timer.Simple(50, function()
         DMU.SendNotification("Hill will move in 10 seconds.")
     end)
-end
-
-MODE.Hooks.PlayerDeath = function(victim, inflictor, attacker)
-    if CLIENT then return end
-
-    if !victim:IsPlayer() or !attacker:IsPlayer() then return end
-
-    if victim == attacker then
-        victim:AddScore(-1)
-        return
-    end
-
-    attacker:AddScore(1)
 end

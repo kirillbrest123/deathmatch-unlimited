@@ -5,7 +5,7 @@ function plymeta:GetScore()
 end
 
 function plymeta:SetScore(new_score)
-    self:SetNWInt("score", score)
+    self:SetNWInt("score", new_score)
 end
 
 function plymeta:AddScore(increment)

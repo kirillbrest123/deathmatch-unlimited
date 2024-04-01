@@ -96,7 +96,7 @@ function SWEP:CThink()
 		if CLIENT or game.SinglePlayer() then -- fuck off. I trust my clients to not use cheats to mitigate this tiny recoil
 			local ang = owner:EyeAngles()
 
-			ang.p = ang.p - 0.15
+			ang.p = ang.p - 0.2
 
 			owner:SetEyeAngles(ang)
 		end
