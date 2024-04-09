@@ -9,7 +9,7 @@ function plymeta:VoteEndMatch()
 
     for k,v in ipairs(player.GetHumans()) do
         if v.EndMatch then
-            votes = votes + 1    
+            votes = votes + 1
         end
     end
 

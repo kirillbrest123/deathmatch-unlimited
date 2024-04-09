@@ -21,7 +21,7 @@ DMU.DefaultPlayLists = {
         name = "Sniper Frenzy",
         modes = {"Snipers", "Shotty Snipers", "Hot Rockets"},
         thumbnail = "game_mode_banners/sniper_frenzy.png"
-    },   
+    },
     {
         name = "Team Objective",
         modes = {"Domination", "Kill Confirmed", "King Of The Hill", "CTF", "One Flag CTF", "Oddball"},
@@ -73,6 +73,10 @@ if SERVER then
         self:SetNWFloat("DMU_Gravity", gravity)
     end
 
+    hook.Add("PlayerSpawn", "DMU_SharedGravity", function( ply )
+        ply:SetGravity( ply:GetNWFloat("DMU_Gravity", 0) )
+    end)
+
     function DMU.GetRandomSpotOnNavmesh()
         local navareas = navmesh.GetAllNavAreas()
         if table.IsEmpty(navareas) then return end
@@ -81,7 +85,7 @@ if SERVER then
             local navarea = navareas[math.random(#navareas)]
 
             if navarea:IsUnderwater() or bit.band(navarea:GetAttributes(), NAV_MESH_INVALID + NAV_MESH_AVOID + NAV_MESH_TRANSIENT + NAV_MESH_STAIRS) != 0 then
-                continue 
+                continue
             end
             return navarea:GetCenter()
         end
@@ -109,9 +113,9 @@ else
             end
         end)
     end)
-    
+
     hook.Add("SetupMove", "DMU_SharedGravity", function( ply, mv, cmd )
-        ply:SetGravity(ply:GetNWFloat("DMU_Gravity", 0))
+        ply:SetGravity( ply:GetNWFloat("DMU_Gravity", 0) )
     end)
 
 end

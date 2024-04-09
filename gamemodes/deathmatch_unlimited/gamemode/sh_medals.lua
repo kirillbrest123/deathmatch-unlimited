@@ -139,10 +139,7 @@ if CLIENT then
 
     local medals_to_display = {}
 
-    local medal_text = ""
-    local medal_material
     local medal_fadein_timer = 0
-
 
     net.Receive("DMU_Medal", function()
         if not show_medals:GetBool() then return end
@@ -165,8 +162,8 @@ if CLIENT then
         local color = ColorAlpha(color_white, alpha)
         local scale = medal_scale:GetFloat()
 
-        local x = ScrW()/2 - ((#medals_to_display-1) * 128 * scale)/2
-        local y = ScrH()/5
+        local x = ScrW() / 2 - ((#medals_to_display-1) * 128 * scale) / 2
+        local y = ScrH() / 5
 
         for k, v in ipairs(medals_to_display) do
 

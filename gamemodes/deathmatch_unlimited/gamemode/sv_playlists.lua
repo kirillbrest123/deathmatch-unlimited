@@ -11,7 +11,7 @@ function DMU.LoadPlayLists()
     end
 
     if file.Read("dmu/playlists.txt", "DATA") then
-        DMU.PlayLists = util.JSONToTable(file.Read("dmu/playlists.txt", "DATA"))   
+        DMU.PlayLists = util.JSONToTable(file.Read("dmu/playlists.txt", "DATA"))
     else
         print("[DMU] Playlist file not found! Loading default playlists...")
         DMU.LoadDefaultPlayLists()
