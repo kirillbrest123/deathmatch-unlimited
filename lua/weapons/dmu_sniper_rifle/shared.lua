@@ -1,5 +1,5 @@
 SWEP.PrintName = "Sniper Rifle"
-    
+
 SWEP.Author = ".kkrill"
 SWEP.Instructions = "Bolt-action sniper rifle. Powerful enough to rip through multiple targets. Best suited for long range combat."
 SWEP.Category = "Deathmatch Unlimited"
@@ -24,7 +24,7 @@ SWEP.Secondary.Automatic	= false
 SWEP.Secondary.Ammo			= ""
 
 SWEP.Scoped = true
-SWEP.ADS_fov = 30
+SWEP.ADSFov = 30
 
 SWEP.Slot = 3
 SWEP.SlotPos = 3
@@ -44,7 +44,7 @@ function SWEP:PrimaryAttack()
 
 	if ( !self:CanPrimaryAttack() ) then return end
 
-	self:EmitSound( "Weapon_357.Single" )
+	self:EmitSound( "dmu/weapons/sniper_rifle/fire" .. math.random(2) .. ".wav", 140, 88 + 5 * math.random(0, 1), 0.66, CHAN_WEAPON )
 
 	local owner = self:GetOwner()
 
@@ -54,7 +54,7 @@ function SWEP:PrimaryAttack()
 	bullet.Dir		= owner:GetAimVector()
 	bullet.Spread	= 0
 	bullet.Tracer	= 1
-	bullet.Force	= 1	
+	bullet.Force	= 1
 	bullet.Damage	= 75
 	bullet.AmmoType = self.Primary.Ammo
 	bullet.TracerName = "snipertracer"
@@ -81,10 +81,10 @@ function SWEP:PrimaryAttack()
 
 	self:TakePrimaryAmmo( 1 )
 
-    self:SetNextPrimaryFire( CurTime() + 0.85 ) 
+    self:SetNextPrimaryFire( CurTime() + 0.85 )
 
 	owner:ViewPunch( Angle( -1.5, 0, 0 ) )
-	
+
 	if owner:IsPlayer() and (CLIENT or game.SinglePlayer()) and IsFirstTimePredicted() then -- fuck off. I trust my clients to not use cheats to mitigate this tiny recoil
 
 		local ang = owner:EyeAngles()
@@ -101,4 +101,11 @@ end
 
 function SWEP:OnDrop()
 	self:SetClip1(self.Primary.ClipSize)
+end
+
+if !CLIENT then return end
+
+function SWEP:DrawHUDBackground()
+	if not self:GetADS() then return end
+	DrawMaterialOverlay( "effects/combine_binocoverlay", 0 )
 end

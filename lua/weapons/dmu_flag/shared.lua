@@ -1,5 +1,5 @@
 SWEP.PrintName = "Flag"
-    
+
 SWEP.Author = ".kkrill"
 SWEP.Instructions = "A flag. Press RMB to drop it. You should probably bring it to your base."
 SWEP.Category = "Deathmatch Unlimited"
@@ -114,26 +114,24 @@ function SWEP:PrimaryAttack()
 
 	local scale = phys_pushscale:GetFloat()
 
-	if IsValid( tr.Entity ) then
-		if SERVER then
-			local dmginfo = DamageInfo()
+	if IsValid( tr.Entity ) and SERVER then
+		local dmginfo = DamageInfo()
 
-			local attacker = owner
-			dmginfo:SetAttacker( attacker )
+		local attacker = owner
+		dmginfo:SetAttacker( attacker )
 
-			dmginfo:SetInflictor( self )
-			dmginfo:SetDamage( 50 )
+		dmginfo:SetInflictor( self )
+		dmginfo:SetDamage( 50 )
 
-			dmginfo:SetDamageForce( owner:GetRight() * -4912 * scale + owner:GetForward() * 9989 * scale )
+		dmginfo:SetDamageForce( owner:GetRight() * -4912 * scale + owner:GetForward() * 9989 * scale )
 
-			SuppressHostEvents( NULL ) -- Let the breakable gibs spawn in multiplayer on client
-			tr.Entity:TakeDamageInfo( dmginfo )
-			SuppressHostEvents( owner )
+		SuppressHostEvents( NULL ) -- Let the breakable gibs spawn in multiplayer on client
+		tr.Entity:TakeDamageInfo( dmginfo )
+		SuppressHostEvents( owner )
 
-			local phys = tr.Entity:GetPhysicsObject()
-			if ( IsValid( phys ) ) then
-				phys:ApplyForceOffset( owner:GetAimVector() * 80 * phys:GetMass() * scale, tr.HitPos )
-			end
+		local phys = tr.Entity:GetPhysicsObject()
+		if ( IsValid( phys ) ) then
+			phys:ApplyForceOffset( owner:GetAimVector() * 80 * phys:GetMass() * scale, tr.HitPos )
 		end
 	end
 
@@ -226,7 +224,7 @@ function SWEP:OnRemove()
 		flags[self] = nil
 		return
 	end
-	
+
 	DMU.RemoveBotObjective(self)
 end
 

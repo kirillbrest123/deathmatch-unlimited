@@ -10,7 +10,8 @@ end
 
 SWEP.Base = "weapon_base"
 SWEP.Scoped = false
-SWEP.ADS_fov = 56
+SWEP.ADSFov = 56
+SWEP.ADSZoom = -1
 SWEP.BounceWeaponIcon = false
 
 function SWEP:CSetupDataTables()
@@ -34,7 +35,7 @@ function SWEP:Initialize()
 	self:CInitialize()
 
 	if CLIENT then
-	
+
 		// Create a new table for every weapon instance
 		self.VElements = table.FullCopy( self.VElements )
 		self.WElements = table.FullCopy( self.WElements )
@@ -42,13 +43,13 @@ function SWEP:Initialize()
 
 		self:CreateModels(self.VElements) // create viewmodels
 		self:CreateModels(self.WElements) // create worldmodels
-		
+
 		// init view model bone build function
 		if IsValid(self.Owner) then
 			local vm = self.Owner:GetViewModel()
 			if IsValid(vm) then
 				self:ResetBonePositions(vm)
-				
+
 				// Init viewmodel visibility
 				if (self.ShowViewModel == nil or self.ShowViewModel) then
 					vm:SetColor(Color(255,255,255,255))
@@ -57,12 +58,12 @@ function SWEP:Initialize()
 					vm:SetColor(Color(255,255,255,1))
 					// ^ stopped working in GMod 13 because you have to do Entity:SetRenderMode(1) for translucency to kick in
 					// however for some reason the view model resets to render mode 0 every frame so we just apply a debug material to prevent it from drawing
-					-- vm:SetMaterial("Models/effects/vol_light001") -- debug/Hsv doensn't seem to work, but this is good enough		
+					-- vm:SetMaterial("Models/effects/vol_light001") -- debug/Hsv doensn't seem to work, but this is good enough
 					-- ^ nvm. all weapons use the same viewmodel, changing its material will cause all viewmodels to be invisible and i cba to fix it
 				end
 			end
 		end
-		
+
 	end
 
 end
@@ -118,7 +119,7 @@ function SWEP:Reload()
 	local owner = self:GetOwner()
 	local vm = owner:GetViewModel()
 
-	vm:SendViewModelMatchingSequence( vm:SelectWeightedSequence( ACT_VM_RELOAD ) )
+	self:SendWeaponAnim( ACT_VM_RELOAD )
 	owner:SetAnimation( PLAYER_RELOAD )
 
 	self:SetReloading(true)
@@ -135,7 +136,7 @@ function SWEP:Holster()
 	if self.Scoped then
 		self:SetADS( false )
 	end
-	
+
 	-- if SERVER and IsValid(self:GetOwner()) then -- "Before WEAPON:OnRemove is called, this function is only called serverside." - FUCK YOU
 	-- 	self:CallOnClient("Holster")
 	-- end
@@ -174,25 +175,25 @@ function SWEP:Think()
 		self:SetReloading(false)
 
 		local num = math.min(owner:GetAmmoCount(self:GetPrimaryAmmoType()), self:GetMaxClip1() - self:Clip1())
-	
+
 		self:SetClip1( self:Clip1() + num )
 		owner:RemoveAmmo( num, self:GetPrimaryAmmoType() )
-		
+
 	end
 
 	if !self.Scoped then return end
 
 	if owner:KeyPressed( IN_ATTACK2) then
 		self:SetADS( true )
-		self:GetOwner():SetFOV(self.ADS_fov, 0.1)
-		if CLIENT and IsFirstTimePredicted() then
+		owner:SetFOV( self.ADSZoom != -1 and owner:GetFOV() * self.ADSZoom or self.ADSFov, 0.13)
+		if CLIENT and IsFirstTimePredicted() and self.ADSZoom == -1 then
 			surface.PlaySound("weapons/sniper/sniper_zoomin.wav")
 		end
 	end
 
 	if !owner:KeyDown( IN_ATTACK2 ) and owner:KeyDownLast( IN_ATTACK2 ) then
 		self:SetADS( false )
-		self:GetOwner():SetFOV(0, 0.1)
+		owner:SetFOV(0, 0.1)
 	end
 end
 
@@ -211,28 +212,23 @@ if CLIENT then
 
 	function SWEP:AdjustMouseSensitivity()
 		if not self:GetADS() then return end
-		return self.ADS_fov / 90 -- assumes that your fov is 90, so it doesn't scale perfectly, but i cba to think of a better solution for now
-	end
-	
-	function SWEP:DrawHUDBackground()
-		if not self:GetADS() then return end
-		DrawMaterialOverlay( "effects/combine_binocoverlay", 0 )
+		return self.ADSZoom != -1 and self.ADSZoom or self.ADSFov / 90 -- assumes that your fov is 90, so it doesn't scale perfectly, but i cba to think of a better solution for now
 	end
 
 	SWEP.vRenderOrder = nil
 	function SWEP:ViewModelDrawn()
-		
+
 		local owner = self:GetOwner()
 		if !IsValid(owner) then return end
 		local vm = owner:GetViewModel()
 		if !IsValid(vm) then return end
-		
+
 		if (!self.VElements) then return end
-		
+
 		self:UpdateBonePositions(vm)
 
 		if (!self.vRenderOrder) then
-			
+
 			// we build a render order because sprites need to be drawn after models
 			self.vRenderOrder = {}
 
@@ -243,24 +239,24 @@ if CLIENT then
 					table.insert(self.vRenderOrder, k)
 				end
 			end
-			
+
 		end
 
 		for k, name in ipairs( self.vRenderOrder ) do
-		
+
 			local v = self.VElements[name]
 			if (!v) then self.vRenderOrder = nil break end
 			if (v.hide) then continue end
-			
+
 			local model = v.modelEnt
 			local sprite = v.spriteMaterial
-			
+
 			if (!v.bone) then continue end
-			
+
 			local pos, ang = self:GetBoneOrientation( self.VElements, v, vm )
-			
+
 			if (!pos) then continue end
-			
+
 			if (v.type == "Model" and IsValid(model)) then
 
 				model:SetPos(pos + ang:Forward() * v.pos.x + ang:Right() * v.pos.y + ang:Up() * v.pos.z )
@@ -273,17 +269,17 @@ if CLIENT then
 				local matrix = Matrix()
 				matrix:Scale(v.size)
 				model:EnableMatrix( "RenderMultiply", matrix )
-				
+
 				if (v.material == "") then
 					model:SetMaterial("")
 				elseif (model:GetMaterial() != v.material) then
 					model:SetMaterial( v.material )
 				end
-				
+
 				if (v.skin and v.skin != model:GetSkin()) then
 					model:SetSkin(v.skin)
 				end
-				
+
 				if (v.bodygroup) then
 					for k, v in pairs( v.bodygroup ) do
 						if (model:GetBodygroup(k) != v) then
@@ -291,42 +287,42 @@ if CLIENT then
 						end
 					end
 				end
-				
+
 				if (v.surpresslightning) then
 					render.SuppressEngineLighting(true)
 				end
-				
+
 				render.SetColorModulation(v.color.r/255, v.color.g/255, v.color.b/255)
 				render.SetBlend(v.color.a/255)
 				model:DrawModel()
 				render.SetBlend(1)
 				render.SetColorModulation(1, 1, 1)
-				
+
 				if (v.surpresslightning) then
 					render.SuppressEngineLighting(false)
 				end
-				
+
 			elseif (v.type == "Sprite" and sprite) then
-				
+
 				local drawpos = pos + ang:Forward() * v.pos.x + ang:Right() * v.pos.y + ang:Up() * v.pos.z
 				render.SetMaterial(sprite)
 				render.DrawSprite(drawpos, v.size.x, v.size.y, v.color)
-				
+
 			elseif (v.type == "Quad" and v.draw_func) then
-				
+
 				local drawpos = pos + ang:Forward() * v.pos.x + ang:Right() * v.pos.y + ang:Up() * v.pos.z
 				ang:RotateAroundAxis(ang:Up(), v.angle.y)
 				ang:RotateAroundAxis(ang:Right(), v.angle.p)
 				ang:RotateAroundAxis(ang:Forward(), v.angle.r)
-				
+
 				cam.Start3D2D(drawpos, ang, v.size)
 					v.draw_func( self )
 				cam.End3D2D()
 
 			end
-			
+
 		end
-		
+
 	end
 
 	SWEP.wRenderOrder = nil
@@ -336,15 +332,15 @@ if CLIENT then
 	end
 
 	function SWEP:DrawWorldModel()
-		
+
 		if (self.ShowWorldModel == nil or self.ShowWorldModel) then
 			self:DrawModel()
 		end
 
 		self:CDrawWorldModel()
-		
+
 		if (!self.WElements) then return end
-		
+
 		if (!self.wRenderOrder) then
 
 			self.wRenderOrder = {}
@@ -358,33 +354,33 @@ if CLIENT then
 			end
 
 		end
-		
+
 		if (IsValid(self.Owner)) then
 			bone_ent = self.Owner
 		else
 			// when the weapon is dropped
 			bone_ent = self
 		end
-		
+
 		for k, name in pairs( self.wRenderOrder ) do
-		
+
 			local v = self.WElements[name]
 			if (!v) then self.wRenderOrder = nil break end
 			if (v.hide) then continue end
-			
+
 			local pos, ang
-			
+
 			if (v.bone) then
 				pos, ang = self:GetBoneOrientation( self.WElements, v, bone_ent )
 			else
 				pos, ang = self:GetBoneOrientation( self.WElements, v, bone_ent, "ValveBiped.Bip01_R_Hand" )
 			end
-			
+
 			if (!pos) then continue end
-			
+
 			local model = v.modelEnt
 			local sprite = v.spriteMaterial
-			
+
 			if (v.type == "Model" and IsValid(model)) then
 
 				model:SetPos(pos + ang:Forward() * v.pos.x + ang:Right() * v.pos.y + ang:Up() * v.pos.z )
@@ -397,17 +393,17 @@ if CLIENT then
 				local matrix = Matrix()
 				matrix:Scale(v.size)
 				model:EnableMatrix( "RenderMultiply", matrix )
-				
+
 				if (v.material == "") then
 					model:SetMaterial("")
 				elseif (model:GetMaterial() != v.material) then
 					model:SetMaterial( v.material )
 				end
-				
+
 				if (v.skin and v.skin != model:GetSkin()) then
 					model:SetSkin(v.skin)
 				end
-				
+
 				if (v.bodygroup) then
 					for k, v in pairs( v.bodygroup ) do
 						if (model:GetBodygroup(k) != v) then
@@ -415,83 +411,83 @@ if CLIENT then
 						end
 					end
 				end
-				
+
 				if (v.surpresslightning) then
 					render.SuppressEngineLighting(true)
 				end
-				
+
 				render.SetColorModulation(v.color.r/255, v.color.g/255, v.color.b/255)
 				render.SetBlend(v.color.a/255)
 				model:DrawModel()
 				render.SetBlend(1)
 				render.SetColorModulation(1, 1, 1)
-				
+
 				if (v.surpresslightning) then
 					render.SuppressEngineLighting(false)
 				end
-				
+
 			elseif (v.type == "Sprite" and sprite) then
-				
+
 				local drawpos = pos + ang:Forward() * v.pos.x + ang:Right() * v.pos.y + ang:Up() * v.pos.z
 				render.SetMaterial(sprite)
 				render.DrawSprite(drawpos, v.size.x, v.size.y, v.color)
-				
+
 			elseif (v.type == "Quad" and v.draw_func) then
-				
+
 				local drawpos = pos + ang:Forward() * v.pos.x + ang:Right() * v.pos.y + ang:Up() * v.pos.z
 				ang:RotateAroundAxis(ang:Up(), v.angle.y)
 				ang:RotateAroundAxis(ang:Right(), v.angle.p)
 				ang:RotateAroundAxis(ang:Forward(), v.angle.r)
-				
+
 				cam.Start3D2D(drawpos, ang, v.size)
 					v.draw_func( self )
 				cam.End3D2D()
 
 			end
-			
+
 		end
-		
+
 	end
 
 	function SWEP:GetBoneOrientation( basetab, tab, ent, bone_override )
-		
+
 		local bone, pos, ang
 		if (tab.rel and tab.rel != "") then
-			
+
 			local v = basetab[tab.rel]
-			
+
 			if (!v) then return end
-			
+
 			// Technically, if there exists an element with the same name as a bone
 			// you can get in an infinite loop. Let's just hope nobody's that stupid.
 			pos, ang = self:GetBoneOrientation( basetab, v, ent )
-			
+
 			if (!pos) then return end
-			
+
 			pos = pos + ang:Forward() * v.pos.x + ang:Right() * v.pos.y + ang:Up() * v.pos.z
 			ang:RotateAroundAxis(ang:Up(), v.angle.y)
 			ang:RotateAroundAxis(ang:Right(), v.angle.p)
 			ang:RotateAroundAxis(ang:Forward(), v.angle.r)
-				
+
 		else
-		
+
 			bone = ent:LookupBone(bone_override or tab.bone)
 
 			if (!bone) then return end
-			
+
 			pos, ang = Vector(0,0,0), Angle(0,0,0)
 			local m = ent:GetBoneMatrix(bone)
 			if (m) then
 				pos, ang = m:GetTranslation(), m:GetAngles()
 			end
-			
-			if (IsValid(self.Owner) and self.Owner:IsPlayer() and 
+
+			if (IsValid(self.Owner) and self.Owner:IsPlayer() and
 				ent == self.Owner:GetViewModel() and self.ViewModelFlip) then
 				ang.r = -ang.r // Fixes mirrored models
 			end
-		
+
 		end
-		
+
 		return pos, ang
 	end
 
@@ -501,9 +497,9 @@ if CLIENT then
 
 		// Create the clientside models here because Garry says we can't do it in the render hook
 		for k, v in pairs( tab ) do
-			if (v.type == "Model" and v.model and v.model != "" and (!IsValid(v.modelEnt) or v.createdModel != v.model) and 
+			if (v.type == "Model" and v.model and v.model != "" and (!IsValid(v.modelEnt) or v.createdModel != v.model) and
 					string.find(v.model, ".mdl") and file.Exists (v.model, "GAME") ) then
-				
+
 				v.modelEnt = ClientsideModel(v.model, RENDER_GROUP_VIEW_MODEL_OPAQUE)
 				if (IsValid(v.modelEnt)) then
 					v.modelEnt:SetPos(self:GetPos())
@@ -514,10 +510,10 @@ if CLIENT then
 				else
 					v.modelEnt = nil
 				end
-				
-			elseif (v.type == "Sprite" and v.sprite and v.sprite != "" and (!v.spriteMaterial or v.createdSprite != v.sprite) 
+
+			elseif (v.type == "Sprite" and v.sprite and v.sprite != "" and (!v.spriteMaterial or v.createdSprite != v.sprite)
 				and file.Exists ("materials/"..v.sprite..".vmt", "GAME")) then
-				
+
 				local name = v.sprite.."-"
 				local params = { ["$basetexture"] = v.sprite }
 				// make sure we create a unique name based on the selected options
@@ -533,21 +529,21 @@ if CLIENT then
 
 				v.createdSprite = v.sprite
 				v.spriteMaterial = CreateMaterial(name,"UnlitGeneric",params)
-				
+
 			end
 		end
-		
+
 	end
-	
+
 	local allbones
 	local hasGarryFixedBoneScalingYet = false
 
 	function SWEP:UpdateBonePositions(vm)
-		
+
 		if self.ViewModelBoneMods then
-			
+
 			if (!vm:GetBoneCount()) then return end
-			
+
 			// !! WORKAROUND !! //
 			// We need to check all model names :/
 			local loopthrough = self.ViewModelBoneMods
@@ -555,25 +551,25 @@ if CLIENT then
 				allbones = {}
 				for i=0, vm:GetBoneCount() do
 					local bonename = vm:GetBoneName(i)
-					if (self.ViewModelBoneMods[bonename]) then 
+					if (self.ViewModelBoneMods[bonename]) then
 						allbones[bonename] = self.ViewModelBoneMods[bonename]
 					else
-						allbones[bonename] = { 
+						allbones[bonename] = {
 							scale = Vector(1,1,1),
 							pos = Vector(0,0,0),
 							angle = Angle(0,0,0)
 						}
 					end
 				end
-				
+
 				loopthrough = allbones
 			end
 			// !! ----------- !! //
-			
+
 			for k, v in pairs( loopthrough ) do
 				local bone = vm:LookupBone(k)
 				if (!bone) then continue end
-				
+
 				// !! WORKAROUND !! //
 				local s = Vector(v.scale.x,v.scale.y,v.scale.z)
 				local p = Vector(v.pos.x,v.pos.y,v.pos.z)
@@ -586,10 +582,10 @@ if CLIENT then
 						cur = vm:GetBoneParent(cur)
 					end
 				end
-				
+
 				s = s * ms
 				// !! ----------- !! //
-				
+
 				if vm:GetManipulateBoneScale(bone) != s then
 					vm:ManipulateBoneScale( bone, s )
 				end
@@ -603,18 +599,18 @@ if CLIENT then
 		else
 			self:ResetBonePositions(vm)
 		end
-		   
+
 	end
-	 
+
 	function SWEP:ResetBonePositions(vm)
-		
+
 		if (!vm:GetBoneCount()) then return end
 		for i=0, vm:GetBoneCount() do
 			vm:ManipulateBoneScale( i, Vector(1, 1, 1) )
 			vm:ManipulateBoneAngles( i, Angle(0, 0, 0) )
 			vm:ManipulateBonePosition( i, Vector(0, 0, 0) )
 		end
-		
+
 	end
 
 	/**************************
@@ -627,7 +623,7 @@ if CLIENT then
 	function table.FullCopy( tab )
 
 		if (!tab) then return nil end
-		
+
 		local res = {}
 		for k, v in pairs( tab ) do
 			if (type(v) == "table") then
@@ -640,9 +636,9 @@ if CLIENT then
 				res[k] = v
 			end
 		end
-		
+
 		return res
-		
+
 	end
-	
+
 end

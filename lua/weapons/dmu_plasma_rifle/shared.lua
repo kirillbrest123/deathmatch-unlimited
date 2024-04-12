@@ -1,7 +1,7 @@
 SWEP.PrintName = "Plasma Rifle"
-    
+
 SWEP.Author = ".kkrill"
-SWEP.Instructions = "Fully-automatic futuristic rifle-like weapon. Fires balls of superheated plasma instead of conventional rounds. Isn't limited by magazine size but prone to overheating. Self-destructs when running out of energy or when dropped by original owner for security reasons. Best suited for close range combat."
+SWEP.Instructions = "Fully-automatic futuristic rifle-like weapon. Fires balls of superheated plasma instead of conventional rounds. Isn't limited by magazine size but prone to overheating. Self-destructs when running out of energy or when dropped by original owner for security reasons. Best suited for close range combat. Press and hold RMB while at 0% heat to charge a special attack."
 SWEP.Category = "Deathmatch Unlimited"
 
 SWEP.Spawnable = true
@@ -41,6 +41,9 @@ SWEP.Secondary.Ammo			= ""
 SWEP.Slot = 4
 SWEP.SlotPos = 2
 
+local glow1 = Color(30, 154, 255)
+local glow2 = Color(255, 0, 0)
+
 if CLIENT then
 	SWEP.WepSelectIcon = surface.GetTextureID( "vgui/hud/dmu_plasma_rifle" )
 	killicon.Add( "dmu_plasma_rifle", "hud/killicons/dmu_plasma_rifle", Color( 255, 80, 0, 255 ) )
@@ -49,39 +52,67 @@ end
 function SWEP:CSetupDataTables()
 	self:NetworkVar( "Float", 0, "Overheat" )
 	self:NetworkVar( "Bool", 0, "Overheated" )
+	self:NetworkVar( "Bool", 1, "Charging" )
 end
 
 function SWEP:CInitialize()
 
 	self:SetHoldType( "smg" )
+	self.LoopSound = CreateSound( self, "Jeep.GaussCharge" )
 
 end
 
-local glow1 = Color(30, 154, 255)
-local glow2 = Color(255,0,0)
-
 function SWEP:Think()
-	if !self:GetOverheated() then
-		self:SetOverheat(math.max(0, self:GetOverheat() - 60 * FrameTime()))
+	local owner = self:GetOwner()
+
+	if owner:KeyPressed( IN_ATTACK2) and self:GetOverheat() == 0 and self:Ammo1() >= 40 then
+		self:StartChargeSound()
+		-- self:EmitSound( "Weapon_CombineGuard.Special1" )
+		self:SetCharging( true )
+	end
+
+	if !owner:KeyDown( IN_ATTACK2 ) and owner:KeyDownLast( IN_ATTACK2 ) then
+		self:StopChargeSound()
+		self:SetCharging( false )
+	end
+
+	if self:GetCharging() then
+		self:SetOverheat( math.min( 100, self:GetOverheat() + 40 * FrameTime() ) )
+		self.LoopSound:ChangePitch( 70 + self:GetOverheat() * 3 )
+		if self:GetOverheat() >= 100 then
+			self:FireSecondary()
+			self:SetOverheated(true)
+			self:EmitSound( "Weapon_IRifle.Single" )
+			self:StopChargeSound()
+			owner:ViewPunch( Angle( -5, 0, 0 ) )
+			owner:ScreenFade( SCREENFADE.IN, Color( 255, 255, 255, 64 ), 0.1, 0 )
+			timer.Simple(7, function()
+				if !IsValid(self) then return end
+				self:SetOverheated(false)
+				self:SetOverheat(0)
+			end)
+			self:SetCharging( false )
+		end
+	elseif !self:GetOverheated() then
+		self:SetOverheat( math.max(0, self:GetOverheat() - 60 * FrameTime() ) )
 		self.VElements.glow.color = glow1
 	else
 		self.VElements.glow.color = glow2
 	end
-
 end
 
 function SWEP:PrimaryAttack()
 
-	if self:GetOwner():GetAmmoCount( "Battery" ) <= 0 or self:GetOverheated() then return end
+	if self:Ammo1() <= 0 or self:GetOverheated() or self:GetCharging() then return end
 
 	self:ShootEffects()
 
 	self:TakePrimaryAmmo( 1 )
 
-	self:SetNextPrimaryFire( CurTime() + 0.09 ) 
+	self:SetNextPrimaryFire( CurTime() + 0.09 )
 
 	local owner = self:GetOwner()
-	
+
 	self:EmitSound( "dmu/weapons/plasma_rifle/plasma_rifle_single.wav", 120, 98 + 4 * math.random(-1,1), 0.66, CHAN_WEAPON )
 
 	if ( !owner:IsNPC() ) then owner:ViewPunch( Angle( -0.2, util.SharedRandom(self:GetClass(),-0.2,0.2), 0 ) ) end
@@ -113,7 +144,7 @@ function SWEP:PrimaryAttack()
 			dmginfo:SetDamage(15)
 			dmginfo:SetAttacker(self:GetOwner())
 			dmginfo:SetDamageType(DMG_DISSOLVE)
-	
+
 			tr.Entity:TakeDamageInfo(dmginfo)
 		end
 		owner:EmitSound( "physics/flesh/flesh_squishy_impact_hard" .. math.random(1,4) .. ".wav", 70, 100, 0.4 )
@@ -130,7 +161,45 @@ function SWEP:PrimaryAttack()
 		proj:GetPhysicsObject():SetVelocity(2500 * dest)
 	end
 
-	if owner:GetAmmoCount( self.Primary.Ammo ) <= 0 then
+	if self:Ammo1() <= 0 then
+		self:SelfDestruct()
+	end
+end
+
+function SWEP:FireSecondary()
+	local owner = self:GetOwner()
+	local dest = owner:GetAimVector()
+
+	self:TakePrimaryAmmo( 40 )
+	self:SendWeaponAnim( ACT_VM_SECONDARYATTACK )
+	owner:SetVelocity( -dest * 768 )
+	owner:MuzzleFlash()
+	owner:SetAnimation( PLAYER_ATTACK1 )
+
+	if !SERVER then return end
+
+	for i = 1, 3 do
+
+		local proj = ents.Create( "prop_combine_ball" )
+		proj:SetOwner(owner)
+		proj:SetPos(owner:GetShootPos())
+
+		local ang = dest:Angle()
+		ang:RotateAroundAxis(ang:Up(), math.Rand(-2, 2))
+		ang:RotateAroundAxis(ang:Right(), math.Rand(-2, 2))
+		proj:SetAngles(ang) -- if anyone has a better solution lmk ty
+
+		proj:SetSaveValue("m_flRadius", 10)
+
+		proj:Spawn()
+		proj:Activate()
+		proj:SetSaveValue("m_nState", 3)
+		proj:Fire("Explode", nil, 4 + 0.2 * i)
+		proj:GetPhysicsObject():SetVelocity( ang:Forward() * 1500 )
+		proj:GetPhysicsObject():SetMass( 150 )
+	end
+
+	if self:Ammo1() <= 0 then
 		self:SelfDestruct()
 	end
 end
@@ -166,8 +235,28 @@ function SWEP:SelfDestruct() -- stolen from rb655
 	end)
 end
 
+function SWEP:StartChargeSound()
+	self.LoopSound:Play()
+end
+
+function SWEP:StopChargeSound()
+	self.LoopSound:Stop()
+end
+
 function SWEP:OnDrop()
 	self:SelfDestruct()
+end
+
+function SWEP:OwnerChanged()
+	self:StopChargeSound()
+end
+
+function SWEP:CHolster()
+	self:SetCharging( false )
+
+	self:StopChargeSound()
+
+    return true
 end
 
 if not CLIENT then return end
@@ -175,8 +264,8 @@ if not CLIENT then return end
 local color_overheat = Color(236,100,37)
 
 function SWEP:DrawHUD()
-	local x = ScrW()/2
-	local y = ScrH()/2
+	local x = ScrW() / 2
+	local y = ScrH() / 2
 
 	surface.SetDrawColor(color_white)
 	surface.DrawLine( x - 32, y + 48, x - 32, y + 57)
@@ -184,6 +273,6 @@ function SWEP:DrawHUD()
 
 	local size = self:GetOverheat() / 100 * 63
 
-	surface.SetDrawColor(color_overheat)
+	surface.SetDrawColor( self:GetOverheated() and glow2 or ( self:GetCharging() and glow1 or color_overheat ) )
 	surface.DrawRect( x - 31, y + 48, size, 10)
 end

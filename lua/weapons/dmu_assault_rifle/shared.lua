@@ -1,5 +1,5 @@
 SWEP.PrintName = "Assault Rifle"
-    
+
 SWEP.Author = ".kkrill"
 SWEP.Instructions = "Fully-automatic rifle. Best suited for close-mid range combat."
 SWEP.Category = "Deathmatch Unlimited"
@@ -23,7 +23,7 @@ SWEP.Secondary.Automatic	= false
 SWEP.Secondary.Ammo			= ""
 
 SWEP.Scoped = true
-SWEP.ADS_fov = 56
+SWEP.ADSFov = 56
 
 SWEP.HorizontalRecoil		= 0.1
 SWEP.VerticalRecoil			= 0.3
@@ -55,8 +55,8 @@ function SWEP:PrimaryAttack()
 	bullet.Src		= owner:GetShootPos()
 	bullet.Dir		= owner:GetAimVector()
 	bullet.Spread	= Vector(0.01,0.01,0)
-	bullet.Tracer	= 2	
-	bullet.Force	= 1	
+	bullet.Tracer	= 2
+	bullet.Force	= 1
 	bullet.Damage	= 13
 	bullet.AmmoType = self.Primary.Ammo
 	bullet.TracerName = "AR2Tracer"
@@ -74,7 +74,7 @@ function SWEP:PrimaryAttack()
 
 	self:TakePrimaryAmmo( 1 )
 
-    self:SetNextPrimaryFire( CurTime() + 0.1 ) 
+    self:SetNextPrimaryFire( CurTime() + 0.1 )
 
 	local rand = util.SharedRandom( self:GetClass(), -self.HorizontalRecoil, self.HorizontalRecoil )
 
@@ -96,4 +96,11 @@ end
 
 function SWEP:OnDrop()
 	self:SetClip1(self.Primary.ClipSize)
+end
+
+if !CLIENT then return end
+
+function SWEP:DrawHUDBackground()
+	if not self:GetADS() then return end
+	DrawMaterialOverlay( "effects/combine_binocoverlay", 0 )
 end

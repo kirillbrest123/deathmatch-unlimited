@@ -1,5 +1,5 @@
 SWEP.PrintName = "Pistol"
-    
+
 SWEP.Author = ".kkrill"
 SWEP.Instructions = "Fully-automatic 9mm handgun. Best suited for close range combat as a last resort.\nPress RMB to enter precision mode, lowering spray, recoil and fire rate."
 SWEP.Category = "Deathmatch Unlimited"
@@ -8,6 +8,10 @@ SWEP.Spawnable = true
 SWEP.Base = "weapon_dmu_base"
 
 SWEP.UseHands = true
+
+SWEP.VElements = {
+	["glow"] = { type = "Sprite", sprite = "sprites/glow01", bone = "ValveBiped.Bip01_R_Hand", rel = "", pos = Vector(3.645, 2.165, -2.902), size = { x = 1, y = 1 }, color = Color(0, 255, 0, 0), nocull = true, additive = true, vertexalpha = true, vertexcolor = true, ignorez = false}
+}
 
 SWEP.ViewModel		= "models/weapons/c_pistol.mdl"
 SWEP.WorldModel		= "models/weapons/w_pistol.mdl"
@@ -31,7 +35,7 @@ SWEP.VerticalRecoil			= 0.6
 SWEP.HorizontalRecoil		= 0.3
 
 SWEP.Scoped = true
-SWEP.ADS_fov = 70
+SWEP.ADSZoom = 0.86
 
 SWEP.Slot = 1
 SWEP.SlotPos = 1
@@ -62,8 +66,8 @@ function SWEP:PrimaryAttack()
 	bullet.Src		= owner:GetShootPos()
 	bullet.Dir		= owner:GetAimVector()
 	bullet.Spread	= Vector(0.0175, 0.0175, 0) * recoil_mult
-	bullet.Tracer	= 2	
-	bullet.Force	= 1	
+	bullet.Tracer	= 2
+	bullet.Force	= 1
 	bullet.Damage	= 13
 	bullet.AmmoType = self.Primary.Ammo
 
@@ -129,26 +133,31 @@ function SWEP:Think()
 		self:SetReloading(false)
 
 		local num = math.min(owner:GetAmmoCount(self:GetPrimaryAmmoType()), self:GetMaxClip1() - self:Clip1())
-	
+
 		self:SetClip1( self:Clip1() + num )
 		owner:RemoveAmmo( num, self:GetPrimaryAmmoType() )
-		
+
 	end
 
 	if owner:KeyPressed( IN_ATTACK2) then
 		self:SetADS( true )
-		owner:SetFOV(owner:GetFOV() * 0.86, 0.3)
+		owner:SetFOV(owner:GetFOV() * self.ADSZoom, 0.3)
+		self.VElements.glow.color.a = 200
+		if CLIENT and IsFirstTimePredicted() then
+			surface.PlaySound( "npc/turret_floor/click1.wav" )
+		end
 	end
 
 	if !owner:KeyDown( IN_ATTACK2 ) and owner:KeyDownLast( IN_ATTACK2 ) then
 		self:SetADS( false )
 		owner:SetFOV(0, 0.3)
+		self.VElements.glow.color.a = 0
 	end
 end
 
 function SWEP:AdjustMouseSensitivity()
 	if not self:GetADS() then return end
-	return 0.86
+	return self.ADSZoom
 end
 
 function SWEP:DrawHUDBackground()

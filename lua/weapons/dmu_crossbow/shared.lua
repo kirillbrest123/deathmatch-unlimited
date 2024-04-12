@@ -1,5 +1,5 @@
 SWEP.PrintName = "Auto Crossbow"
-    
+
 SWEP.Author = ".kkrill"
 SWEP.Instructions = "Fully-automatic crossbow. Fires red-hot bolts of steel rebar with enough force to pin its victim to a wall. Best suited for mid-long range combat."
 SWEP.Category = "Deathmatch Unlimited"
@@ -22,8 +22,8 @@ SWEP.Secondary.DefaultClip	= 0
 SWEP.Secondary.Automatic	= false
 SWEP.Secondary.Ammo			= ""
 
-SWEP.Scoped = true 
-SWEP.ADS_fov = 40
+SWEP.Scoped = true
+SWEP.ADSFov = 40
 
 SWEP.VerticalRecoil			= 0.4
 SWEP.HorizontalRecoil		= 0.05
@@ -56,10 +56,10 @@ function SWEP:PrimaryAttack()
 
 	self:TakePrimaryAmmo( 1 )
 
-	self:SetNextPrimaryFire( CurTime() + 0.4 ) 
+	self:SetNextPrimaryFire( CurTime() + 0.4 )
 
 	local owner = self:GetOwner()
-	
+
 	self:EmitSound("Weapon_Crossbow.Single")
 
 	local rand = util.SharedRandom( self:GetClass(), -self.HorizontalRecoil, self.HorizontalRecoil )
@@ -91,7 +91,7 @@ function SWEP:PrimaryAttack()
 			dmginfo:SetDamage(45)
 			dmginfo:SetAttacker(self:GetOwner())
 			dmginfo:SetDamageType(DMG_BULLET)
-	
+
 			tr.Entity:TakeDamageInfo(dmginfo)
 			owner:EmitSound("Weapon_Crossbow.BoltHitBody")
 		else
@@ -104,7 +104,7 @@ function SWEP:PrimaryAttack()
 
 		proj:SetPos(owner:GetShootPos())
 		proj:SetAngles(dest:Angle())
-	
+
 		proj:SetVelocity(dest * 3500)
 
 		timer.Simple(0, function() -- WHY DOES IT NOT APPLY DAMAGE UNTIL 1 TICK HAS PASSED
@@ -127,4 +127,9 @@ function SWEP:ShootEffects()
 
 end
 
-if not CLIENT then return end
+if !CLIENT then return end
+
+function SWEP:DrawHUDBackground()
+	if not self:GetADS() then return end
+	DrawMaterialOverlay( "effects/combine_binocoverlay", 0 )
+end

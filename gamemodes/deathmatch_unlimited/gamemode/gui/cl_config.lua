@@ -320,7 +320,7 @@ function PANEL:Init()
         starter = "dmu_pistol,dmu_carbine,dmu_fists,weapon_physcannon"
         common = "dmu_pistol,dmu_carbine,weapon_frag"
         uncommon = "dmu_assault_rifle,dmu_battle_rifle,dmu_crossbow"
-        rare = "dmu_smg,dmu_sniper_rifle,dmu_plasma_rifle"
+        rare = "dmu_smg,dmu_sniper_rifle,dmu_plasma_rifle,dmu_grenade_launcher"
         very_rare = "dmu_railgun,dmu_rocket_launcher,dmu_shotgun,dmu_bfb"
         self.StarterWeapons:SetValue(starter)
         self.CommonWeapons:SetValue(common)

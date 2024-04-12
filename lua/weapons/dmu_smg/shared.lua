@@ -1,5 +1,5 @@
 SWEP.PrintName = "SMG"
-    
+
 SWEP.Author = ".kkrill"
 SWEP.Instructions = "Fully-automatic submachine gun. Incredible fire rate at the cost of high spread and steep damage falloff. Best suited for close range combat."
 SWEP.Category = "Deathmatch Unlimited"
@@ -24,6 +24,9 @@ SWEP.Secondary.Ammo			= ""
 
 SWEP.VerticalRecoil			= 0.4
 SWEP.HorizontalRecoil		= 0.3
+
+SWEP.Scoped = true
+SWEP.ADSZoom = 0.88
 
 SWEP.Slot = 2
 SWEP.SlotPos = 1
@@ -53,7 +56,7 @@ function SWEP:PrimaryAttack()
 	bullet.Dir		= owner:GetAimVector()
 	bullet.Spread	= Vector(0.0225,0.0225,0)
 	bullet.Tracer	= 2
-	bullet.Force	= 1	
+	bullet.Force	= 1
 	bullet.Damage	= 10
 	bullet.AmmoType = self.Primary.Ammo
 
@@ -69,7 +72,7 @@ function SWEP:PrimaryAttack()
 
 	self:TakePrimaryAmmo( 1 )
 
-    self:SetNextPrimaryFire( CurTime() + 0.06 ) 
+    self:SetNextPrimaryFire( CurTime() + 0.06 )
 
 	local rand = util.SharedRandom( self:GetClass(), -self.HorizontalRecoil, self.HorizontalRecoil )
 

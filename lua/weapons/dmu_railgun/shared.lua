@@ -1,5 +1,5 @@
 SWEP.PrintName = "Railgun"
-    
+
 SWEP.Author = ".kkrill"
 SWEP.Instructions = "Handheld particle accelerator. Needs charging before each shot but the impact is guaranteed to reduce the target to atoms. Self-destructs when running out of energy or when dropped by original owner for safety concerns. Best suited for long range combat."
 SWEP.Category = "Deathmatch Unlimited"
@@ -42,7 +42,7 @@ SWEP.Secondary.Automatic	= false
 SWEP.Secondary.Ammo			= ""
 
 SWEP.Scoped = true
-SWEP.ADS_fov = 40
+SWEP.ADSFov = 40
 
 SWEP.VerticalRecoil			= 1.5
 
@@ -62,6 +62,7 @@ end
 function SWEP:CInitialize()
 
 	self:SetHoldType( "ar2" )
+	self.LoopSound = CreateSound( self, "Jeep.GaussCharge" )
 	self.ChargeTime = DMU.Mode.InstantRailgun and 0.15 or 0.8
 
 end
@@ -80,7 +81,7 @@ function SWEP:FirePrimary()
 	bullet.Dir		= owner:GetAimVector()
 	bullet.Spread	= 0
 	bullet.Tracer	= 1
-	bullet.Force	= 1	
+	bullet.Force	= 1
 	bullet.Damage	= 1000
 	bullet.AmmoType = self.Primary.Ammo
 	bullet.TracerName = "railguntracer"
@@ -98,14 +99,13 @@ function SWEP:FirePrimary()
 			self.Pierces = self.Pierces + 1
 			tr.Entity:FireBullets( bullet )
 		end
-    end
+	end
 
 	owner:FireBullets( bullet )
 
 	self:ShootEffects()
 
 	self:TakePrimaryAmmo( 25 )
-
 
 	owner:ViewPunch( Angle( -self.VerticalRecoil, 0, 0 ) )
 
@@ -124,31 +124,30 @@ end
 
 function SWEP:CThink()
 
-	if self:GetOwner():IsBot() or !(self:GetDelay() < CurTime()) then return end
- 
-	if self:GetOwner():KeyPressed( IN_ATTACK ) and self:GetOwner():GetAmmoCount( self.Primary.Ammo ) > 0 then
+	if self:GetOwner():IsBot() or self:GetDelay() >= CurTime() then return end
+
+	if self:GetOwner():KeyPressed( IN_ATTACK ) and self:Ammo1() > 0 then
 		self:SetChargeTimer(CurTime() + self.ChargeTime)
 		if IsFirstTimePredicted() then
-			self.LoopSound = self:StartLoopingSound( "Jeep.GaussCharge" )
+			self:StartChargeSound()
 		end
 	end
 
 	if !self:GetOwner():KeyDown( IN_ATTACK ) and self:GetOwner():KeyDownLast( IN_ATTACK ) then
 		self:SetChargeTimer(0)
 
-		if self.LoopSound then
-			self:StopLoopingSound(self.LoopSound)
-			self.LoopSound = nil
-		end
+		self:StopChargeSound()
 	end
 
-	if self:GetChargeTimer() != 0 and self:GetChargeTimer() < CurTime() then
-		self:FirePrimary()
-		self:SetChargeTimer(0)
-		self:SetDelay(CurTime() + 0.75)
-		if self.LoopSound then
-			self:StopLoopingSound(self.LoopSound)
-			self.LoopSound = nil
+
+	if self:GetChargeTimer() != 0 then
+		self.LoopSound:ChangePitch( 100 + ( 1 - ( self:GetChargeTimer() - CurTime() ) / self.ChargeTime ) * 100 )
+
+		if self:GetChargeTimer() < CurTime() then
+			self:FirePrimary()
+			self:SetChargeTimer(0)
+			self:SetDelay(CurTime() + 0.75)
+			self:StopChargeSound()
 		end
 	end
 end
@@ -157,15 +156,12 @@ function SWEP:PrimaryAttack() -- bots use a simplified control scheme
 	if !self:GetOwner():IsBot() then return end
 
 	self:SetNextPrimaryFire( CurTime() + self.ChargeTime + 0.75 )
-	self.LoopSound = self:StartLoopingSound( "Jeep.GaussCharge" )
+	self:StartChargeSound()
 	timer.Simple(self.ChargeTime, function()
 		if !IsValid(self) or !IsValid(self:GetOwner()) then return end
 		self:FirePrimary()
-		if self.LoopSound then
-			self:StopLoopingSound(self.LoopSound)
-			self.LoopSound = nil
-		end
-	end) 
+		self:StopChargeSound()
+	end)
 end
 
 function SWEP:SelfDestruct() -- stolen from rb655
@@ -202,32 +198,37 @@ function SWEP:Reload()
 
 end
 
+function SWEP:StartChargeSound()
+	self.LoopSound:Play()
+end
+
+function SWEP:StopChargeSound()
+	self.LoopSound:Stop()
+end
+
 function SWEP:CHolster()
 	self:SetChargeTimer(0)
 
-	if self.LoopSound then
-		self:StopLoopingSound(self.LoopSound)
-		self.LoopSound = nil
-	end
+	self:StopChargeSound()
 
     return true
 end
 
 function SWEP:COnRemove()
-	if self.LoopSound then
-		self:StopLoopingSound(self.LoopSound)
-	end
+	self:StopChargeSound()
 end
 
 function SWEP:OnDrop()
 	self:SelfDestruct()
-	if self.LoopSound then
-		self:StopLoopingSound(self.LoopSound)
-		self.LoopSound = nil
-	end
+	self:StopChargeSound()
 end
 
 if !CLIENT then return end
+
+function SWEP:DrawHUDBackground()
+	if not self:GetADS() then return end
+	DrawMaterialOverlay( "effects/combine_binocoverlay", 0 )
+end
 
 local color_overheat = Color(236,100,37)
 

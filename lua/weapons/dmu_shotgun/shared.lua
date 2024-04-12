@@ -1,5 +1,5 @@
 SWEP.PrintName = "Shotgun"
-    
+
 SWEP.Author = ".kkrill"
 SWEP.Instructions = "Semi-automatic shotgun. Absolutely devastates everything unfortunate enough to be in its range. Best suited for close range combat."
 SWEP.Category = "Deathmatch Unlimited"
@@ -29,9 +29,8 @@ SWEP.HorizontalRecoil		= 0.05
 SWEP.Slot = 3
 SWEP.SlotPos = 1
 
--- SWEP.Reloading = false
--- SWEP.ReloadTimer = 0
--- SWEP.NextReload = 0
+SWEP.Scoped = true
+SWEP.ADSZoom = 0.88
 
 if CLIENT then
 	SWEP.WepSelectIcon = surface.GetTextureID( "vgui/hud/dmu_shotgun" )
@@ -62,14 +61,14 @@ function SWEP:PrimaryAttack()
 	bullet.Num		= 1
 	bullet.Src		= owner:GetShootPos()
 	bullet.Dir		= owner:GetAimVector()
-	bullet.Tracer	= 1	
-	bullet.Force	= 1	
+	bullet.Tracer	= 1
+	bullet.Force	= 1
 	bullet.Damage	= 25
 	bullet.AmmoType = self.Primary.Ammo
 
 	bullet.Callback = function(attacker, tr, dmginfo)
 		if tr.HitGroup == HITGROUP_HEAD then
-			dmginfo:ScaleDamage(0.8) // 40 headshot damage 
+			dmginfo:ScaleDamage(0.8) // 40 headshot damage
 		end
 		local dist = tr.StartPos:Distance(tr.HitPos)
 		local falloff = 1 - math.Clamp((dist - 320) / 896, 0, 1) // up to 25% damage falloff starting at 20m up to 40m
@@ -93,7 +92,7 @@ function SWEP:PrimaryAttack()
 
 	self:TakePrimaryAmmo( 1 )
 
-    self:SetNextPrimaryFire( CurTime() + 1 ) 
+    self:SetNextPrimaryFire( CurTime() + 1 )
 
 	local rand = util.SharedRandom( self:GetClass(), -self.HorizontalRecoil, self.HorizontalRecoil )
 
@@ -109,24 +108,23 @@ function SWEP:PrimaryAttack()
 	end
 end
 
-function SWEP:Think()
+function SWEP:CThink()
 	if CurTime() < self:GetReloadTimer() or !self:GetReloading() then return end
 	local owner = self:GetOwner()
-	local vm = owner:GetViewModel()
 
 	if self:Clip1() >= self:GetMaxClip1() or self:Ammo1() <= 0 then
 		self:SetReloading(false)
-		vm:SendViewModelMatchingSequence( vm:SelectWeightedSequence( ACT_VM_IDLE ) )
+		self:SendWeaponAnim( ACT_VM_IDLE )
 	end
 
 	if self:GetReloading() then
 		owner:RemoveAmmo( 1, self:GetPrimaryAmmoType() )
 		self:SetClip1(self:Clip1() + 1)
-		vm:SendViewModelMatchingSequence( vm:SelectWeightedSequence( ACT_VM_RELOAD ) )
+		self:SendWeaponAnim( ACT_VM_RELOAD )
 		self:SetReloadTimer(CurTime() + 0.5)
 
 		self:EmitSound( "Weapon_Shotgun.Reload" )
-	end 
+	end
 end
 
 function SWEP:Reload()
@@ -136,12 +134,11 @@ function SWEP:Reload()
 	if self:GetReloading() then return end
 
 	local owner = self:GetOwner()
-	local vm = owner:GetViewModel()
 
 	self:SetReloading(true)
 	self:SetReloadTimer(CurTime() + 0.6)
 
-	vm:SendViewModelMatchingSequence( vm:SelectWeightedSequence( ACT_VM_RELOAD ) )
+	self:SendWeaponAnim( ACT_VM_RELOAD )
 	owner:SetAnimation( PLAYER_RELOAD )
 end
 

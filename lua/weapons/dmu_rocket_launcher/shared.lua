@@ -1,5 +1,5 @@
 SWEP.PrintName = "Rocket Launcher"
-    
+
 SWEP.Author = ".kkrill"
 SWEP.Instructions = "A rocket launcher. It launches rockets. Handle with care and stay out of the blast. Best suited for mid range combat."
 SWEP.Category = "Deathmatch Unlimited"
@@ -25,6 +25,9 @@ SWEP.Secondary.Ammo			= ""
 
 SWEP.Slot = 4
 SWEP.SlotPos = 1
+
+SWEP.Scoped = true
+SWEP.ADSZoom = 0.88
 
 if CLIENT then
 	SWEP.WepSelectIcon = surface.GetTextureID( "vgui/hud/dmu_rocket_launcher" )
@@ -52,7 +55,7 @@ function SWEP:PrimaryAttack()
 
 	self:TakePrimaryAmmo( 1 )
 
-    self:SetNextPrimaryFire( CurTime() + 1 ) 
+    self:SetNextPrimaryFire( CurTime() + 1 )
 
 	if !SERVER then return end
 
@@ -69,7 +72,7 @@ function SWEP:PrimaryAttack()
 	proj:SetVelocity(dest * 500)
 end
 
-function SWEP:Think()
+function SWEP:CThink()
 	if CurTime() < self:GetReloadTimer() or !self:GetReloading() then return end
 
 	self:GetOwner():RemoveAmmo( 1, self:GetPrimaryAmmoType() )
