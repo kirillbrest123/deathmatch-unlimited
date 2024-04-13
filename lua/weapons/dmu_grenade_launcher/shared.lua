@@ -38,7 +38,7 @@ SWEP.Secondary.Automatic	= false
 SWEP.Secondary.Ammo			= ""
 
 SWEP.Scoped = true
-SWEP.ADSFov = 40
+SWEP.ADSZoom = 0.88
 
 SWEP.VerticalRecoil			= 1.5
 
@@ -108,7 +108,7 @@ function SWEP:FirePrimary()
 	-- self.NextReload = CurTime() + owner:GetViewModel():SequenceDuration() + 0.1
 end
 
-function SWEP:Think()
+function SWEP:CThink()
 
 	if self:GetOwner():IsBot() or self:GetDelay() >= CurTime() then goto reload end
 
@@ -134,7 +134,7 @@ function SWEP:Think()
 			self:StopChargeSound()
 			self:FirePrimary()
 			self:SetChargeTimer(0)
-			self:SetDelay(CurTime() + 0.4)
+			self:SetDelay( CurTime() + 0.6 )
 		end
 	end
 
@@ -163,7 +163,7 @@ function SWEP:PrimaryAttack() -- bots use a simplified control scheme
 
 	self:FirePrimary()
 	self:SetChargeTimer(0)
-	self:SetNextPrimaryFire( CurTime() + 0.6 )
+	self:SetNextPrimaryFire( CurTime() + 0.8 )
 
 end
 

@@ -77,7 +77,7 @@ function SWEP:Think()
 	end
 
 	if self:GetCharging() then
-		self:SetOverheat( math.min( 100, self:GetOverheat() + 40 * FrameTime() ) )
+		self:SetOverheat( math.min( 100, self:GetOverheat() + 34 * FrameTime() ) )
 		self.LoopSound:ChangePitch( 70 + self:GetOverheat() * 3 )
 		if self:GetOverheat() >= 100 then
 			self:FireSecondary()
@@ -170,7 +170,7 @@ function SWEP:FireSecondary()
 	local owner = self:GetOwner()
 	local dest = owner:GetAimVector()
 
-	self:TakePrimaryAmmo( 40 )
+	self:TakePrimaryAmmo( 50 )
 	self:SendWeaponAnim( ACT_VM_SECONDARYATTACK )
 	owner:SetVelocity( -dest * 768 )
 	owner:MuzzleFlash()

@@ -6,7 +6,7 @@ GM.Email = "N/A"
 GM.Website = "N/A"
 
 DMU = {}
-DMU.Version = 1400
+DMU.Version = 1401
 print("[DMU] DMU Version is v" .. DMU.Version)
 
 -- Convert old playlist files
