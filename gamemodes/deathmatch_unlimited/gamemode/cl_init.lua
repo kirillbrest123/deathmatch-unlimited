@@ -18,3 +18,9 @@ hook.Add("HUDShouldDraw", "dmu_RemoveRedScreen", function(name)
        return false
     end
 end)
+
+timer.Simple(0, function()
+    GAMEMODE:SuppressHint( "OpeningMenu" )
+    GAMEMODE:SuppressHint( "Annoy1" )
+    GAMEMODE:SuppressHint( "Annoy2" )
+end)

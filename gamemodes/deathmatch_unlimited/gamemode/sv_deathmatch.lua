@@ -244,6 +244,10 @@ hook.Add("EntityTakeDamage", "dmu_FriendlyFire", function(target, dmginfo)
     end
 end)
 
+function GM:PlayerShouldTakeDamage(ply, attacker) -- overwrite sandbox shit
+    return true
+end
+
 function GM:PlayerSelectSpawn(pl, transiton)
     -- If we are in transition, do not reset player's position
     if transiton then return end
