@@ -1,9 +1,9 @@
 MODE.Name = "Gun Game"
 MODE.FriendlyFire = true
-MODE.FFA = true -- mostly used in GUIs
+MODE.FFA = true
 MODE.RespawnTime = 3
 MODE.TimeLimit = 600
-MODE.DontDropWeapons = true 
+MODE.DontDropWeapons = true
 MODE.WeaponSpawnsDisabled = true
 
 MODE.Hooks = {}
@@ -16,17 +16,21 @@ MODE.GunTiers = {
     "dmu_smg",
     "dmu_battle_rifle",
     "dmu_plasma_rifle",
+    "dmu_crossbow",
     "dmu_shotgun",
     "dmu_sniper_rifle",
     "dmu_bfb",
+    "dmu_grenade_launcher",
     "dmu_railgun",
     "dmu_rocket_launcher",
     "dmu_pistol",
     "dmu_rocket_launcher",
     "dmu_railgun",
+    "dmu_grenade_launcher",
     "dmu_bfb",
     "dmu_sniper_rifle",
     "dmu_shotgun",
+    "dmu_crossbow",
     "dmu_plasma_rifle",
     "dmu_battle_rifle",
     "dmu_smg",

@@ -168,26 +168,26 @@ hook.Add("PlayerSay", "DMU_Commands", function(ply, input, teamChat)
     local command = string.lower(text[1])
 
     if command == "!help" then
-        ply:PrintMessage(HUD_PRINTTALK, "'!endmatch' - Initiate a vote to end match early")
-        ply:PrintMessage(HUD_PRINTTALK, "'!endround' - Initiate a vote to end round early")
-        ply:PrintMessage(HUD_PRINTTALK, "'!votemap <map> <game mode>' - Initiate a vote to change map and game mode")
-        if ply:IsSuperAdmin() then
-            ply:PrintMessage(HUD_PRINTTALK, "'!config' - Open config menu")
-        end
-        if LeadBot then
-            ply:PrintMessage(HUD_PRINTTALK, "'!botskill [0-3]' - Initiate a vote to change bots' skill level")
-            ply:PrintMessage(HUD_PRINTTALK, "'!botquota [0-" .. math.min(12, game.MaxPlayers() - 1) .. "]' - Initiate a vote to change bot quota")
-        end
+        timer.Simple( 0, function()
+            ply:PrintMessage(HUD_PRINTTALK, "'!endmatch' - Initiate a vote to end match early")
+            ply:PrintMessage(HUD_PRINTTALK, "'!endround' - Initiate a vote to end round early")
+            ply:PrintMessage(HUD_PRINTTALK, "'!votemap <map> <game mode>' - Initiate a vote to change map and game mode")
+            if ply:IsSuperAdmin() then
+                ply:PrintMessage(HUD_PRINTTALK, "'!config' - Open config menu")
+            end
+            if LeadBot then
+                ply:PrintMessage(HUD_PRINTTALK, "'!botskill [0-3]' - Initiate a vote to change bots' skill level")
+                ply:PrintMessage(HUD_PRINTTALK, "'!botquota [0-" .. math.min(12, game.MaxPlayers() - 1) .. "]' - Initiate a vote to change bot quota")
+            end
 
-        ply:PrintMessage(HUD_PRINTTALK, "Current Game Mode: " .. (DMU.Mode.PrintName or DMU.Mode.Name))
+            ply:PrintMessage(HUD_PRINTTALK, "Current Game Mode: " .. (DMU.Mode.PrintName or DMU.Mode.Name))
 
-        if !DMU.Mode.Tips then return "" end
+            if DMU.Mode.Instructions then
+                ply:PrintMessage(HUD_PRINTTALK, DMU.Mode.Instructions)
+            end
+        end)
 
-        for k,v in ipairs(DMU.Mode.Tips) do
-            ply:PrintMessage(HUD_PRINTTALK, v)
-        end
-
-        return ""
+        -- return ""
     elseif command == "!endmatch" then
         ply:VoteEndMatch()
         return ""

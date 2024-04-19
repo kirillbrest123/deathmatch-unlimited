@@ -1,6 +1,6 @@
 MODE.Name = "Juggernaut"
 MODE.FriendlyFire = false
-MODE.FFA = true -- mostly used in GUIs
+MODE.FFA = true
 MODE.RespawnTime = 3
 MODE.TimeLimit = 600
 
@@ -23,7 +23,7 @@ local function set_juggernaut(ply)
     if IsValid(juggernaut) then
         juggernaut:SetMaxHealth(100)
         juggernaut:SetTeam(1)
-    end 
+    end
 
     SetGlobalEntity("DMU_CurrentJuggernaut", ply)
 

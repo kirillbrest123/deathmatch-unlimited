@@ -1,41 +1,41 @@
 "LightmappedGeneric"
 {
-	"$basetexture" "aperture/aperture_wall001a"
-	"$surfaceprop" "concrete"
-	"%keywords" "portal"
+    "$basetexture" "aperture/aperture_wall001a"
+    "$surfaceprop" "concrete"
+    "%keywords" "portal"
 
 
-	"LightmappedGeneric_HDR_DX9"
-	{
-		"$bumpmap" "aperture/aperture_wall001a_height-ssbump"
-		"$ssbump" "1"
+    "LightmappedGeneric_HDR_DX9"
+    {
+        "$bumpmap" "aperture/aperture_wall001a_height-ssbump"
+        "$ssbump" "1"
 
-        	"$detail" "aperture\detail_concrete"
-		"$detailscale" "4.25"
-		"$detailblendfactor" .35
-		"$detailblendmode" 0
-	}
+            "$detail" "aperture\detail_concrete"
+        "$detailscale" "4.25"
+        "$detailblendfactor" .35
+        "$detailblendmode" 0
+    }
 
-	"LightmappedGeneric_DX9"
-	{
-		"$bumpmap" "aperture/aperture_wall001a_height-ssbump"
-		"$ssbump" "1"
+    "LightmappedGeneric_DX9"
+    {
+        "$bumpmap" "aperture/aperture_wall001a_height-ssbump"
+        "$ssbump" "1"
 
-        	"$detail" "aperture\detail_concrete"
-		"$detailscale" "4.25"
-		"$detailblendfactor" .35
-		"$detailblendmode" 0
-	}
+            "$detail" "aperture\detail_concrete"
+        "$detailscale" "4.25"
+        "$detailblendfactor" .35
+        "$detailblendmode" 0
+    }
 
-	"LightmappedGeneric_DX8"
-	{
-		"$bumpmap" "aperture/aperture_wall001a_normal"
-		"$nodiffusebumplighting" 1
-	}
+    "LightmappedGeneric_DX8"
+    {
+        "$bumpmap" "aperture/aperture_wall001a_normal"
+        "$nodiffusebumplighting" 1
+    }
 
-	"LightmappedGeneric_NoBump_DX8"
-	{
-		"$basetexture" "aperture/aperture_wall001a"
-		"$basealphaenvmapmask" 1
-	}
+    "LightmappedGeneric_NoBump_DX8"
+    {
+        "$basetexture" "aperture/aperture_wall001a"
+        "$basealphaenvmapmask" 1
+    }
 }

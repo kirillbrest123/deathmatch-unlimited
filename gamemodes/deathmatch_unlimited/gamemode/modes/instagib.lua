@@ -1,6 +1,6 @@
 MODE.Name = "Instagib"
 MODE.FriendlyFire = true
-MODE.FFA = true -- mostly used in GUIs
+MODE.FFA = true
 MODE.RespawnTime = 2
 MODE.TimeLimit = 600
 MODE.WeaponSpawnsDisabled = true

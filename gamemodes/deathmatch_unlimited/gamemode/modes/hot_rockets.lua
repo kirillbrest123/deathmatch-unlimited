@@ -2,8 +2,8 @@ MODE.Name = "Hot Rockets"
 MODE.FriendlyFire = false
 MODE.RespawnTime = 2
 MODE.TimeLimit = 600
-MODE.WeaponSpawnsDisabled = true 
-MODE.DontDropWeapons = true 
+MODE.WeaponSpawnsDisabled = true
+MODE.DontDropWeapons = true
 
 MODE.Teams = {
     {
@@ -34,7 +34,6 @@ MODE.Hooks.EntityTakeDamage = function(ply, dmginfo)
     dmginfo:ScaleDamage(3)
     if ply:IsPlayer() and ply == dmginfo:GetAttacker() then
         dmginfo:SetDamage(0)
-        return true
     end
 end
 

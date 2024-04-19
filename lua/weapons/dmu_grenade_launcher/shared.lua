@@ -1,7 +1,7 @@
 SWEP.PrintName = "Grenade Launcher"
 
 SWEP.Author = ".kkrill"
-SWEP.Instructions = "A grenade launcher. It launches grenades. Somehow converts regular grenades to impacts. Holding the trigger will allow you to shoot grenades at higher velocity. Handle with extreme care. Best suited for short-mid range combat."
+SWEP.Instructions = "A grenade launcher. It launches grenades. Holding the trigger will allow you to shoot grenades at higher velocity. Handle with extreme care. Best suited for short-mid range combat."
 SWEP.Category = "Deathmatch Unlimited"
 
 SWEP.Spawnable = true
@@ -28,7 +28,7 @@ SWEP.WElements = {
 }
 
 SWEP.Primary.ClipSize		= 6
-SWEP.Primary.DefaultClip	= 6
+SWEP.Primary.DefaultClip	= 12
 SWEP.Primary.Ammo			= "Grenade"
 SWEP.Primary.Automatic      = false
 
@@ -93,9 +93,9 @@ function SWEP:FirePrimary()
 	proj:SetPos(owner:GetShootPos())
 	proj:SetAngles(dest:Angle())
 	proj:SetSaveValue("m_hThrower", owner) -- brother why things just can't be nice and simple
-	proj:Fire("SetTimer", "15", 0)
+	proj:Fire("SetTimer", "1", 0)
 	proj:AddCallback("PhysicsCollide", function(ent, data)
-		proj:Fire("SetTimer", "0", 0)
+		-- proj:Fire("SetTimer", "0", 0)
 	end)
 
 	proj:Spawn()
@@ -134,7 +134,7 @@ function SWEP:CThink()
 			self:StopChargeSound()
 			self:FirePrimary()
 			self:SetChargeTimer(0)
-			self:SetDelay( CurTime() + 0.6 )
+			self:SetDelay( CurTime() + 0.5 )
 		end
 	end
 
@@ -161,9 +161,15 @@ function SWEP:PrimaryAttack() -- bots use a simplified control scheme
 	if !self:GetOwner():IsBot() then return end
 	if !self:CanPrimaryAttack() then return end
 
-	self:FirePrimary()
-	self:SetChargeTimer(0)
-	self:SetNextPrimaryFire( CurTime() + 0.8 )
+	self:SetNextPrimaryFire( CurTime() + 1.3 )
+	self:SetChargeTimer( CurTime() - 0.5 )
+	self:StartChargeSound()
+	timer.Simple( 0.5, function()
+		if !IsValid( self ) or !IsValid( self:GetOwner() ) or !self:GetOwner():Alive() or !self:GetOwner():IsBot() then return end
+		self:StopChargeSound()
+		self:FirePrimary()
+		self:SetChargeTimer( 0 )
+	end)
 
 end
 
@@ -195,7 +201,7 @@ function SWEP:StopChargeSound()
 end
 
 function SWEP:Equip( owner )
-	owner:Give( "weapon_frag" ) -- you get grenades with the weapon. you should be able to use them
+	owner:Give( "weapon_frag" ) -- you get grenades with the weapon. you should be able to use them'
 end
 
 function SWEP:CHolster()
@@ -212,6 +218,13 @@ end
 
 function SWEP:OnDrop()
 	self:StopChargeSound()
+end
+
+function SWEP:OwnerChanged()
+	self:SetReloading( false )
+	self:StopChargeSound()
+	self:SetChargeTimer( 0 )
+	self:SetDelay( 0 )
 end
 
 if !CLIENT then return end

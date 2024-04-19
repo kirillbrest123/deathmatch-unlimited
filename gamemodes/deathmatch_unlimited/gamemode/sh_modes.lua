@@ -3,7 +3,7 @@ DMU.Modes = DMU.Modes or {}
 local prefix = "deathmatch_unlimited/gamemode/modes/"
 
 local function create_teams(teams)
-    
+
     for k, v in ipairs(teams) do
         team.SetUp(k, v.name, v.color, true)
         if SERVER then
@@ -78,18 +78,14 @@ local function load_mode(name)
         if SERVER then
             if DMU.Mode.RoundBased then
                 hook.Add("Think", "DMU_TimeLimit", function()
-                    if CurTime() >= DMU.CurTimeLimit and !DMU.GameEnded and !DMU.RoundEnded then
-                        if !hook.Run("DMU_TimeLimitReached") then
-                            DMU.EndRound()
-                        end
+                    if CurTime() >= DMU.CurTimeLimit and !DMU.GameEnded and !DMU.RoundEnded and !hook.Run("DMU_TimeLimitReached") then
+                        DMU.EndRound()
                     end
                 end)
             else
                 hook.Add("Think", "DMU_TimeLimit", function()
-                    if CurTime() >= DMU.CurTimeLimit and !DMU.GameEnded then
-                        if !hook.Run("DMU_TimeLimitReached") then
-                            DMU.EndGame()
-                        end
+                    if CurTime() >= DMU.CurTimeLimit and !DMU.GameEnded and !hook.Run("DMU_TimeLimitReached") then
+                        DMU.EndGame()
                     end
                 end)
             end

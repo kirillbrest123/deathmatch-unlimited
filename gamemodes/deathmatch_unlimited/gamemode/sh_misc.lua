@@ -117,5 +117,4 @@ else
     hook.Add("SetupMove", "DMU_SharedGravity", function( ply, mv, cmd )
         ply:SetGravity( ply:GetNWFloat("DMU_Gravity", 0) )
     end)
-
 end

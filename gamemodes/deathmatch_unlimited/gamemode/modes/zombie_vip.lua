@@ -70,7 +70,7 @@ MODE.Hooks.PlayerSpawn = function(ply)
 
     DMU.Mode.OldVips[ ply:Team() ] = ply
     DMU.SendAnnouncement("You are VIP!", 1, "buttons/bell1.wav", ply)
-    
+
     DMU.SendNotification("New VIP!")
 end
 

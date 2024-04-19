@@ -1,6 +1,6 @@
 MODE.Name = "One in the Chamber"
 MODE.FriendlyFire = true
-MODE.FFA = true -- mostly used in GUIs
+MODE.FFA = true
 MODE.RespawnTime = 3
 MODE.TimeLimit = 600
 MODE.WeaponSpawnsDisabled = true

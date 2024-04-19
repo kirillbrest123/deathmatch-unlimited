@@ -6,34 +6,34 @@ GM.Email = "N/A"
 GM.Website = "N/A"
 
 DMU = {}
-DMU.Version = 1402
+DMU.Version = 1404
 print("[DMU] DMU Version is v" .. DMU.Version)
 
 -- Convert old playlist files
 if SERVER and cookie.GetNumber( "DMU_LastVersion", 0 ) < 1200 then
-	local replace_table = {
-		tdm = "Team Deathmatch",
-		ffa = "FFA Deathmatch",
-		gun_game = "Gun Game",
-		hot_rockets = "Hot Rockets",
-		kill_confirmed = "Kill Confirmed",
-		king_of_the_hill = "King Of The Hill",
-		laser_tag = "Laser Tag",
-		one_in_the_chamber = "One In The Chamber",
-		shotty_snipers = "Shotty Snipers",
-		zombie_vip = "Zombie VIP",
-	}
+    local replace_table = {
+        tdm = "Team Deathmatch",
+        ffa = "FFA Deathmatch",
+        gun_game = "Gun Game",
+        hot_rockets = "Hot Rockets",
+        kill_confirmed = "Kill Confirmed",
+        king_of_the_hill = "King Of The Hill",
+        laser_tag = "Laser Tag",
+        one_in_the_chamber = "One In The Chamber",
+        shotty_snipers = "Shotty Snipers",
+        zombie_vip = "Zombie VIP",
+    }
 
-	timer.Simple(0, function()
-		for i = 1, #DMU.PlayLists do
-			for j = 1, #DMU.PlayLists[i].modes do
-				DMU.PlayLists[i].modes[j] = replace_table[string.lower(DMU.PlayLists[i].modes[j])] or DMU.PlayLists[i].modes[j]
-			end
-		end
+    timer.Simple(0, function()
+        for i = 1, #DMU.PlayLists do
+            for j = 1, #DMU.PlayLists[i].modes do
+                DMU.PlayLists[i].modes[j] = replace_table[string.lower(DMU.PlayLists[i].modes[j])] or DMU.PlayLists[i].modes[j]
+            end
+        end
 
-		print("[DMU] Playlists have been updated!")
-		DMU.SavePlayLists()
-	end)
+        print("[DMU] Playlists have been updated!")
+        DMU.SavePlayLists()
+    end)
 end
 
 cookie.Set( "DMU_LastVersion", DMU.Version )
@@ -45,8 +45,8 @@ function GM:Initialize()
 end
 
 function GM:ShouldCollide(ent1, ent2)
-	if !(ent1:IsPlayer() and ent2:IsPlayer()) then return end
-	return not ent1:Team() == ent2:Team()
+    if not (ent1:IsPlayer() and ent2:IsPlayer()) then return end
+    return ent1:Team() ~= ent2:Team()
 end
 
 local function check_allow_feature()
@@ -59,23 +59,23 @@ end
 
 function GM:ScalePlayerDamage( ply, hitgroup, dmginfo )
 
-	-- More damage if we're shot in the head
-	if ( hitgroup == HITGROUP_HEAD ) then
+    -- More damage if we're shot in the head
+    if ( hitgroup == HITGROUP_HEAD ) then
 
-		dmginfo:ScaleDamage( 2 )
+        dmginfo:ScaleDamage( 2 )
 
-	end
+    end
 
-	-- Less damage if we're shot in the arms or legs
-	if ( hitgroup == HITGROUP_LEFTARM ||
-		 hitgroup == HITGROUP_RIGHTARM ||
-		 hitgroup == HITGROUP_LEFTLEG ||
-		 hitgroup == HITGROUP_RIGHTLEG ||
-		 hitgroup == HITGROUP_GEAR ) then
+    -- Less damage if we're shot in the arms or legs
+    if ( hitgroup == HITGROUP_LEFTARM ||
+         hitgroup == HITGROUP_RIGHTARM ||
+         hitgroup == HITGROUP_LEFTLEG ||
+         hitgroup == HITGROUP_RIGHTLEG ||
+         hitgroup == HITGROUP_GEAR ) then
 
-		dmginfo:ScaleDamage( 0.55 )
+        dmginfo:ScaleDamage( 0.55 )
 
-	end
+    end
 
 end
 

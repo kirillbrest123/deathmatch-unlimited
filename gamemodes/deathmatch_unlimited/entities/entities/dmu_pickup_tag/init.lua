@@ -6,7 +6,7 @@ function ENT:Initialize()
 
     self:SetModel("models/balloons/balloon_star.mdl")
 
-    self:PhysicsInitBox(Vector(-16, -16, 0), Vector(16, 16, 8))
+    self:PhysicsInitBox(Vector(-16, -16, -16), Vector(16, 16, 16))
     self:GetPhysicsObject():EnableMotion(false)
     self:SetCollisionGroup(COLLISION_GROUP_DEBRIS)
     self:DrawShadow(false)
